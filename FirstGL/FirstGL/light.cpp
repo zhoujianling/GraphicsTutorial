@@ -1,4 +1,5 @@
-#include  "scene.h"
+#include "scene.h"
+
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -41,10 +42,6 @@ void EnableDirectionLight()
 
 void EnableDirectionAmbient()
 {
-}
-
-void Draw()
-{
 	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_LIGHT0); // 开启第一盏灯，
@@ -58,15 +55,14 @@ void Draw()
 	const GLfloat diffuseMat[] = {0.4f, 0.4f, 0.4f, 1.0f}; // 物体表面材质的漫反射系数
 	const GLfloat specularMat[] = {0.9f, 0.9f, 0.9f, 1.0f}; // 物体表面材质的镜面反射系数
 
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor); // 设置环境光
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat); // 物体正面对环境光的反射系数
+	glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor); // 设置环境光
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat); // 物体正面对环境光的反射系数
 
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor); // 设置漫反射
-	//glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat); // 物体正面漫反射系数
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor); // 设置漫反射
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat); // 物体正面漫反射系数
 
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor); // 设置镜面反射
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat); // 物体正面镜面反射系数
+	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor); // 设置镜面反射
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat); // 物体正面镜面反射系数
 	
 	DrawModel();
-
 }

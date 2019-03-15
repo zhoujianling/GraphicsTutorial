@@ -21,6 +21,12 @@
     <ClCompile Include="scene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="primitive.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h">
