@@ -1,4 +1,7 @@
 #include  "scene.h"
+#include  "utils.h"
+
+GLuint texture;
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -12,61 +15,53 @@ void Init()
 	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
 	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
 	glLoadIdentity();
+
+	//// 加载图片纹理
+	//int nFileSize = 0;
+	//unsigned char *bmpFileContent = LoadFile("Res/Texture.bmp", nFileSize);
+	//int bmpWidth = 0, bmpHeight = 0;
+	//unsigned char *bmpImageData = DecodeBMP(bmpFileContent, bmpWidth, bmpHeight);
+
+	//if (bmpWidth > 0 && bmpHeight > 0)
+	//{
+	//	fprintf(stdout, "Init OK.");
+	//	texture = CreateTexture2D(bmpImageData, bmpWidth, bmpHeight, GL_RGB);
+	//} else
+	//{
+	//	fprintf(stderr, "Cannot decode bmp file.\n");
+	//}
+	texture = CreateTexture2DFromBmp("Res/Texture.bmp");
 }
 
 void DrawModel()
 {
-	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
-	glClear(GL_COLOR_BUFFER_BIT);
 	glBegin(GL_QUADS); 
-	glColor4ub(255, 255, 255, 255); glVertex3d(-0.0f, -0.0f, -2.5f); // 第一个点的坐标
-	glColor4ub(255, 255, 255, 255); glVertex3d(-0.0f, +0.2f, -2.5f); // 第一个点的坐标
-	glColor4ub(255, 255, 255, 255); glVertex3d(0.2f, +0.2f, -2.5f); // 第一个点的坐标
-	glColor4ub(255, 255, 255, 255); glVertex3d(0.2f, 0.0f, -2.5f); // 第一个点的坐标
+	// 第一个点的坐标， 颜色，纹理坐标
+	glColor4ub(255, 255, 255, 255); 
+	glVertex3d(-0.0f, -0.0f, -2.5f); 
+	glTexCoord2f(0.0f, 0.0f);
+	// 第二个点的坐标， 颜色，纹理坐标
+	glColor4ub(255, 255, 255, 255); 
+	glVertex3d(-0.0f, +0.2f, -2.5f); 
+	glTexCoord2f(0.0f, 1.0f);
+	// 第三个点的坐标， 颜色，纹理坐标
+	glColor4ub(255, 255, 255, 255); 
+	glVertex3d(0.2f, +0.2f, -2.5f); 
+	glTexCoord2f(1.0f, 1.0f);
+	// 第四个点的坐标， 颜色，纹理坐标
+	glColor4ub(255, 255, 255, 255); 
+	glVertex3d(0.2f, 0.0f, -2.5f); 
+	glTexCoord2f(1.0f, 0.0f);
 	glEnd(); 
 }
 
-void EnableDirectionLight()
-{
-	DrawModel();
-	glEnable(GL_LIGHTING); // 开启光照算法，白色的四边形会变黑，没有法线信息会导致变黑
-	// OpenGL 里面有八盏灯，从 0 - 7
-	glEnable(GL_LIGHT0); // 开启第一盏灯，
-	// 光源坐标，是齐次坐标 (x, y, z, w) -> (x/w, y/w, z/w, 1)
-	const GLfloat lightPos[] = {0.0f, 1.0f, 0.0f, 0.0f}; 
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos); // 设置 LIGHT0 的位置
-
-}
-
-
-void EnableDirectionAmbient()
-{
-}
 
 void Draw()
 {
 	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	glClear(GL_COLOR_BUFFER_BIT);
-	glEnable(GL_LIGHT0); // 开启第一盏灯，
-	glEnable(GL_CULL_FACE); 
-	const GLfloat lightPos[] = {0.0f, 1.0f, 0.0f, 0.0f}; 
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPos); // 设置 LIGHT0 的位置
-
-	const GLfloat whiteColor[] = {1.0f, 1.0f, 1.0f, 1.0f}; // 白色光
-	const GLfloat blackColor[] = {0.0f, 0.0f, 0.0f, 1.0f}; // 黑色光 
-	const GLfloat ambientMat[] = {0.07f, 0.07f, 0.07f, 1.0f}; // 物体表面材质的反射系数
-	const GLfloat diffuseMat[] = {0.4f, 0.4f, 0.4f, 1.0f}; // 物体表面材质的漫反射系数
-	const GLfloat specularMat[] = {0.9f, 0.9f, 0.9f, 1.0f}; // 物体表面材质的镜面反射系数
-
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, whiteColor); // 设置环境光
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, ambientMat); // 物体正面对环境光的反射系数
-
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteColor); // 设置漫反射
-	//glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuseMat); // 物体正面漫反射系数
-
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor); // 设置镜面反射
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat); // 物体正面镜面反射系数
-	
+	glEnable(GL_TEXTURE_2D); // 开启纹理
+	glBindTexture(GL_TEXTURE_2D, texture);
+	// 模型表面的颜色需要是白色，否则会变成颜色和纹理混合
 	DrawModel();
-
 }

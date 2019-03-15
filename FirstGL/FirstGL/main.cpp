@@ -1,11 +1,36 @@
 #include "ggl.h"
 #include "scene.h"
-#include <windows.h>
+#include <Windows.h>
 #include <gl/GL.h>
+#include "utils.h"
 // 指示链接 opengl32.lib 这个库, VS 默认带这个库
 #pragma comment (lib, "opengl32.lib") 
 #pragma comment (lib, "glu32.lib") 
 
+
+unsigned char* LoadFile(const char* filePath, int& fileSize)
+{
+	unsigned char *fileContent = nullptr;
+	fileSize = 0;
+
+	FILE *fp = fopen(filePath, "rb");
+	if (fp == nullptr)
+	{
+		return fileContent;
+	}
+	fseek(fp, 0, SEEK_END); // 移动文件指针到尾部
+	int nlen = ftell(fp);
+	if (nlen > 0)
+	{
+		rewind(fp); // 移到头部
+		fileContent = new unsigned char[nlen + 1];
+		fread(fileContent, sizeof(unsigned char), nlen, fp);
+		fileContent[nlen] = 0;
+		fileSize = nlen;
+	}
+	fclose(fp);
+	return fileContent;
+}
 
 /**
  * @param msg: 1 表示用户关闭了窗口， 2 表示用户用户拖拽了窗口

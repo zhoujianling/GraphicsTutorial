@@ -1,21 +1,8 @@
 #include "scene.h"
 
 
-/**
- * 屏幕正中心是世界坐标系原点
- * z 轴指向屏幕外面, 所以 z 坐标要设负值
- */
-void Init()
-{
-	// OpenGl 存在当前矩阵的概念，通过 glMatrixMode 设置当前矩阵的 模式
-	glMatrixMode(GL_PROJECTION);
-	// ?, 画布的宽高比， 最近可以看到的距离，最远可以看到的距离 
-	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
-	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
-	glLoadIdentity();
-}
 
-void DrawModel()
+void DrawModel2()
 {
 	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -29,7 +16,7 @@ void DrawModel()
 
 void EnableDirectionLight()
 {
-	DrawModel();
+	DrawModel2();
 	glEnable(GL_LIGHTING); // 开启光照算法，白色的四边形会变黑，没有法线信息会导致变黑
 	// OpenGL 里面有八盏灯，从 0 - 7
 	glEnable(GL_LIGHT0); // 开启第一盏灯，
@@ -64,5 +51,5 @@ void EnableDirectionAmbient()
 	glLightfv(GL_LIGHT0, GL_SPECULAR, whiteColor); // 设置镜面反射
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat); // 物体正面镜面反射系数
 	
-	DrawModel();
+	DrawModel2();
 }

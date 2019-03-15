@@ -1,4 +1,5 @@
 #pragma once
+#define _CRT_SECURE_NO_DEPRECATE
 #include <windows.h>
 #include <gl/gl.h>
 #include <gl/glu.h> // π§æﬂ¿‡

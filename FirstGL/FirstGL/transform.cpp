@@ -24,5 +24,5 @@ void Draw2()
 	// 原坐标系的 (0, 0, 1) 旋转30°，遵循右手定则
 	glRotatef(30.0, 0, 0, 1.); 
 
-	glTranslatef(0.5, 0.9, 0.); // 平移物体
+	glTranslatef(0.5f, 0.9f, 0.f); // 平移物体
 }
