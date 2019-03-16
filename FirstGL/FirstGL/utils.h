@@ -17,3 +17,5 @@ GLuint CreateTexture2D(unsigned char* pixelData, int with, int height, GLenum ty
 
 GLuint CreateTexture2DFromBmp(const char *bmpPath);
 
+GLuint CreateDisplayList(std::function<void()> foo);
+

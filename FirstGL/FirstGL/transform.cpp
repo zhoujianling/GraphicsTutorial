@@ -1,5 +1,7 @@
 #include "scene.h"
 
+// 这个文件记录了 OpenGL 的矩阵变换
+
 void DrawTriangleZero()
 {
 	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色

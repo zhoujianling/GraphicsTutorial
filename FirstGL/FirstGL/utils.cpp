@@ -60,3 +60,15 @@ GLuint CreateTexture2DFromBmp(const char *bmpPath)
 	delete bmpFileData;
 	return textureID;
 }
+
+/**
+ * 将所有绘制指令（glBegin(xxxx)) 打包进显示列表
+ */
+GLuint CreateDisplayList(std::function<void()> foo)
+{
+	GLuint displayList = glGenLists(1); // 声明 OpenGL 的显示列表
+	glNewList(displayList, GL_COMPILE);
+	foo();
+	glEndList();
+	return displayList;
+}

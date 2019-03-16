@@ -131,12 +131,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="primitive.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="skybox.cpp" />
+    <ClCompile Include="texture.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="skybox.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
