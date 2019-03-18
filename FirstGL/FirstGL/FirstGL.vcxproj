@@ -127,8 +127,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="happly.h" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="primitive.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="skybox.cpp" />
@@ -138,6 +140,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h" />
+    <ClInclude Include="model.h" />
+    <ClInclude Include="objloader.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="skybox.h" />
     <ClInclude Include="utils.h" />

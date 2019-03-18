@@ -19,7 +19,8 @@ x64/
 x86/
 bld/
 [Bb]in/
-[Oo]bj/
+# uncomment obj because obj can be mesh files
+# [Oo]bj/
 [Ll]og/
 
 # Visual Studio 2015 cache/options directory

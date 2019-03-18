@@ -1,8 +1,10 @@
-#include  "scene.h"
-#include  "utils.h"
+#include "scene.h"
+#include "utils.h"
 #include "skybox.h"
+#include "model.h"
 
 SkyBox skyBox;
+Model model;
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -17,6 +19,8 @@ void Init()
 	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
 	glLoadIdentity();
 	skyBox.Init("Res/");
+	//model.Init("Res/Box.obj");
+	model.Init("Res/Dog.ply");
 }
 
 void DrawModel()
@@ -52,5 +56,6 @@ void Draw()
 
 	skyBox.DrawCommand();
 	glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
-	DrawModel();
+	model.Draw();
+	// DrawModel();
 }
