@@ -1,0 +1,25 @@
+ply
+format ascii 1.0
+comment zjl generated
+element vertex 8 
+property float x
+property float y
+property float z
+element face 6
+property list uchar int vertex_indices
+end_header
+-1.0 -1.0 -1.0
+-1.0 +1.0 -1.0
++1.0 +1.0 -1.0
++1.0 -1.0 -1.0
+-1.0 -1.0 -2.0
+-1.0 +1.0 -2.0
++1.0 +1.0 -2.0
++1.0 -1.0 -2.0
+4 1 2 3 4
+4 5 6 7 8
+4 1 2 5 6
+4 3 4 7 8
+4 1 4 5 8
+4 2 3 6 7
+
