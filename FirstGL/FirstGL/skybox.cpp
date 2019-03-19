@@ -35,7 +35,8 @@ void SkyBox::Init(const char* imageDir)
  */
 void SkyBox::DrawCommand()
 {
-	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DEPTH_TEST); // 如果不禁用， 可能挡住别的物体
+	glDisable(GL_LIGHTING); // 如果不禁用，光照可能导致天空盒变黑
 	glEnable(GL_TEXTURE_2D);
 
 	// Front

@@ -127,23 +127,32 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="happly.h" />
+    <ClCompile Include="ground.cpp" />
+    <ClCompile Include="io.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="primitive.cpp" />
+    <ClCompile Include="ply_io.c" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="skybox.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h" />
+    <ClInclude Include="ground.h" />
+    <ClInclude Include="io.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="objloader.h" />
+    <ClInclude Include="ply_io.h" />
+    <ClInclude Include="sbt_image.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="skybox.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

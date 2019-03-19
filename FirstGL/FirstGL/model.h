@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ggl.h"
+#include "sprite.h"
 
 /**
  * 一个网格顶点
@@ -17,20 +18,29 @@ struct Vertex
 	GLfloat normal[3];
 };
 
-class Model
+class Model : public Sprite
 {
 private:
 	std::vector<Vertex> vertices;
 
 	std::vector<int> faceIndices;
 
-	void LoadObj(const char *filePath);
 
-	void LoadPly(const char *filePath);
 public:
+
 	Model();
 
 	void Init(const char *modelPath);
 
-	void Draw();
+	void Draw() override;
+
+	std::vector<Vertex>& GetVertices()
+	{
+		return this->vertices;
+	}
+
+	std::vector<int>& GetFaces()
+	{
+		return this->faceIndices;
+	}
 };

@@ -2,7 +2,11 @@
 #include "utils.h"
 #include "skybox.h"
 #include "model.h"
+#include "ground.h"
+#include "light.h"
 
+DirectionLight light(GL_LIGHT0);
+Ground ground;
 SkyBox skyBox;
 Model model;
 
@@ -21,6 +25,16 @@ void Init()
 	skyBox.Init("Res/");
 	//model.Init("Res/Box.obj");
 	model.Init("Res/Dog.ply");
+	ground.Init();
+
+	light.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
+	light.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
+	light.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	light.SetPosition(0.0f, 1.0f, 0.0f);
+	model.SetAmbientMaterial(0.1f, 0.1f, 0.1f, 1.0f);
+	model.SetDiffuseMaterial(0.4f, 0.4f, 0.4f, 1.0f);
+	model.SetSpecularMaterial(1.0f, 1.0f, 1.0f, 1.0f);
+
 }
 
 void DrawModel()
@@ -54,8 +68,11 @@ void Draw()
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
+	light.Enable();
+
 	skyBox.DrawCommand();
-	glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
+	ground.Draw();
+	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
 	model.Draw();
 	// DrawModel();
 }

@@ -1,5 +1,6 @@
 #include "scene.h"
 
+#include "light.h"
 
 
 void DrawModel2()
@@ -52,4 +53,46 @@ void EnableDirectionAmbient()
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specularMat); // 物体正面镜面反射系数
 	
 	DrawModel2();
+}
+
+Light::Light()
+{
+	
+}
+
+
+void Light::SetAmbientColor(float r, float g, float b, float a)
+{
+	GLfloat ambientColor[] = { r, g, b, a };
+	glLightfv(mLightIdentifier, GL_AMBIENT, ambientColor);
+}
+
+void Light::SetDiffuseColor(float r, float g, float b, float a)
+{
+	GLfloat diffuseColor[] = { r, g, b, a };
+	glLightfv(mLightIdentifier, GL_DIFFUSE, diffuseColor);
+}
+
+void Light::SetSpecularColor(float r, float g, float b, float a)
+{
+	int ab = 0;
+	int c = ab;
+	GLfloat specularColor[] = { r, g, b, a };
+	glLightfv(mLightIdentifier, GL_SPECULAR, specularColor);
+}
+
+void Light::Enable()
+{
+	glEnable(GL_LIGHTING);
+	glEnable(mLightIdentifier);
+}
+
+DirectionLight::DirectionLight(GLenum light)
+{
+}
+
+void DirectionLight::SetPosition(float x, float y, float z)
+{
+	GLfloat pos[] = { x, y, z, 0 };
+	glLightfv(mLightIdentifier, GL_POSITION, pos);
 }

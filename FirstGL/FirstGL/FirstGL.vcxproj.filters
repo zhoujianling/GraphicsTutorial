@@ -42,8 +42,17 @@
     <ClCompile Include="model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="happly.h">
-      <Filter>头文件</Filter>
+    <ClCompile Include="ground.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ply_io.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="io.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +72,24 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="objloader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ply_io.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="io.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="sbt_image.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,5 @@
 #include "utils.h"
+#include "io.h"
 
 unsigned char* DecodeBMP(unsigned char* bmpData, int& width, int& height)
 {
@@ -48,7 +49,9 @@ GLuint CreateTexture2DFromBmp(const char *bmpPath)
 		return 0; // 出错，返回 0 号黑色纹理单元
 	}
 	int width = 0, height = 0;
-	unsigned char *bmpImageData = DecodeBMP(bmpFileData, width, height);
+	unsigned char *bmpImageData = nullptr;
+	LoadRGBImage(bmpPath, bmpImageData, width, height);
+	//= DecodeBMP(bmpFileData, width, height);
 	if (width <= 0 || height <= 0)
 	{
 		fprintf(stderr, "Error, cannot decode image.\n");
@@ -57,7 +60,8 @@ GLuint CreateTexture2DFromBmp(const char *bmpPath)
 	}
 
 	GLuint textureID = CreateTexture2D(bmpImageData, width, height, GL_RGB);
-	delete bmpFileData;
+//	delete bmpFileData;
+	delete bmpImageData;
 	return textureID;
 }
 
