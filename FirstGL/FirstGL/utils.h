@@ -19,3 +19,6 @@ GLuint CreateTexture2DFromBmp(const char *bmpPath);
 
 GLuint CreateDisplayList(std::function<void()> foo);
 
+/** 统计渲染每一帧的时间，需要链接 winmm.lib **/
+float GetFrameTime();
+

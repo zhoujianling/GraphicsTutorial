@@ -6,7 +6,11 @@
 // 指示链接 opengl32.lib 这个库, VS 默认带这个库
 #pragma comment (lib, "opengl32.lib") 
 #pragma comment (lib, "glu32.lib") 
+#pragma comment (lib, "winmm.lib") 
 
+POINT originalPos;
+
+bool rotateView = false;
 
 unsigned char* LoadFile(const char* filePath, int& fileSize)
 {
@@ -40,6 +44,33 @@ LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case WM_KEYDOWN:
+		OnKeyDown(wParam);
+		return 0;
+	case WM_KEYUP:
+		OnKeyUp(wParam);
+		return 0;
+	case WM_RBUTTONDOWN:
+		GetCursorPos(&originalPos);
+		ShowCursor(false);
+		rotateView = true;
+		return 0;
+	case WM_RBUTTONUP:
+		SetCursorPos(originalPos.x, originalPos.y);
+		ShowCursor(true);
+		rotateView = false;
+		return 0;
+	case WM_MOUSEMOVE:
+		if (rotateView)
+		{
+			POINT currentPos;
+			GetCursorPos(&currentPos);
+			int deltaX = currentPos.x - originalPos.x;
+			int deltaY = currentPos.y - originalPos.y;
+			OnMouseMove(deltaX, deltaX);
+			SetCursorPos(originalPos.x, originalPos.y);
+		}
+			return 0;
 	case WM_CLOSE:
 		// 窗口关闭，发送 QUIT 消息
 		PostQuitMessage(0);

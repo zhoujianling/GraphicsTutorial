@@ -4,11 +4,15 @@
 #include "model.h"
 #include "ground.h"
 #include "light.h"
+#include "camera.h"
 
 DirectionLight light(GL_LIGHT0);
+PointLight light1(GL_LIGHT1);
+PointLight light2(GL_LIGHT2);
 Ground ground;
 SkyBox skyBox;
 Model model;
+Camera camera;
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -31,6 +35,19 @@ void Init()
 	light.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
 	light.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
 	light.SetPosition(0.0f, 1.0f, 0.0f);
+	light1.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
+	light1.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
+	light1.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	light1.SetPosition(0.0f, 0.0f, 0.0f); // 点光源放到原点
+	light1.SetConstantAttenuation(0.1f);
+	light1.SetLinearAttenuation(0.2f);
+	// 第二个点光源
+	light2.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
+	light2.SetDiffuseColor(0.1f, 0.4f, 0.7f, 1.0f);
+	light2.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
+	light2.SetPosition(0.0f, 0.0f, -20.0f); // 
+	light2.SetConstantAttenuation(0.5f);
+	light2.SetLinearAttenuation(0.2f);
 	model.SetAmbientMaterial(0.1f, 0.1f, 0.1f, 1.0f);
 	model.SetDiffuseMaterial(0.4f, 0.4f, 0.4f, 1.0f);
 	model.SetSpecularMaterial(1.0f, 1.0f, 1.0f, 1.0f);
@@ -66,13 +83,61 @@ void Draw()
 {
 	glClearColor(0, 0, 0, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	light.Enable();
+	const float frameTime = GetFrameTime();
+	camera.Update(frameTime);
+
+	//light.Enable();
+	light1.Enable();
+	light2.Enable();
 
 	skyBox.DrawCommand();
 	ground.Draw();
 	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
 	model.Draw();
 	// DrawModel();
+}
+
+void OnKeyDown(char code)
+{
+	switch (code)
+	{
+	case 'A':
+		camera.SetMovingLeft(true);
+		break;
+	case 'S':
+		camera.SetMovingBackward(true);
+		break;
+	case 'D':
+		camera.SetMovingRight(true);
+		break;
+	case 'W':
+		camera.SetMovingForward(true);
+		break;
+	}
+}
+
+void OnKeyUp(char code)
+{
+	switch (code)
+	{
+	case 'A':
+		camera.SetMovingLeft(false);
+		break;
+	case 'S':
+		camera.SetMovingBackward(false);
+		break;
+	case 'D':
+		camera.SetMovingRight(false);
+		break;
+	case 'W':
+		camera.SetMovingForward(false);
+		break;
+	}
+}
+
+void OnMouseMove(float deltaX, float deltaY)
+{
+
 }

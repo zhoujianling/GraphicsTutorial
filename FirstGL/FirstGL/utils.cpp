@@ -76,3 +76,13 @@ GLuint CreateDisplayList(std::function<void()> foo)
 	glEndList();
 	return displayList;
 }
+
+float GetFrameTime()
+{
+	static unsigned long latestTime = 0;
+	static unsigned long timeSinceBoot = 0;
+	timeSinceBoot = timeGetTime();
+	unsigned long frameTime = latestTime == 0 ? 0 : timeSinceBoot - latestTime;
+	latestTime = timeSinceBoot;
+	return static_cast<float>(frameTime) / 1000.0f;
+}

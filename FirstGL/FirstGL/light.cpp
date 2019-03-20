@@ -96,3 +96,52 @@ void DirectionLight::SetPosition(float x, float y, float z)
 	GLfloat pos[] = { x, y, z, 0 };
 	glLightfv(mLightIdentifier, GL_POSITION, pos);
 }
+
+PointLight::PointLight(GLenum light)
+{
+	mLightIdentifier = light;
+}
+
+void PointLight::SetPosition(GLfloat x, GLfloat y, GLfloat z)
+{
+	GLfloat pos[] = { x, y, z, 1.00 };
+	glLightfv(mLightIdentifier, GL_POSITION, pos);
+}
+
+void PointLight::SetConstantAttenuation(float v)
+{
+	glLightf(mLightIdentifier, GL_CONSTANT_ATTENUATION, v);
+}
+
+void PointLight::SetLinearAttenuation(float v)
+{
+	glLightf(mLightIdentifier, GL_LINEAR_ATTENUATION, v);
+}
+
+void PointLight::SetQuadricAttenuation(float v)
+{
+	glLightf(mLightIdentifier, GL_QUADRATIC_ATTENUATION, v);
+}
+
+SpotLight::SpotLight(GLenum light) : PointLight(light)
+{
+}
+
+void SpotLight::SetDirection(float x, float y, float z)
+{
+	float dir[] = { x, y, z };
+	glLightfv(mLightIdentifier, GL_SPOT_DIRECTION, dir);
+}
+
+void SpotLight::SetExponent(float v)
+{
+	glLightf(mLightIdentifier, GL_SPOT_EXPONENT, v);
+}
+
+void SpotLight::SetCufoff(float v)
+{
+	glLightf(mLightIdentifier, GL_SPOT_CUTOFF, v);
+}
+
+
+

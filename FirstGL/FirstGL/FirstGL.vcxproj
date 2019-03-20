@@ -127,9 +127,11 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="ground.cpp" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="light.cpp" />
+    <ClCompile Include="linearmath.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="primitive.cpp" />
@@ -142,10 +144,12 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="ggl.h" />
     <ClInclude Include="ground.h" />
     <ClInclude Include="io.h" />
     <ClInclude Include="light.h" />
+    <ClInclude Include="linearmath.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="objloader.h" />
     <ClInclude Include="ply_io.h" />
