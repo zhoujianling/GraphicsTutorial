@@ -1,8 +1,10 @@
 #include "skybox.h"
 #include "utils.h"
 
-void SkyBox::Init(const char* imageDir)
+void SkyBox::Init(const char* imageDir, Camera *c)
 {
+	this->currCamera = c;
+
 	char temp[256];
 	strcpy(temp, imageDir);
 	strcat(temp, "Front.bmp");
@@ -158,6 +160,10 @@ void SkyBox::DrawCommand()
 	glTexCoord2f(0.f, 1.f);
 	glVertex3f(-0.5f, -.5f, +0.5f);
 	glEnd();
+
+	glEnable(GL_DEPTH_TEST); // 如果不禁用， 可能挡住别的物体
+	glEnable(GL_LIGHTING); // 如果不禁用，光照可能导致天空盒变黑
+	glEnable(GL_TEXTURE_2D);
 }
 
 /*
@@ -167,5 +173,15 @@ void SkyBox::DrawCommand()
  */
 void SkyBox::Draw()
 {
+
+	//glLoadIdentity();
+	//glPushMatrix();
+	//glTranslatef(-currCamera->GetPosition().position[0],
+	//	-currCamera->GetPosition().position[1], 
+	//	-currCamera->GetPosition().position[2]);
+	//glPopMatrix();
+	//glLoadIdentity();
+
 	glCallList(mFastDrawCall);
+
 }

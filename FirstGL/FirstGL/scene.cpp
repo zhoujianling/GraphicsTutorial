@@ -26,7 +26,7 @@ void Init()
 	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
 	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
 	glLoadIdentity();
-	skyBox.Init("Res/");
+	skyBox.Init("Res/", &camera);
 	//model.Init("Res/Box.obj");
 	model.Init("Res/Dog.ply");
 	ground.Init();
@@ -90,9 +90,11 @@ void Draw()
 
 	//light.Enable();
 	light1.Enable();
+	light1.Update(camera.GetPosition().position[0], camera.GetPosition().position[1], camera.GetPosition().position[2]);
 	light2.Enable();
+	light2.Update(camera.GetPosition().position[0], camera.GetPosition().position[1], camera.GetPosition().position[2]);
 
-	skyBox.DrawCommand();
+	skyBox.Draw();
 	ground.Draw();
 	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
 	model.Draw();
@@ -139,5 +141,10 @@ void OnKeyUp(char code)
 
 void OnMouseMove(float deltaX, float deltaY)
 {
-
+	// 在 x 轴滑动，相机沿 y轴转动，位移值近似逼近 yaw 的角度
+	float angleRotateByYAxis = deltaX / 1000.0f; 
+	// 在 y 轴滑动，相机沿 x轴转动，位移值近似逼近 pitch 的角度
+	float angleRotateByXAxis = deltaY / 1000.0f; 
+	camera.Yaw(- angleRotateByYAxis);
+	camera.Pitch(- angleRotateByXAxis);
 }

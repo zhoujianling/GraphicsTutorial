@@ -36,5 +36,16 @@ public:
 	void SetMovingForward(const bool& l) { this->movingForwards= l; }
 
 	void SetMovingBackward(const bool& l) { this->movingBackwards = l; }
+
+	Vector3f GetPosition() const { return this->mPos; }
+
+	void Pitch(float angle);
+
+	void Yaw(float angle);
+
+	/**
+	 * 让摄像机任意角度旋转， 相机的位置不变，相当于相机的视点改变了
+	 */
+	void RotateView(float angle, float x, float y, float z);
 };
 

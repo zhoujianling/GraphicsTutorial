@@ -67,7 +67,7 @@ LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
 			GetCursorPos(&currentPos);
 			int deltaX = currentPos.x - originalPos.x;
 			int deltaY = currentPos.y - originalPos.y;
-			OnMouseMove(deltaX, deltaX);
+			OnMouseMove(deltaX, deltaY);
 			SetCursorPos(originalPos.x, originalPos.y);
 		}
 			return 0;

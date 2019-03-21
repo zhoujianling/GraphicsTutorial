@@ -47,6 +47,9 @@ public:
  */
 class PointLight: public Light
 {
+private:
+	float position[3];
+
 public:
 	PointLight(GLenum light);
 
@@ -60,6 +63,11 @@ public:
 
 	// 设置二次方衰减系数
 	void SetQuadricAttenuation(float v);
+
+	/**
+	 * 参数是摄像机的位置
+	 */
+	void Update(float x, float y, float z);
 };
 
 // 聚光灯
