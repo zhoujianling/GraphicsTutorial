@@ -5,6 +5,8 @@
 #include "ground.h"
 #include "light.h"
 #include "camera.h"
+#include "particle.h"
+#include <iostream>
 
 DirectionLight light(GL_LIGHT0);
 PointLight light1(GL_LIGHT1);
@@ -13,6 +15,7 @@ Ground ground;
 SkyBox skyBox;
 Model model;
 Camera camera;
+//Particle particle;
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -20,6 +23,9 @@ Camera camera;
  */
 void Init()
 {
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	//std::cout << "Render: " << glGetString(GL_RENDER) << std::endl;
 	// OpenGl 存在当前矩阵的概念，通过 glMatrixMode 设置当前矩阵的 模式
 	glMatrixMode(GL_PROJECTION);
 	// ?, 画布的宽高比， 最近可以看到的距离，最远可以看到的距离 
@@ -54,29 +60,6 @@ void Init()
 
 }
 
-void DrawModel()
-{
-	glBegin(GL_QUADS); 
-	glColor4ub(255, 50, 0, 255); glVertex3d(-0.0f, -0.0f, -2.5f); 
-
-	glColor4ub(255, 50, 0, 255); glVertex3d(-0.0f, +0.2f, -2.5f); 
-
-	glColor4ub(255, 50, 0, 255); glVertex3d(0.2f, +0.2f, -2.5f); 
-
-	glColor4ub(255, 50, 0, 255); glVertex3d(0.2f, 0.0f, -2.5f); 
-	// 绘制了第一个四边形
-
-	glColor4ub(255, 250, 0, 255); glVertex3d(-0.0f, -0.0f, -3.5f); 
-
-	glColor4ub(255, 250, 0, 255); glVertex3d(-0.0f, +0.2f, -3.5f); 
-
-	glColor4ub(255, 250, 0, 255); glVertex3d(0.2f, +0.2f, -3.5f); 
-
-	glColor4ub(255, 250, 0, 255); glVertex3d(0.2f, 0.0f, -3.5f); 
-	// 绘制了第一个四边形
-	glEnd(); 
-}
-
 
 
 void Draw()
@@ -90,14 +73,15 @@ void Draw()
 
 	//light.Enable();
 	light1.Enable();
-	light1.Update(camera.GetPosition().position[0], camera.GetPosition().position[1], camera.GetPosition().position[2]);
+	light1.Update(camera.GetPosition().v1, camera.GetPosition().v2, camera.GetPosition().v3);
 	light2.Enable();
-	light2.Update(camera.GetPosition().position[0], camera.GetPosition().position[1], camera.GetPosition().position[2]);
+	light2.Update(camera.GetPosition().v1, camera.GetPosition().v2, camera.GetPosition().v3);
 
 	skyBox.Draw();
 	ground.Draw();
 	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
 	model.Draw();
+	//particle.Draw();
 	// DrawModel();
 }
 

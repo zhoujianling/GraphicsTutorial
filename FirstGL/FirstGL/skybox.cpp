@@ -173,15 +173,13 @@ void SkyBox::DrawCommand()
  */
 void SkyBox::Draw()
 {
-
-	//glLoadIdentity();
-	//glPushMatrix();
-	//glTranslatef(-currCamera->GetPosition().position[0],
-	//	-currCamera->GetPosition().position[1], 
-	//	-currCamera->GetPosition().position[2]);
-	//glPopMatrix();
-	//glLoadIdentity();
-
+	glPushMatrix();
+	glTranslatef(currCamera->GetPosition().v1,
+		currCamera->GetPosition().v2, 
+		currCamera->GetPosition().v3);
 	glCallList(mFastDrawCall);
+	glPopMatrix();
+	//glLoadIdentity();
+
 
 }

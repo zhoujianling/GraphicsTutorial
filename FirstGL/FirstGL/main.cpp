@@ -1,10 +1,10 @@
 #include "ggl.h"
 #include "scene.h"
 #include <Windows.h>
-#include <gl/GL.h>
 #include "utils.h"
 // 指示链接 opengl32.lib 这个库, VS 默认带这个库
 #pragma comment (lib, "opengl32.lib") 
+//#pragma comment (lib, "glew32.lib") 
 #pragma comment (lib, "glu32.lib") 
 #pragma comment (lib, "winmm.lib") 
 

@@ -2,56 +2,58 @@
 #include "linearmath.h"
 #include <cmath>
 
-Vector3f::Vector3f(): position{0, 0, 0}
+Vector3f::Vector3f(): 
+v1(0), v2(0), v3(0)
 {
 }
 
-Vector3f::Vector3f(float x, float y, float z): position{x, y, z}
+Vector3f::Vector3f(float x, float y, float z): 
+v1(x), v2(y), v3(z)
 {
 }
 
 Vector3f Vector3f::mul(const Vector3f& b)
 {
 	Vector3f r;
-	r.position[0] = position[0] * b.position[0] + position[0] * b.position[0];
-	r.position[1] = position[1] * b.position[1] + position[1] * b.position[1];
-	r.position[2] = position[2] * b.position[2] + position[2] * b.position[2];
+	r.v1 = v1 * b.v1 + v1 * b.v1;
+	r.v2 = v2 * b.v2 + v2 * b.v2;
+	r.v3 = v3 * b.v3 + v3 * b.v3;
 	return r;
 }
 
 Vector3f Vector3f::cross(const Vector3f& b)
 {
 	Vector3f r;
-	r.position[0] = position[1] * b.position[2] - position[2] * b.position[1];
-	r.position[1] = position[2] * b.position[0] - position[0] * b.position[2];
-	r.position[2] = position[0] * b.position[1] - position[1] * b.position[0];
+	r.v1 = v2 * b.v3 - v3 * b.v2;
+	r.v2 = v3 * b.v1 - v1 * b.v3;
+	r.v3 = v1 * b.v2 - v2 * b.v1;
 	return r;
 }
 
 Vector3f Vector3f::add(const Vector3f& b)
 {
 	Vector3f r;
-	r.position[0] = position[0] + b.position[0];
-	r.position[1] = position[1] + b.position[1];
-	r.position[2] = position[2] + b.position[2];
+	r.v1 = v1 + b.v1;
+	r.v2 = v2 + b.v2;
+	r.v3 = v3 + b.v3;
 	return r;
 }
 
 Vector3f Vector3f::sub(const Vector3f& b)
 {
 	Vector3f r;
-	r.position[0] = position[0] - b.position[0];
-	r.position[1] = position[1] - b.position[1];
-	r.position[2] = position[2] - b.position[2];
+	r.v1 = v1 - b.v1;
+	r.v2 = v2 - b.v2;
+	r.v3 = v3 - b.v3;
 	return r;
 }
 
 Vector3f Vector3f::scale(float s)
 {
 	Vector3f r;
-	r.position[0] = position[0] * s;
-	r.position[1] = position[1] * s;
-	r.position[2] = position[2] * s;
+	r.v1 = v1 * s;
+	r.v2 = v2 * s;
+	r.v3 = v3 * s;
 	return r;
 }
 
@@ -77,16 +79,16 @@ Vector3f Vector3f::operator+(const Vector3f& v)
 
 float Vector3f::length() const
 {
-	return sqrt(position[0] * position[0] + position[1] * position[1] + position[2] * position[2]);
+	return sqrt(v1 * v1 + v2 * v2 + v3 * v3);
 }
 
 void Vector3f::normalize()
 {
 	const auto& length = this->length();
 	if (length == 0) return;
-	position[0] = position[0] / length;
-	position[1] = position[1] / length;
-	position[2] = position[2] / length;
+	v1 = v1 / length;
+	v2 = v2 / length;
+	v3 = v3 / length;
 }
 
 Matrix33f::Matrix33f(float val11, float val12, float val13, float val21, float val22, float val23, float val31,
@@ -119,9 +121,9 @@ Matrix33f::Matrix33f(float array[9])
 /** Matrix33 * Vector3 **/
 Vector3f Matrix33f::mul(const Vector3f& vector)
 {
-	const auto vx = vector.position[0];
-	const auto vy = vector.position[1];
-	const auto vz = vector.position[2];
+	const auto vx = vector.v1;
+	const auto vy = vector.v2;
+	const auto vz = vector.v3;
 	const auto nx = vx * v11 + vy * v12 + vz * v13;
 	const auto ny = vx * v21 + vy * v22 + vz * v23;
 	const auto nz = vx * v31 + vy * v32 + vz * v33;

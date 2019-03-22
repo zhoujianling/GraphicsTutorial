@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "io.h"
+#include "iostream"
 
 unsigned char* DecodeBMP(unsigned char* bmpData, int& width, int& height)
 {
@@ -77,6 +78,26 @@ GLuint CreateDisplayList(std::function<void()> foo)
 	return displayList;
 }
 
+// 代码生成 size x size 的纹理
+GLuint CreateProcedureTexture(int size)
+{
+	unsigned char *imageData = new unsigned char[size * size * 4];
+	for (int x = 0; x < size; x ++)
+	{
+		for (int y = 0; y < size; y ++)
+		{
+			int i = (x + y * size) * 4;
+			imageData[i + 0] = 255;
+			imageData[i + 1] = 255;
+			imageData[i + 2] = 255;
+			imageData[i + 3] = 255;
+		}
+	}
+	GLuint texture = CreateTexture2D(imageData, size, size, GL_RGBA);
+	delete imageData;
+	return texture;
+}
+
 float GetFrameTime()
 {
 	static unsigned long latestTime = 0;
@@ -86,3 +107,4 @@ float GetFrameTime()
 	latestTime = timeSinceBoot;
 	return static_cast<float>(frameTime) / 1000.0f;
 }
+

@@ -60,6 +60,9 @@
     <ClCompile Include="camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="particle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h">
@@ -102,6 +105,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="linearmath.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="particle.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

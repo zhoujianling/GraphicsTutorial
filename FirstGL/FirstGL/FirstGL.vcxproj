@@ -134,6 +134,7 @@
     <ClCompile Include="linearmath.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="particle.cpp" />
     <ClCompile Include="primitive.cpp" />
     <ClCompile Include="ply_io.c" />
     <ClCompile Include="scene.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="linearmath.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="objloader.h" />
+    <ClInclude Include="particle.h" />
     <ClInclude Include="ply_io.h" />
     <ClInclude Include="sbt_image.h" />
     <ClInclude Include="scene.h" />

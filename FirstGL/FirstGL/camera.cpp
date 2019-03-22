@@ -37,21 +37,21 @@ void Camera::Update(float deltaTime)
 	if (movingForwards)
 	{
 		const auto& delta = forwardDirection * deltaTime * moveSpeed;
-		std::cout << "x: " << delta.position[0] << " y: " << delta.position[1] << " z: " << delta.position[2] << std::endl;
+		std::cout << "x: " << delta.v1 << " y: " << delta.v2 << " z: " << delta.v3 << std::endl;
 		mPos = mPos + delta;
 		mViewCenter = mViewCenter + delta;
 	}
 	if (movingBackwards)
 	{
 		const auto& delta = forwardDirection * deltaTime * moveSpeed;
-		std::cout << "x: " << delta.position[0] << " y: " << delta.position[1] << " z: " << delta.position[2] << std::endl;
+		std::cout << "x: " << delta.v1 << " y: " << delta.v2 << " z: " << delta.v3 << std::endl;
 		mPos = mPos - delta;
 		mViewCenter = mViewCenter - delta;
 	}
 	glLoadIdentity();
-	gluLookAt(mPos.position[0], mPos.position[1], mPos.position[2],
-		mViewCenter.position[0], mViewCenter.position[1], mViewCenter.position[2],
-		mUp.position[0], mUp.position[1], mUp.position[2]);
+	gluLookAt(mPos.v1, mPos.v2, mPos.v3,
+		mViewCenter.v1, mViewCenter.v2, mViewCenter.v3,
+		mUp.v1, mUp.v2, mUp.v3);
 }
 
 void Camera::Pitch(float angle)
@@ -60,12 +60,12 @@ void Camera::Pitch(float angle)
 	viewDirection.normalize();
 	auto rightDirection = viewDirection.cross(mUp);
 	rightDirection.normalize();
-	RotateView(angle, rightDirection.position[0], rightDirection.position[1], rightDirection.position[2]);
+	RotateView(angle, rightDirection.v1, rightDirection.v2, rightDirection.v3);
 }
 
 void Camera::Yaw(float angle)
 {
-	RotateView(angle, mUp.position[0], mUp.position[1], mUp.position[2]);
+	RotateView(angle, mUp.v1, mUp.v2, mUp.v3);
 }
 
 /**

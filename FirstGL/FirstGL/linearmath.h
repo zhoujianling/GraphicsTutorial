@@ -2,7 +2,11 @@
 
 struct Vector3f
 {
-	float position[3];
+	float v1;
+
+	float v2;
+
+	float v3;
 
 	Vector3f();
 
