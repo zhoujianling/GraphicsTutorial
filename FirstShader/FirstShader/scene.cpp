@@ -1,6 +1,8 @@
 #include "scene.h"
 #include "utils.h"
+#include "Include/glm/glm.hpp"
 #include <iostream>
+#include "Include/glm/gtc/type_ptr.hpp"
 
 GLuint vbo;
 GLuint program;
@@ -9,6 +11,11 @@ GLint modelMatrixLocation;
 GLint viewMatrixLocation;
 GLint projectionMatrixLocation;
 
+glm::mat4 modelMatrix;
+glm::mat4 viewMatrix;
+glm::mat4 projectionMatrix;
+
+void InitVBO();
 
 /**
  * 屏幕正中心是世界坐标系原点
@@ -18,6 +25,15 @@ void Init()
 {
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	glewInit();
+	if (glewInit()) {
+		std::cerr 
+		<< "Unable to initialize GLEW ... exiting" 
+		<< std::endl; 
+		exit(EXIT_FAILURE);
+	}
+	InitVBO();
+
 	//std::cout << "Render: " << glGetString(GL_RENDER) << std::endl;
 	// OpenGl 存在当前矩阵的概念，通过 glMatrixMode 设置当前矩阵的 模式
 	glMatrixMode(GL_PROJECTION);
@@ -52,6 +68,9 @@ void InitVBO()
 		0.2f, -0.2f, -0.6f, 1.0f,
 		0.0f, 0.2f, -0.6f, 1.0f
 	};
+	glewInit();
+	printf("glBegin entrance: %p\n", glBegin);
+	printf("glGenBuffer entrance: %p\n", glGenBuffers);
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertexData, GL_STATIC_DRAW);
@@ -60,7 +79,7 @@ void InitVBO()
 	unsigned char *shaderCode = LoadFile("Res/test.vs", fileSize);
 	GLuint vsShader = CompileShader(GL_VERTEX_SHADER, (char*)shaderCode);
 	delete shaderCode;
-
+	
 	shaderCode = LoadFile("Res/test.fs", fileSize);
 	GLuint fsShader = CompileShader(GL_FRAGMENT_SHADER, (char*)shaderCode);
 	delete shaderCode;
@@ -81,6 +100,26 @@ void Draw()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	const float frameTime = GetFrameTime();
+
+	modelMatrix = glm::identity<glm::mat4>();
+	viewMatrix = glm::identity<glm::mat4>();
+	projectionMatrix = glm::identity<glm::mat4>();
+
+	// 区分正反面：逆时针方向则为图形的正面
+	glUseProgram(program);
+	// 为 GPU 上的顶点着色程序传递数据（几个matrix)
+	// 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
+	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glEnableVertexAttribArray(positionLocation);
+	// 第一个传插槽， 第二个 数据有几个分量， 第三个 数据类型， 第四个 是否归一化， 第五个 数据大小， 第六个 
+	glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, nullptr);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glUseProgram(0);
+
 	// camera.Update(frameTime);
 
 	// light1.Enable();

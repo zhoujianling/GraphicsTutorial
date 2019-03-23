@@ -1,11 +1,12 @@
-#include "ggl.h"
 #include "scene.h"
+#include "ggl.h"
 #include <Windows.h>
+#include <cstdio>
 #include "utils.h"
-// 指示链接 opengl32.lib 这个库, VS 默认带这个库
-#pragma comment (lib, "opengl32.lib") 
+// // 指示链接 opengl32.lib 这个库, VS 默认带这个库
 #pragma comment (lib, "glew32.lib") 
 #pragma comment (lib, "glu32.lib") 
+#pragma comment (lib, "opengl32.lib") 
 #pragma comment (lib, "winmm.lib") 
 
 POINT originalPos;
@@ -127,11 +128,14 @@ HDC SetOpenGlEnv(HWND hwnd)
  * windows 窗口程序的入口函数
  */
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, int nShowCommand) {
+	char temp[2048];
+	GetSystemDirectory(temp, 2048);
+	printf("system directory: %s\n", temp);
 	// 注册窗口
 	WNDCLASSEX windowClass; // 这是一个结构体, 描述窗口信息
 	SetWindowContent(&windowClass, hInstance);
 	auto atom = RegisterClassEx(&windowClass); // 注册窗口
-
+	
 	RECT rect;
 	rect.left = 0;
 	rect.right = 800;
@@ -141,19 +145,19 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, 0);
 	const int windowWidth = rect.right - rect.left;
 	const int windowHeight = rect.bottom - rect.top;
-
+	
 	if (atom == 0) {
 		MessageBox(nullptr, "notice", "Error", MB_OK);
 		return 0;
 	}
-
+	
 	HWND hwnd = CreateWindowEx(NULL, "GLWindow", "GL", WS_OVERLAPPEDWINDOW,
 		100, 100, windowWidth, windowHeight,
 		nullptr, nullptr, hInstance, nullptr);
 	const auto hdc = SetOpenGlEnv(hwnd); // 初始化 OpenGL 渲染环境
 	ShowWindow(hwnd, SW_SHOW); //
 	UpdateWindow(hwnd); // 画面可能是脏的，需要重新刷新一下
-
+	
 	MSG msg;
 	// 自己处理事件， 让程序不退出
 	while (true)

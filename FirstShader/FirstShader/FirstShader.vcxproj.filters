@@ -18,19 +18,16 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="scene.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="utils.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="io.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="linearmath.cpp">
+    <ClCompile Include="scene.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="ply_io.c">
+    <ClCompile Include="Include\ply_io.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,24 +44,27 @@
     <ClInclude Include="io.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="linearmath.h">
+    <ClInclude Include="Include\objloader.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="objloader.h">
+    <ClInclude Include="Include\ply_io.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="ply_io.h">
+    <ClInclude Include="Include\sbt_image.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="sbt_image.h">
+    <ClInclude Include="Include\glm\ext.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\glm\glm.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test.vs">
+    <None Include="Res\test.fs">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="test.fs">
+    <None Include="Res\test.vs">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>
