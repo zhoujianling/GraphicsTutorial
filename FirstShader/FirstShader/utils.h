@@ -39,3 +39,12 @@ GLuint CompileShader(GLenum shaderType, const char *shaderCode);
  * @param fsShader: fragment shader
  */
 GLuint CreateShaderProgram(GLuint vsShader, GLuint fsShader);
+
+/**
+ * 创建 Buffer Object
+ * @param bufferType 缓冲区类型
+ * @param size 缓冲区的大小
+ * @param usage static_draw 还是 dynamic_draw
+ * @param data 具体的数据
+ */
+GLuint CreateBufferObject(GLenum bufferType, GLsizeiptr size, GLenum usage, void *data = nullptr);

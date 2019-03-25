@@ -153,3 +153,14 @@ GLuint CreateShaderProgram(GLuint vsShader, GLuint fsShader)
 	}
 	return programId;
 }
+
+GLuint CreateBufferObject(GLenum bufferType, GLsizeiptr size, GLenum usage, void* data)
+{
+	GLuint bufferObject;
+	glGenBuffers(1, &bufferObject);
+	glBindBuffer(bufferType, bufferObject);
+	glBufferData(bufferType, size, data, usage);
+	// 重置当前缓冲区指向
+	glBindBuffer(bufferType, 0);
+	return bufferObject;
+}

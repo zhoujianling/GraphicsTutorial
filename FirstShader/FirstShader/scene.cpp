@@ -77,31 +77,23 @@ void Init()
 void InitVBO()
 {
 	float vertexData[] = {
-		/*XYZU*/-0.2f, -0.2f, -0.6f, 1.0f, /*RGBA*/ 1.0f, 1.0f, 1.0f, 1.0f, /*UV*/ 0.0f, 0.0f,
-		0.2f, -0.2f, -0.6f, 1.0f,/**/  0.0f, 1.0f, 0.0f, 1.0f,/**/  1.0f, 0.0f,
+		/*XYZU*/-0.2f, -0.2f, -0.6f, 1.0f, /*RGBA*/ 1.0f, 1.0f, 1.0f, 1.0f, /*UV*/ 0.0f, 0.5f,
+		0.2f, -0.2f, -0.6f, 1.0f,/**/  1.0f, 0.0f, 1.0f, 0.0f,/**/  1.0f, 0.5f,
 		0.0f, 0.2f, -0.6f, 1.0f,/**/  1.0f, 0.0f, 0.0f, 1.0f,/**/  0.5f, 1.0f
 	};
-	glewInit();
-	printf("glBegin entrance: %p\n", glBegin);
-	printf("glGenBuffer entrance: %p\n", glGenBuffers);
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	// 每描述一个顶点要用 10个float，三个顶点30个float
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 30, vertexData, GL_STATIC_DRAW);
-	// 重置当前缓冲区指向
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+	vbo = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(float) * 30, GL_STATIC_DRAW, vertexData);
 }
 
 void InitEBO()
 {
 	unsigned short indices[] = { 0, 1, 2 };
-	glGenBuffers(1, &ebo);
-	// 将当前缓冲区指向ebo
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, indices, GL_STATIC_DRAW);
-	// 重置当前缓冲区指向
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, GL_STATIC_DRAW, indices);
+	// glGenBuffers(1, &ebo);
+	// // 将当前缓冲区指向ebo
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, indices, GL_STATIC_DRAW);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
