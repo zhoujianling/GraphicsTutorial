@@ -1,6 +1,8 @@
 #pragma once
 #include "ggl.h"
 
+void SetViewPortSize(float width, float height);
+
 void Init();
 
 void Draw();

@@ -3,6 +3,9 @@
 #include "Include/glm/glm.hpp"
 #include <iostream>
 #include "Include/glm/gtc/type_ptr.hpp"
+#include "ground.h"
+
+Ground ground;
 
 GLuint vbo;
 // 指示如何组织顶点数据来绘制图元
@@ -28,31 +31,29 @@ void InitEBO();
 
 void InitShader();
 
+void SetViewPortSize(float width, float height)
+{
+	glViewport(0, 0, width, height);
+	projectionMatrix = glm::perspective(60.0f, width / height, 0.1f, 1000.0f);
+}
+
 /**
  * 屏幕正中心是世界坐标系原点
  * z 轴指向屏幕外面, 所以 z 坐标要设负值
  */
 void Init()
 {
-	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
-	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	glewInit();
-	if (glewInit()) {
-		std::cerr 
-		<< "Unable to initialize GLEW ... exiting" 
-		<< std::endl; 
-		exit(EXIT_FAILURE);
-	}
+	gluLookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+	ground.Init();
 	InitVBO();
 	InitEBO();
 	InitShader();
 
-	//std::cout << "Render: " << glGetString(GL_RENDER) << std::endl;
 	// OpenGl 存在当前矩阵的概念，通过 glMatrixMode 设置当前矩阵的 模式
-	glMatrixMode(GL_PROJECTION);
-	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
-	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
-	glLoadIdentity();
+//	glMatrixMode(GL_PROJECTION);
+//	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
+//	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
+//	glLoadIdentity();
 
 	// light.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
 	// light.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
@@ -89,11 +90,6 @@ void InitEBO()
 {
 	unsigned short indices[] = { 0, 1, 2 };
 	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, GL_STATIC_DRAW, indices);
-	// glGenBuffers(1, &ebo);
-	// // 将当前缓冲区指向ebo
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	// glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, indices, GL_STATIC_DRAW);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 
@@ -132,31 +128,35 @@ void Draw()
 
 	modelMatrix = glm::identity<glm::mat4>();
 	viewMatrix = glm::identity<glm::mat4>();
-	projectionMatrix = glm::identity<glm::mat4>();
+	viewMatrix = glm::scale(viewMatrix, { 1.0, -1.0, 1.0 });
+	//projectionMatrix = glm::identity<glm::mat4>();
 
-	glUseProgram(program);
-	// 为 GPU 上的顶点着色程序传递数据（几个matrix)
-	// 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
-	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glBindTexture(GL_TEXTURE_2D, textureID);
-	glUniform1i(textureLocation, 0);
+	ground.Draw(viewMatrix, projectionMatrix);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glEnableVertexAttribArray(positionLocation);
-	// 第一个传插槽， 第二个 数据有几个分量， 第三个 数据类型， 第四个 是否归一化， 第五个 数据大小， 第六个 
-	glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, nullptr);
-	glEnableVertexAttribArray(colorLocation);
-	glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 4));
-	glEnableVertexAttribArray(texcoordLocation);
-	glVertexAttribPointer(texcoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 8));
-	// glDrawArrays(GL_TRIANGLES, 0, 3);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	// 传递数据到显卡进行绘制，每 3 个顶点画一个三角形， 最后一个参数是数据的起始位置
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	glUseProgram(0);
+	// glUseProgram(program);
+	// // 为 GPU 上的顶点着色程序传递数据（几个matrix)
+	// // 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
+	// glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+	// glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	// glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	// glBindTexture(GL_TEXTURE_2D, textureID);
+	// glUniform1i(textureLocation, 0);
+	//
+	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	// glEnableVertexAttribArray(positionLocation);
+	// // 第一个传插槽， 第二个 数据有几个分量， 第三个 数据类型， 第四个 是否归一化， 第五个 数据大小， 第六个 
+	// glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, nullptr);
+	// glEnableVertexAttribArray(colorLocation);
+	// glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 4));
+	// glEnableVertexAttribArray(texcoordLocation);
+	// glVertexAttribPointer(texcoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 8));
+	// // glDrawArrays(GL_TRIANGLES, 0, 3);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	// // 传递数据到显卡进行绘制，每 3 个顶点画一个三角形， 最后一个参数是数据的起始位置
+	// glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	// glUseProgram(0);
+
 
 	// camera.Update(frameTime);
 

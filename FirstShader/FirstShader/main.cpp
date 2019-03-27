@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <cstdio>
 #include "utils.h"
+#include <iostream>
 // // 指示链接 opengl32.lib 这个库, VS 默认带这个库
 #pragma comment (lib, "glew32.lib") 
 #pragma comment (lib, "glu32.lib") 
@@ -118,6 +119,17 @@ HDC SetOpenGlEnv(HWND hwnd)
 	SetPixelFormat(hdc, pixelFormat, &pfd);
 	HGLRC rc = wglCreateContext(hdc);// handle GL render context 创建渲染环境
 	wglMakeCurrent(hdc, rc); // 使渲染环境生效
+	glewInit();
+	if (glewInit()) {
+		std::cerr 
+		<< "Unable to initialize GLEW ... exiting" 
+		<< std::endl; 
+		exit(EXIT_FAILURE);
+	}
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
+	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
+	SetViewPortSize(800.0f, 600.0f);
+
 	Init();
 
 	return hdc;

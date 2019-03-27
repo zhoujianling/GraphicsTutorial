@@ -30,6 +30,15 @@
     <ClCompile Include="Include\ply_io.c">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ground.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene.h">
@@ -59,12 +68,27 @@
     <ClInclude Include="Include\glm\glm.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\test.fs">
       <Filter>资源文件</Filter>
     </None>
     <None Include="Res\test.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="ground.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="ground.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

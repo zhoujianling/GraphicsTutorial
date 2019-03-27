@@ -135,24 +135,32 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ground.cpp" />
     <ClCompile Include="Include\ply_io.c" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="scene.cpp" />
+    <ClCompile Include="shader.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ggl.h" />
+    <ClInclude Include="ground.h" />
     <ClInclude Include="Include\glm\ext.hpp" />
     <ClInclude Include="Include\glm\glm.hpp" />
     <ClInclude Include="Include\objloader.h" />
     <ClInclude Include="Include\ply_io.h" />
     <ClInclude Include="Include\sbt_image.h" />
     <ClInclude Include="io.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="scene.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ground.frag" />
+    <None Include="ground.vert" />
     <None Include="Res\test.fs" />
     <None Include="Res\test.vs" />
   </ItemGroup>
