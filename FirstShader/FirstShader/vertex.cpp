@@ -1,4 +1,4 @@
-#include "TriMesh.h"
+#include "vertex.h"
 #include "utils.h"
 // #include "happly.h"
 #include "io.h"
@@ -12,6 +12,7 @@ void VertexBuffer::SetVertexCount(int c)
 	}
 	this->mVertexCount = c;
 	this->mVertices = new Vertex[c];
+	memset(mVertices, 0, c * sizeof(Vertex));
 	mVBO = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(Vertex) * mVertexCount, GL_STATIC_DRAW, nullptr);
 }
 
@@ -62,54 +63,25 @@ Vertex& VertexBuffer::Get(int index)
 	return mVertices[index];
 }
 
-TriMesh::TriMesh()
+ElementBuffer::ElementBuffer():indices_buffer_(nullptr), length_(0)
 {
-	
 }
 
-// void TriMesh::Init(const char* modelPath)
-// {
-// 	int nFileSize = 0;
-// 	int len = strlen(modelPath);
-// 	if (len < 4) return;
-// 	const auto &suffix = std::string(modelPath + len - 3);
-// 	if (suffix == "obj")
-// 	{
-// 		LoadObj(modelPath, this);
-// 	} else if (suffix == "ply")
-// 	{
-// 		LoadPly(modelPath, this);
-// 	} else
-// 	{
-// 		std::cerr << "Unsupported types:" << modelPath << std::endl;
-// 		return;
-// 	}
-// }
-//
-// void TriMesh::Draw()
-// {
-// 	glEnable(GL_LIGHTING);
-// 	glMaterialfv(GL_FRONT, GL_AMBIENT, mAmbientMaterial);
-// 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mDiffuseMaterial);
-// 	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecularMaterial);
-// 	glPushMatrix();
-// 	// 要后移一点，不然容易跟相机重合，看不到模型
-// 	glTranslatef(0.0f, 0.0f, -3.0f);
-// 	glRotated(90.0, 0, 1.0, 0);
-// 	glBegin(GL_TRIANGLES);
-// 	// 假设绘制的是三角化的网格模型
-// 	for (auto i = 0; i < faceIndices.size(); i ++)
-// 	{
-// 		Vertex vertex = vertices[faceIndices[i]];
-// 		//glTexCoord2fv(vertex.texcoord);
-// 		//glNormal3fv(vertex.normal);
-// 		glColor3ub(125, 200, 0);
-// 		glVertex3fv(vertex.position);
-// 		
-// 	}
-// 	glEnd();
-// 	glPopMatrix();
-// }
-//
-//
-//
+void ElementBuffer::SetBufferLength(int len)
+{
+	length_ = len;
+	indices_buffer_ = new unsigned int[len];
+	memset(indices_buffer_, 0, len * sizeof(unsigned int));
+	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, len * sizeof(unsigned int), GL_STATIC_DRAW, nullptr);
+}
+
+void ElementBuffer::Bind()
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+}
+
+void ElementBuffer::UnBind()
+{
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+

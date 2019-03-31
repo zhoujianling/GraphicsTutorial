@@ -1,5 +1,5 @@
 #include "ground.h"
-#include "Include/glm/gtc/type_ptr.hpp"
+
 
 using glm::mat4;
 using glm::identity;
@@ -9,9 +9,9 @@ void Ground::Init()
 {
 	//modelMatrix = identity<mat4>();
 	modelMatrix = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
+	//printGLMMatrix(modelMatrix);
 	buffer = new VertexBuffer();
 	buffer->SetVertexCount(1600);
-	//Vertex vertices[1600];
 	for (int z = 0; z < 20; ++z)
 	{
 		float zStart = 100.0f - z * 10.0f;
@@ -36,8 +36,8 @@ void Ground::Init()
 			buffer->SetColor(offset + 3, color, color, color);
 		}
 	}
-//	std::cerr << "sizeof(vertex):" << sizeof(Vertex) << " vertices number: " << buffer->getVerticesCount() << std::endl;
-	vbo = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(Vertex) * buffer->getVerticesCount(), GL_STATIC_DRAW, buffer->getVertex());
+//	std::cerr << "sizeof(vertex):" << sizeof(Vertex) << " vertices number: " << vertex_buffer_->getVerticesCount() << std::endl;
+	//vbo = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(Vertex) * vertex_buffer_->getVerticesCount(), GL_STATIC_DRAW, vertex_buffer_->getVertex());
 	shader = new Shader;
 	shader->Init("ground.vert", "ground.frag");
 }
@@ -45,7 +45,8 @@ void Ground::Init()
 void Ground::Draw(glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
 {
 	glEnable(GL_DEPTH_TEST);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	buffer->Bind();
 	shader->Bind(glm::value_ptr(modelMatrix), glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix));
 	for (int i = 0; i < 400; i ++)
 	{
@@ -56,5 +57,6 @@ void Ground::Draw(glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
 	// if (error != GL_NO_ERROR) {
 	// 	printf("error: 0x%x\n", error);
 	// }
+	buffer->UnBind();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

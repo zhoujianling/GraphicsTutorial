@@ -574,7 +574,7 @@ void put_element_ply(PlyFile *plyfile, void *elem_ptr)
 				item = elem_data + prop->offset;
 				str = (char **)item;
 
-				/* write the length */
+				/* write the length_ */
 				len = strlen(*str) + 1;
 				fwrite(&len, sizeof(int), 1, fp);
 

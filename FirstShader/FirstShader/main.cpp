@@ -147,7 +147,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 	WNDCLASSEX windowClass; // 这是一个结构体, 描述窗口信息
 	SetWindowContent(&windowClass, hInstance);
 	auto atom = RegisterClassEx(&windowClass); // 注册窗口
-	
+		
 	RECT rect;
 	rect.left = 0;
 	rect.right = 800;

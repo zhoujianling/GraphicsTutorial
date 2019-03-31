@@ -1,5 +1,5 @@
 #pragma once
-// OBJ_Loader.h - A Single Header OBJ Model Loader
+// OBJ_Loader.h - A Single Header OBJ TriMesh Loader
 
 #pragma once
 
@@ -24,7 +24,7 @@
 // Namespace: OBJL
 //
 // Description: The namespace that holds eveyrthing that
-//	is needed and used for the OBJ Model Loader
+//	is needed and used for the OBJ TriMesh Loader
 namespace objl
 {
 	// Structure: Vector2
@@ -133,7 +133,7 @@ namespace objl
 
 	// Structure: Vertex
 	//
-	// Description: Model Vertex object that holds
+	// Description: TriMesh Vertex object that holds
 	//	a Position, Normal, and Texture Coordinate
 	struct Vertex
 	{
@@ -409,7 +409,7 @@ namespace objl
 
 	// Class: Loader
 	//
-	// Description: The OBJ Model Loader
+	// Description: The OBJ TriMesh Loader
 	class Loader
 	{
 	public:

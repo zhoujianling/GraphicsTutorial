@@ -1,4 +1,4 @@
-#include "TriMesh.h"
+#include "vertex"
 #include "utils.h"
 // #include "happly.h"
 #include "io.h"

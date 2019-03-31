@@ -1,6 +1,6 @@
 #include "shader.h"
 #include "utils.h"
-#include "model.h"
+#include "vertex.h"
 
 void Shader::Init(const std::string &vs, const std::string &fs)
 {

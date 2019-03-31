@@ -2,6 +2,7 @@
 attribute vec4 position;
 attribute vec4 color;
 attribute vec4 normal;
+attribute vec4 texcoord;
 
 uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;

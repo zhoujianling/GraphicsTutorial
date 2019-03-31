@@ -1,11 +1,13 @@
 #include "scene.h"
 #include "utils.h"
-#include "Include/glm/glm.hpp"
 #include <iostream>
-#include "Include/glm/gtc/type_ptr.hpp"
 #include "ground.h"
+#include "mesh.h"
+#include "Include/glm/glm.hpp"
+#include "Include/glm/gtc/type_ptr.hpp"
 
 Ground ground;
+TriMesh mesh;
 
 GLuint vbo;
 // 指示如何组织顶点数据来绘制图元
@@ -24,17 +26,12 @@ glm::mat4 modelMatrix;
 glm::mat4 viewMatrix;
 glm::mat4 projectionMatrix;
 
-// 初始化顶点缓冲区
-void InitVBO();
-
-void InitEBO();
-
-void InitShader();
 
 void SetViewPortSize(float width, float height)
 {
 	glViewport(0, 0, width, height);
-	projectionMatrix = glm::perspective(60.0f, width / height, 0.1f, 1000.0f);
+	// 最新API中，第一个参数 角度改成了弧度。
+	projectionMatrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
 }
 
 /**
@@ -43,17 +40,18 @@ void SetViewPortSize(float width, float height)
  */
 void Init()
 {
-	gluLookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 	ground.Init();
-	InitVBO();
-	InitEBO();
-	InitShader();
+	mesh.Init("Res/Dog.ply");
+	// InitVBO();
+	// InitEBO();
+	// InitShader();
+	modelMatrix = glm::identity<glm::mat4>();
+	viewMatrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
 
-	// OpenGl 存在当前矩阵的概念，通过 glMatrixMode 设置当前矩阵的 模式
-//	glMatrixMode(GL_PROJECTION);
-//	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
-//	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
-//	glLoadIdentity();
+	// printGLMMatrix(modelMatrix, "model ");
+	// printGLMMatrix(viewMatrix, "view ");
+	// printGLMMatrix(projectionMatrix, "projection ");
+
 
 	// light.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
 	// light.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
@@ -75,47 +73,37 @@ void Init()
 
 }
 
-void InitVBO()
-{
-	float vertexData[] = {
-		/*XYZU*/-0.2f, -0.2f, -0.6f, 1.0f, /*RGBA*/ 1.0f, 1.0f, 1.0f, 1.0f, /*UV*/ 0.0f, 0.5f,
-		0.2f, -0.2f, -0.6f, 1.0f,/**/  1.0f, 0.0f, 1.0f, 0.0f,/**/  1.0f, 0.5f,
-		0.0f, 0.2f, -0.6f, 1.0f,/**/  1.0f, 0.0f, 0.0f, 1.0f,/**/  0.5f, 1.0f
-	};
-	// 每描述一个顶点要用 10个float，三个顶点30个float
-	vbo = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(float) * 30, GL_STATIC_DRAW, vertexData);
-}
 
-void InitEBO()
-{
-	unsigned short indices[] = { 0, 1, 2 };
-	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, GL_STATIC_DRAW, indices);
-}
+// void InitEBO()
+// {
+// 	unsigned short indices[] = { 0, 1, 2 };
+// 	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, GL_STATIC_DRAW, indices);
+// }
 
-
-void InitShader()
-{
-	int fileSize = 0;
-	unsigned char *shaderCode = LoadFile("Res/test.vs", fileSize);
-	GLuint vsShader = CompileShader(GL_VERTEX_SHADER, (char*)shaderCode);
-	delete shaderCode;
-	
-	shaderCode = LoadFile("Res/test.fs", fileSize);
-	GLuint fsShader = CompileShader(GL_FRAGMENT_SHADER, (char*)shaderCode);
-	delete shaderCode;
-	program = CreateShaderProgram(vsShader, fsShader);
-	glDeleteShader(vsShader);
-	glDeleteShader(fsShader);
-	positionLocation = glGetAttribLocation(program, "position");
-	colorLocation = glGetAttribLocation(program, "color");
-	texcoordLocation = glGetAttribLocation(program, "texcoord");
-	modelMatrixLocation = glGetUniformLocation(program, "ModelMatrix");
-	viewMatrixLocation = glGetUniformLocation(program, "ViewMatrix");
-	textureLocation = glGetUniformLocation(program, "U_Texture");
-	projectionMatrixLocation = glGetUniformLocation(program, "ProjectionMatrix");
-
-	textureID = CreateTexture2DFromBmp("Res/Texture.bmp");
-}
+//
+// void InitShader()
+// {
+// 	int fileSize = 0;
+// 	unsigned char *shaderCode = LoadFile("Res/test.vs", fileSize);
+// 	GLuint vsShader = CompileShader(GL_VERTEX_SHADER, (char*)shaderCode);
+// 	delete shaderCode;
+// 	
+// 	shaderCode = LoadFile("Res/test.fs", fileSize);
+// 	GLuint fsShader = CompileShader(GL_FRAGMENT_SHADER, (char*)shaderCode);
+// 	delete shaderCode;
+// 	program = CreateShaderProgram(vsShader, fsShader);
+// 	glDeleteShader(vsShader);
+// 	glDeleteShader(fsShader);
+// 	positionLocation = glGetAttribLocation(program, "position");
+// 	colorLocation = glGetAttribLocation(program, "color");
+// 	texcoordLocation = glGetAttribLocation(program, "texcoord");
+// 	modelMatrixLocation = glGetUniformLocation(program, "ModelMatrix");
+// 	viewMatrixLocation = glGetUniformLocation(program, "ViewMatrix");
+// 	textureLocation = glGetUniformLocation(program, "U_Texture");
+// 	projectionMatrixLocation = glGetUniformLocation(program, "ProjectionMatrix");
+//
+// 	textureID = CreateTexture2DFromBmp("Res/Texture.bmp");
+// }
 
 
 void Draw()
@@ -126,14 +114,17 @@ void Draw()
 
 	const float frameTime = GetFrameTime();
 
-	modelMatrix = glm::identity<glm::mat4>();
-	viewMatrix = glm::identity<glm::mat4>();
-	viewMatrix = glm::scale(viewMatrix, { 1.0, -1.0, 1.0 });
-	//projectionMatrix = glm::identity<glm::mat4>();
+//	gluLookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
+	//viewMatrix = glm::scale(viewMatrix, { 1.0, -1.0, 1.0 });
 
-	ground.Draw(viewMatrix, projectionMatrix);
+	// ground.Draw(viewMatrix, projectionMatrix);
+	mesh.Draw(viewMatrix, projectionMatrix);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("error: 0x%x\n", error);
+	}
 
-	// glUseProgram(program);
+	// glUseProgram(program);	
 	// // 为 GPU 上的顶点着色程序传递数据（几个matrix)
 	// // 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
 	// glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));

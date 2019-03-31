@@ -61,29 +61,29 @@ public:
 	Vertex& Get(int index);
 };
 
-class TriMesh// : public Sprite
+class ElementBuffer
 {
 private:
-	std::vector<Vertex> vertices;
 
-	std::vector<int> faceIndices;
+	unsigned int *indices_buffer_;
 
+	int length_;
 
+	GLuint ebo;
 public:
 
-	TriMesh();
+	ElementBuffer();
 
-	//void Init(const char *modelPath);
+	void SetBufferLength(int len);
 
-	//void Draw() override;
-
-	std::vector<Vertex>& GetVertices()
+	unsigned int *GetBuffer()
 	{
-		return this->vertices;
+		return indices_buffer_;
 	}
 
-	std::vector<int>& GetFaces()
-	{
-		return this->faceIndices;
-	}
+	void Bind();
+
+	void UnBind();
+
+	int GetLength() const { return length_; }
 };

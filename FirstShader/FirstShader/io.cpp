@@ -1,10 +1,10 @@
 #include "io.h"
 #include "Include/objloader.h"
-// #include "model.h"
 #include "Include/ply_io.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Include/sbt_image.h"
+#include "vertex.h"
 
 extern "C" {
 	typedef struct options
@@ -93,38 +93,41 @@ extern "C" {
 	}
 
 }
-//
-// void LoadPly(std::string modelPath, Model *model)
-// {
-// 	model->GetVertices().clear();
-// 	model->GetFaces().clear();
-// 	TriMesh trimesh;
-// 	read_ply_file(modelPath.c_str(), &trimesh);
-// 	for (int i = 0; i < trimesh.n_verts; i ++)
-// 	{
-// 		const auto& vt = trimesh.vertices[i];
-// 		Vertex vertex;
-// 		vertex.position[0] = vt.x;
-// 		vertex.position[1] = vt.y;
-// 		vertex.position[2] = vt.z;
-// 		model->GetVertices().push_back(vertex);
-// 	}
-// 	for (int i = 0; i < trimesh.n_faces; i ++)
-// 	{
-// 		const auto& face = trimesh.faces[i];
-// 		if (face.count != 3)
-// 		{
-// 			std::cerr << "Not a triangulated mesh, exit" << std::endl;
-// 			break;
-// 		}
-// 		for (int j = 0; j < 3; j ++)
-// 		{
-// 			model->GetFaces().push_back(face.vertex_indices[j]);
-// 		}
-// 	}
-// }
-//
-// void LoadObj(std::string modelPath, Model *model)
+
+void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element_buffer)
+{
+	memset(buffer, 0, sizeof(float) * buffer->getVerticesCount() * 16);
+	TriMesh trimesh;
+	read_ply_file(modelPath.c_str(), &trimesh);
+	buffer->SetVertexCount(trimesh.n_verts);
+	for (int i = 0; i < trimesh.n_verts; i ++)
+	{
+		const auto& vt = trimesh.vertices[i];
+		Vertex vertex;
+		vertex.position[0] = vt.x;
+		vertex.position[1] = vt.y;
+		vertex.position[2] = vt.z;
+		buffer->SetPosition(i, vt.x, vt.y, vt.z);
+		buffer->SetColor(i, 1.0f, 1.0f, 1.0f);
+	}
+	element_buffer->SetBufferLength(trimesh.n_faces * 3);
+	for (int i = 0; i < trimesh.n_faces; i ++)
+	{
+		const auto& face = trimesh.faces[i];
+		if (face.count != 3)
+		{
+			std::cerr << "Not a triangulated mesh, exit" << std::endl;
+			break;
+		}
+		unsigned int *indices = element_buffer->GetBuffer();
+		for (int j = 0; j < 3; j ++)
+		{
+			indices[i * 3 + j] = face.vertex_indices[j];
+		}
+	}
+}
+
+// void LoadObj(std::string modelPath, VertexBuffer *model)
 // {
 // 	objl::Loader loader;
 // 	const auto success = loader.LoadFile(modelPath);

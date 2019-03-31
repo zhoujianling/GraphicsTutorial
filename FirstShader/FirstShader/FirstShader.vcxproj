@@ -139,7 +139,8 @@
     <ClCompile Include="Include\ply_io.c" />
     <ClCompile Include="io.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="model.cpp" />
+    <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="vertex.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -153,7 +154,8 @@
     <ClInclude Include="Include\ply_io.h" />
     <ClInclude Include="Include\sbt_image.h" />
     <ClInclude Include="io.h" />
-    <ClInclude Include="model.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="vertex.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="utils.h" />
@@ -163,6 +165,8 @@
     <None Include="ground.vert" />
     <None Include="Res\test.fs" />
     <None Include="Res\test.vs" />
+    <None Include="trimesh.frag" />
+    <None Include="trimesh.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
