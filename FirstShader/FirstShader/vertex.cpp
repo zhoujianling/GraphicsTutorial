@@ -10,47 +10,47 @@ void VertexBuffer::SetVertexCount(int c)
 		std::cerr << "count <= 0" << std::endl;
 		return;
 	}
-	this->mVertexCount = c;
-	this->mVertices = new Vertex[c];
-	memset(mVertices, 0, c * sizeof(Vertex));
-	mVBO = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(Vertex) * mVertexCount, GL_STATIC_DRAW, nullptr);
+	this->vertex_count_ = c;
+	this->vertices_ = new Vertex[c];
+	memset(vertices_, 0, c * sizeof(Vertex));
+	vbo_ = CreateBufferObject(GL_ARRAY_BUFFER, sizeof(Vertex) * vertex_count_, GL_STATIC_DRAW, nullptr);
 }
 
 void VertexBuffer::SetPosition(int index, float x, float y, float z, float w)
 {
-	this->mVertices[index].position[0] = x;
-	this->mVertices[index].position[1] = y;
-	this->mVertices[index].position[2] = z;
-	this->mVertices[index].position[3] = w;
+	this->vertices_[index].position[0] = x;
+	this->vertices_[index].position[1] = y;
+	this->vertices_[index].position[2] = z;
+	this->vertices_[index].position[3] = w;
 }
 
 void VertexBuffer::SetColor(int index, float r, float g, float b, float a)
 {
-	this->mVertices[index].color[0] = r;
-	this->mVertices[index].color[1] = g;
-	this->mVertices[index].color[2] = b;
-	this->mVertices[index].color[3] = a;
+	this->vertices_[index].color[0] = r;
+	this->vertices_[index].color[1] = g;
+	this->vertices_[index].color[2] = b;
+	this->vertices_[index].color[3] = a;
 }
 
 void VertexBuffer::SetNormal(int index, float x, float y, float z, float a)
 {
-	this->mVertices[index].normal[0] = x;
-	this->mVertices[index].normal[1] = y;
-	this->mVertices[index].normal[2] = z;
-	this->mVertices[index].normal[3] = 1.0;
+	this->vertices_[index].normal[0] = x;
+	this->vertices_[index].normal[1] = y;
+	this->vertices_[index].normal[2] = z;
+	this->vertices_[index].normal[3] = 1.0;
 }
 
 void VertexBuffer::SetTexcoord(int index, float u, float v)
 {
-	this->mVertices[index].texcoord[0] = u;
-	this->mVertices[index].texcoord[1] = v;
+	this->vertices_[index].texcoord[0] = u;
+	this->vertices_[index].texcoord[1] = v;
 }
 
 void VertexBuffer::Bind()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
 	// 这玩意有啥用？
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * mVertexCount, mVertices);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * vertex_count_, vertices_);
 }
 
 void VertexBuffer::UnBind()
@@ -60,7 +60,7 @@ void VertexBuffer::UnBind()
 
 Vertex& VertexBuffer::Get(int index)
 {
-	return mVertices[index];
+	return vertices_[index];
 }
 
 ElementBuffer::ElementBuffer():indices_buffer_(nullptr), length_(0)
@@ -78,6 +78,9 @@ void ElementBuffer::SetBufferLength(int len)
 void ElementBuffer::Bind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	// 之前在 CreateBufferObject 并没有真正把 indices_buffer 提交到 OpenGL，
+	// 我们可以在开辟缓冲区后再往里面填数据，再之后 才 SubmitData
+	glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * length_, indices_buffer_);
 }
 
 void ElementBuffer::UnBind()

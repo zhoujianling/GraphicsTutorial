@@ -15,8 +15,8 @@ TriMesh::TriMesh()
 
 void TriMesh::Init(std::string modelPath)
 {
-//	modelMatrix = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
-	//printGLMMatrix(modelMatrix);
+//	model_matrix_ = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
+	//printGLMMatrix(model_matrix_);
 	vertex_buffer_ = new VertexBuffer();
 	element_buffer_ = new ElementBuffer();
 	LoadPly(modelPath, vertex_buffer_, element_buffer_);
@@ -32,9 +32,10 @@ void TriMesh::Draw(glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
 	element_buffer_->Bind();
 	shader->Bind(glm::value_ptr(modelMatrix), glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix));
 	// 
-	//glDrawElements(GL_TRIANGLES, vertex_buffer_->getVerticesCount(), GL_UNSIGNED_INT, nullptr);
+	//glDrawElements(GL_TRIANGLES, vertex_buffer_->GetVerticesCount(), GL_UNSIGNED_INT, nullptr);
+	
 	glDrawElements(GL_TRIANGLES, element_buffer_->GetLength(), GL_UNSIGNED_INT, (void*)0);
-	//glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_->getVerticesCount());
+	//glDrawArrays(GL_TRIANGLES, 0, vertex_buffer_->GetVerticesCount());
 	//
 	vertex_buffer_->UnBind();
 	element_buffer_->UnBind();

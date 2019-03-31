@@ -22,18 +22,18 @@ void Shader::Init(const std::string &vs, const std::string &fs)
 		return;
 	}
 	delete shaderCode;
-	programId = CreateShaderProgram(vsShader, fsShader);
+	program_id_ = CreateShaderProgram(vsShader, fsShader);
 	glDeleteShader(vsShader);
 	glDeleteShader(fsShader);
-	if (programId != 0)
+	if (program_id_ != 0)
 	{
-		positionLocation = glGetAttribLocation(programId, "position");
-		colorLocation = glGetAttribLocation(programId, "color");
-		normalLocation = glGetAttribLocation(programId, "normal");
-		// texcoordLocation = glGetAttribLocation(programId, "texcoord");
-		modelMatrixLocation = glGetUniformLocation(programId, "ModelMatrix");
-		viewMatrixLocation = glGetUniformLocation(programId, "ViewMatrix");
-		projectionMatrixLocation = glGetUniformLocation(programId, "ProjectionMatrix");
+		position_location_ = glGetAttribLocation(program_id_, "position");
+		color_location_ = glGetAttribLocation(program_id_, "color");
+		normal_location_ = glGetAttribLocation(program_id_, "normal");
+		// texcoord_location_ = glGetAttribLocation(program_id_, "texcoord");
+		model_matrix_location_ = glGetUniformLocation(program_id_, "ModelMatrix");
+		view_matrix_location_ = glGetUniformLocation(program_id_, "ViewMatrix");
+		projection_matrix_location_ = glGetUniformLocation(program_id_, "ProjectionMatrix");
 		std::cerr << "succeed in binding slots"<< std::endl;
 	} else
 	{
@@ -47,17 +47,17 @@ void Shader::Init(const std::string &vs, const std::string &fs)
  */
 void Shader::Bind(float* M, float* V, float* P)
 {
-	glUseProgram(programId);
-	glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, M);
-	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, V);
-	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, P);
+	glUseProgram(program_id_);
+	glUniformMatrix4fv(model_matrix_location_, 1, GL_FALSE, M);
+	glUniformMatrix4fv(view_matrix_location_, 1, GL_FALSE, V);
+	glUniformMatrix4fv(projection_matrix_location_, 1, GL_FALSE, P);
 
-	glEnableVertexAttribArray(positionLocation);
-	glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);;
-	glEnableVertexAttribArray(colorLocation);
-	glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 4));;
-	// glEnableVertexAttribArray(texcoordLocation);
-	// glVertexAttribPointer(texcoordLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 8));;
-	glEnableVertexAttribArray(normalLocation);
-	glVertexAttribPointer(normalLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 12));;
+	glEnableVertexAttribArray(position_location_);
+	glVertexAttribPointer(position_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);;
+	glEnableVertexAttribArray(color_location_);
+	glVertexAttribPointer(color_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 4));;
+	// glEnableVertexAttribArray(texcoord_location_);
+	// glVertexAttribPointer(texcoord_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 8));;
+	glEnableVertexAttribArray(normal_location_);
+	glVertexAttribPointer(normal_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 12));;
 }

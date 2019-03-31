@@ -96,7 +96,7 @@ extern "C" {
 
 void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element_buffer)
 {
-	memset(buffer, 0, sizeof(float) * buffer->getVerticesCount() * 16);
+	memset(buffer, 0, sizeof(float) * buffer->GetVerticesCount() * 16);
 	TriMesh trimesh;
 	read_ply_file(modelPath.c_str(), &trimesh);
 	buffer->SetVertexCount(trimesh.n_verts);

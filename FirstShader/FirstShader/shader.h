@@ -9,28 +9,28 @@
 class Shader
 {
 private:
-	GLuint programId;
+	GLuint program_id_;
 
-	GLint positionLocation;
+	GLint position_location_;
 
-	GLint colorLocation;
+	GLint color_location_;
 
-	GLint texcoordLocation;
+	GLint texcoord_location_;
 
-	GLint normalLocation;
+	GLint normal_location_;
 
-	GLint modelMatrixLocation;
-	GLint viewMatrixLocation;
-	GLint projectionMatrixLocation;
+	GLint model_matrix_location_;
+	GLint view_matrix_location_;
+	GLint projection_matrix_location_;
 
 public:
-	int GetPositionLocation() const { return positionLocation; }
+	int GetPositionLocation() const { return position_location_; }
 
-	int GetColorLocation() const { return colorLocation; }
+	int GetColorLocation() const { return color_location_; }
 
-	int GetTexcoordLocation() const { return texcoordLocation; }
+	int GetTexcoordLocation() const { return texcoord_location_; }
 
-	int GetNormalLocation() const { return normalLocation; }
+	int GetNormalLocation() const { return normal_location_; }
 		
 	void Init(const std::string& vs, const std::string& fs);
 

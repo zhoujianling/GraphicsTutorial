@@ -26,22 +26,22 @@ struct Vertex
 class VertexBuffer
 {
 private:
-	Vertex *mVertices;
+	Vertex *vertices_;
 
-	int mVertexCount;
+	int vertex_count_;
 
-	GLuint mVBO;
+	GLuint vbo_;
 
 public:
 
-	Vertex *getVertex() 
+	Vertex *GetVertex() 
 	{
-		return this->mVertices;
+		return this->vertices_;
 	}
 
-	int getVerticesCount() const
+	int GetVerticesCount() const
 	{
-		return this->mVertexCount;
+		return this->vertex_count_;
 	}
 
 	void SetVertexCount(int c);

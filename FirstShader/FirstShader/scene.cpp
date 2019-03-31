@@ -48,7 +48,7 @@ void Init()
 	modelMatrix = glm::identity<glm::mat4>();
 	viewMatrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
 
-	// printGLMMatrix(modelMatrix, "model ");
+	// printGLMMatrix(model_matrix_, "model ");
 	// printGLMMatrix(viewMatrix, "view ");
 	// printGLMMatrix(projectionMatrix, "projection ");
 
@@ -94,13 +94,13 @@ void Init()
 // 	program = CreateShaderProgram(vsShader, fsShader);
 // 	glDeleteShader(vsShader);
 // 	glDeleteShader(fsShader);
-// 	positionLocation = glGetAttribLocation(program, "position");
-// 	colorLocation = glGetAttribLocation(program, "color");
-// 	texcoordLocation = glGetAttribLocation(program, "texcoord");
-// 	modelMatrixLocation = glGetUniformLocation(program, "ModelMatrix");
-// 	viewMatrixLocation = glGetUniformLocation(program, "ViewMatrix");
+// 	position_location_ = glGetAttribLocation(program, "position");
+// 	color_location_ = glGetAttribLocation(program, "color");
+// 	texcoord_location_ = glGetAttribLocation(program, "texcoord");
+// 	model_matrix_location_ = glGetUniformLocation(program, "ModelMatrix");
+// 	view_matrix_location_ = glGetUniformLocation(program, "ViewMatrix");
 // 	textureLocation = glGetUniformLocation(program, "U_Texture");
-// 	projectionMatrixLocation = glGetUniformLocation(program, "ProjectionMatrix");
+// 	projection_matrix_location_ = glGetUniformLocation(program, "ProjectionMatrix");
 //
 // 	textureID = CreateTexture2DFromBmp("Res/Texture.bmp");
 // }
@@ -127,20 +127,20 @@ void Draw()
 	// glUseProgram(program);	
 	// // 为 GPU 上的顶点着色程序传递数据（几个matrix)
 	// // 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
-	// glUniformMatrix4fv(modelMatrixLocation, 1, GL_FALSE, glm::value_ptr(modelMatrix));
-	// glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	// glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	// glUniformMatrix4fv(model_matrix_location_, 1, GL_FALSE, glm::value_ptr(model_matrix_));
+	// glUniformMatrix4fv(view_matrix_location_, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	// glUniformMatrix4fv(projection_matrix_location_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	// glBindTexture(GL_TEXTURE_2D, textureID);
 	// glUniform1i(textureLocation, 0);
 	//
 	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// glEnableVertexAttribArray(positionLocation);
+	// glEnableVertexAttribArray(position_location_);
 	// // 第一个传插槽， 第二个 数据有几个分量， 第三个 数据类型， 第四个 是否归一化， 第五个 数据大小， 第六个 
-	// glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, nullptr);
-	// glEnableVertexAttribArray(colorLocation);
-	// glVertexAttribPointer(colorLocation, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 4));
-	// glEnableVertexAttribArray(texcoordLocation);
-	// glVertexAttribPointer(texcoordLocation, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 8));
+	// glVertexAttribPointer(position_location_, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, nullptr);
+	// glEnableVertexAttribArray(color_location_);
+	// glVertexAttribPointer(color_location_, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 4));
+	// glEnableVertexAttribArray(texcoord_location_);
+	// glVertexAttribPointer(texcoord_location_, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 8));
 	// // glDrawArrays(GL_TRIANGLES, 0, 3);
 	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	// // 传递数据到显卡进行绘制，每 3 个顶点画一个三角形， 最后一个参数是数据的起始位置

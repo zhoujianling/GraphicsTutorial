@@ -10,9 +10,9 @@ class Ground
 {
 private:
 	//GLuint vbo;
-	VertexBuffer *buffer;
+	VertexBuffer *buffer_;
 	Shader *shader;
-	glm::mat4 modelMatrix;
+	glm::mat4 model_matrix_;
 
 public:
 	// 设置数据，编译链接 Shader
