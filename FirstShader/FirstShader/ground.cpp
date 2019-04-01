@@ -9,7 +9,7 @@ void Ground::Init()
 {
 	//model_matrix_ = identity<mat4>();
 	model_matrix_ = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
-	//printGLMMatrix(model_matrix_);
+	//PrintGLMMatrix(model_matrix_);
 	buffer_ = new VertexBuffer();
 	buffer_->SetVertexCount(1600);
 	for (int z = 0; z < 20; ++z)
@@ -42,12 +42,12 @@ void Ground::Init()
 	shader->Init("ground.vert", "ground.frag");
 }
 
-void Ground::Draw(glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+void Ground::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 {
 	glEnable(GL_DEPTH_TEST);
 	//glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	buffer_->Bind();
-	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix));
+	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
 	for (int i = 0; i < 400; i ++)
 	{
 		glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);

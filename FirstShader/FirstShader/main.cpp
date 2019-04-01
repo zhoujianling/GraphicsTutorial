@@ -183,6 +183,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
+		UpdateScene();
 		Draw();
 		SwapBuffers(hdc); // 交换 OpenGl 的缓冲区，把后面的缓冲区交换到前面来
 	}

@@ -2,35 +2,46 @@
 #include "utils.h"
 #include "vertex.h"
 
+UniformVector4f::UniformVector4f():location_(-1)
+{
+	memset(value_, 0, sizeof(float) * 4);
+}
+
+UniformVector4f::UniformVector4f(float x, float y, float z, float w, GLint location):
+value_{x, y, z, w},
+location_(location)
+{
+}
+
 void Shader::Init(const std::string &vs, const std::string &fs)
 {
 
-	int fileSize = 0;
-	unsigned char *shaderCode = LoadFile(vs.c_str(), fileSize);
-	GLuint vsShader = CompileShader(GL_VERTEX_SHADER, (char*)shaderCode);
-	if (vsShader == 0)
+	auto file_size = 0;
+	const unsigned char *shader_code = LoadFile(vs.c_str(), file_size);
+	const auto vs_shader = CompileShader(GL_VERTEX_SHADER, (char*)shader_code);
+	if (vs_shader == 0)
 	{
 		std::cerr << "fail to create vertex shader " << vs << std::endl;
 		return;
 	}
-	delete shaderCode;
-	shaderCode = LoadFile(fs.c_str(), fileSize);
-	GLuint fsShader = CompileShader(GL_FRAGMENT_SHADER, (char*)shaderCode);
-	if (fsShader == 0)
+	delete shader_code;
+	shader_code = LoadFile(fs.c_str(), file_size);
+	const auto fs_shader = CompileShader(GL_FRAGMENT_SHADER, (char*)shader_code);
+	if (fs_shader == 0)
 	{
 		std::cerr << "fail to create fragment shader " << fs << std::endl;
 		return;
 	}
-	delete shaderCode;
-	program_id_ = CreateShaderProgram(vsShader, fsShader);
-	glDeleteShader(vsShader);
-	glDeleteShader(fsShader);
+	delete shader_code;
+	program_id_ = CreateShaderProgram(vs_shader, fs_shader);
+	glDeleteShader(vs_shader);
+	glDeleteShader(fs_shader);
 	if (program_id_ != 0)
 	{
 		position_location_ = glGetAttribLocation(program_id_, "position");
 		color_location_ = glGetAttribLocation(program_id_, "color");
 		normal_location_ = glGetAttribLocation(program_id_, "normal");
-		// texcoord_location_ = glGetAttribLocation(program_id_, "texcoord");
+		texcoord_location_ = glGetAttribLocation(program_id_, "texcoord");
 		model_matrix_location_ = glGetUniformLocation(program_id_, "ModelMatrix");
 		view_matrix_location_ = glGetUniformLocation(program_id_, "ViewMatrix");
 		projection_matrix_location_ = glGetUniformLocation(program_id_, "ProjectionMatrix");
@@ -43,6 +54,7 @@ void Shader::Init(const std::string &vs, const std::string &fs)
 
 /**
  * 做 M V P 矩阵的绑定
+ * 此时与顶点数据是解耦的，但是知道不同位置的数据的语义，做语义绑定
  * 顶点数据取决于调用 glDrawElements() 之前 glBindBuffer() 里面传入的 vbo
  */
 void Shader::Bind(float* M, float* V, float* P)
@@ -56,8 +68,32 @@ void Shader::Bind(float* M, float* V, float* P)
 	glVertexAttribPointer(position_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), nullptr);;
 	glEnableVertexAttribArray(color_location_);
 	glVertexAttribPointer(color_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 4));;
-	// glEnableVertexAttribArray(texcoord_location_);
-	// glVertexAttribPointer(texcoord_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 8));;
+	glEnableVertexAttribArray(texcoord_location_);
+	glVertexAttribPointer(texcoord_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 8));;
 	glEnableVertexAttribArray(normal_location_);
 	glVertexAttribPointer(normal_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 12));;
+
+	for (auto kv : vec4_map_)
+	{
+		glUniform4fv(kv.second->location_, 1, kv.second->value_);
+	}
+}
+
+void Shader::SetVector4(const std::string& name, float x, float y, float z, float w)
+{
+	auto iter = vec4_map_.find(name);
+	if (iter == vec4_map_.end())
+	{
+		GLint location = glGetUniformLocation(program_id_, name.c_str());
+		if (location != -1)
+		{
+			vec4_map_[name] = new UniformVector4f(x, y, z, w, location);
+		}
+	} else
+	{
+		iter->second->value_[0] = x;
+		iter->second->value_[1] = y;
+		iter->second->value_[2] = z;
+		iter->second->value_[3] = w;
+	}
 }

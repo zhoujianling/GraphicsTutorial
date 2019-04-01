@@ -52,7 +52,7 @@ GLuint CreateShaderProgram(GLuint vsShader, GLuint fsShader);
 GLuint CreateBufferObject(GLenum bufferType, GLsizeiptr size, GLenum usage, void *data = nullptr);
 
 template<typename T>
-void printGLMMatrix(T const& m, const std::string  prompt = "")
+void PrintGLMMatrix(T const& m, const std::string  prompt = "")
 {
 	// 列向量转行向量，方便观察
 	const auto tm = glm::transpose(m);

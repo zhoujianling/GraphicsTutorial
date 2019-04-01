@@ -3,35 +3,42 @@
 #include <iostream>
 #include "ground.h"
 #include "mesh.h"
+#include "camera.h"
 #include "Include/glm/glm.hpp"
 #include "Include/glm/gtc/type_ptr.hpp"
 
 Ground ground;
 TriMesh mesh;
+Camera camera;
 
 GLuint vbo;
 // 指示如何组织顶点数据来绘制图元
 GLuint ebo;
 GLuint program;
-GLuint textureID;
-GLint positionLocation;
-GLint texcoordLocation; // 纹理UV坐标的插槽
-GLint textureLocation; // 纹理信息的插槽
-GLint colorLocation;
-GLint modelMatrixLocation;
-GLint viewMatrixLocation;
-GLint projectionMatrixLocation;
+GLuint texture_id;
+GLint position_location;
+GLint texcoord_location; // 纹理UV坐标的插槽
+GLint texture_location; // 纹理信息的插槽
+GLint color_location;
+GLint model_matrix_location;
+GLint view_matrix_location;
+GLint projection_matrix_location;
 
-glm::mat4 modelMatrix;
-glm::mat4 viewMatrix;
-glm::mat4 projectionMatrix;
+glm::mat4 model_matrix;
+glm::mat4 view_matrix;
+glm::mat4 projection_matrix;
 
+bool w_pressing = false;
+bool s_pressing = false;
+bool a_pressing = false;
+bool d_pressing = false;
 
 void SetViewPortSize(float width, float height)
 {
 	glViewport(0, 0, width, height);
+	camera.Init(width / height);
 	// 最新API中，第一个参数 角度改成了弧度。
-	projectionMatrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
+	projection_matrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
 }
 
 /**
@@ -45,12 +52,12 @@ void Init()
 	// InitVBO();
 	// InitEBO();
 	// InitShader();
-	modelMatrix = glm::identity<glm::mat4>();
-	viewMatrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
+	model_matrix = glm::identity<glm::mat4>();
+	view_matrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
 
-	// printGLMMatrix(model_matrix_, "model ");
-	// printGLMMatrix(viewMatrix, "view ");
-	// printGLMMatrix(projectionMatrix, "projection ");
+	// PrintGLMMatrix(model_matrix_, "model ");
+	// PrintGLMMatrix(viewMatrix, "view ");
+	// PrintGLMMatrix(projectionMatrix, "projection ");
 
 
 	// light.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -72,6 +79,7 @@ void Init()
 	// light2.SetLinearAttenuation(0.2f);
 
 }
+
 
 
 // void InitEBO()
@@ -102,9 +110,39 @@ void Init()
 // 	textureLocation = glGetUniformLocation(program, "U_Texture");
 // 	projection_matrix_location_ = glGetUniformLocation(program, "ProjectionMatrix");
 //
-// 	textureID = CreateTexture2DFromBmp("Res/Texture.bmp");
+// 	texture_id = CreateTexture2DFromBmp("Res/Texture.bmp");
 // }
 
+void UpdateScene()
+{
+	const auto delta_time = GetFrameTime();
+	
+	// update camera
+	const auto move_speed = 2.0f;
+	const auto forward_direction = glm::normalize(camera.ForwardDirection());
+	const auto right_hand_direction = glm::normalize(camera.RightHandDirection());
+	const auto scale = move_speed * delta_time;
+
+	auto delta = glm::vec3(0.0f, 0.0f, 0.0f);
+
+	if (a_pressing)
+	{
+		delta = right_hand_direction * delta_time * move_speed * -1.0f;
+	}
+	if (d_pressing)
+	{
+		delta = right_hand_direction * delta_time * move_speed;
+	}
+	if (w_pressing)
+	{
+		delta = forward_direction * delta_time * move_speed;
+	}
+	if (s_pressing)
+	{
+		delta = forward_direction * delta_time * move_speed * -1.0f;
+	}
+	camera.Translate(delta);
+}
 
 void Draw()
 {
@@ -112,17 +150,17 @@ void Draw()
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	const float frameTime = GetFrameTime();
-
-//	gluLookAt(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f);
 	//viewMatrix = glm::scale(viewMatrix, { 1.0, -1.0, 1.0 });
 
-	// ground.Draw(viewMatrix, projectionMatrix);
-	mesh.Draw(viewMatrix, projectionMatrix);
-	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("error: 0x%x\n", error);
-	}
+	// ground.Draw(view_matrix, projection_matrix);
+	// mesh.Draw(view_matrix, projection_matrix);
+	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+
+	// GLenum error = glGetError();
+	// if (error != GL_NO_ERROR) {
+	// 	printf("error: 0x%x\n", error);
+	// }
 
 	// glUseProgram(program);	
 	// // 为 GPU 上的顶点着色程序传递数据（几个matrix)
@@ -130,7 +168,7 @@ void Draw()
 	// glUniformMatrix4fv(model_matrix_location_, 1, GL_FALSE, glm::value_ptr(model_matrix_));
 	// glUniformMatrix4fv(view_matrix_location_, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	// glUniformMatrix4fv(projection_matrix_location_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	// glBindTexture(GL_TEXTURE_2D, textureID);
+	// glBindTexture(GL_TEXTURE_2D, texture_id);
 	// glUniform1i(textureLocation, 0);
 	//
 	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -163,48 +201,48 @@ void Draw()
 
 void OnKeyDown(char code)
 {
-	// switch (code)
-	// {
-	// case 'A':
-	// 	camera.SetMovingLeft(true);
-	// 	break;
-	// case 'S':
-	// 	camera.SetMovingBackward(true);
-	// 	break;
-	// case 'D':
-	// 	camera.SetMovingRight(true);
-	// 	break;
-	// case 'W':
-	// 	camera.SetMovingForward(true);
-	// 	break;
-	// }
+	switch (code)
+	{
+	case 'A':
+		a_pressing = true;
+		break;
+	case 'S':
+		s_pressing = true;
+		break;
+	case 'D':
+		d_pressing = true;
+		break;
+	case 'W':
+		w_pressing = true;
+		break;
+	}
 }
 
 void OnKeyUp(char code)
 {
-	// switch (code)
-	// {
-	// case 'A':
-	// 	camera.SetMovingLeft(false);
-	// 	break;
-	// case 'S':
-	// 	camera.SetMovingBackward(false);
-	// 	break;
-	// case 'D':
-	// 	camera.SetMovingRight(false);
-	// 	break;
-	// case 'W':
-	// 	camera.SetMovingForward(false);
-	// 	break;
-	// }
+	switch (code)
+	{
+	case 'A':
+		a_pressing = false;
+		break;
+	case 'S':
+		s_pressing = false;
+		break;
+	case 'D':
+		d_pressing = false;
+		break;
+	case 'W':
+		w_pressing = false;
+		break;
+	}
 }
 
-void OnMouseMove(float deltaX, float deltaY)
+void OnMouseMove(const float delta_x, const float delta_y)
 {
 	// 在 x 轴滑动，相机沿 y轴转动，位移值近似逼近 yaw 的角度
-	float angleRotateByYAxis = deltaX / 1000.0f; 
+	const auto angle_rotate_by_y_axis = delta_x / 1000.0f; 
 	// 在 y 轴滑动，相机沿 x轴转动，位移值近似逼近 pitch 的角度
-	float angleRotateByXAxis = deltaY / 1000.0f; 
-	// camera.Yaw(- angleRotateByYAxis);
-	// camera.Pitch(- angleRotateByXAxis);
+	const auto angle_rotate_by_x_axis = delta_y / 1000.0f; 
+	camera.Yaw(- angle_rotate_by_y_axis / 180.0f * PI);
+	camera.Pitch(- angle_rotate_by_x_axis / 180.0f * PI);
 }

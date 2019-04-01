@@ -23,7 +23,7 @@ public:
 
 	void Init(std::string modelPath);
 
-	void Draw(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
+	void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	//TriMesh();
 
 	//void Translate(float x, float y, float z);

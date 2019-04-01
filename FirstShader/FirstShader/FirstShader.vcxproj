@@ -135,6 +135,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="ground.cpp" />
     <ClCompile Include="Include\ply_io.c" />
     <ClCompile Include="io.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="ggl.h" />
     <ClInclude Include="ground.h" />
     <ClInclude Include="Include\glm\ext.hpp" />

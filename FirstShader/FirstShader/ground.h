@@ -18,6 +18,6 @@ public:
 	// 设置数据，编译链接 Shader
 	void Init();
 
-	void Draw(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
+	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
 };
 

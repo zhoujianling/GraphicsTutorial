@@ -16,16 +16,19 @@ TriMesh::TriMesh()
 void TriMesh::Init(std::string modelPath)
 {
 //	model_matrix_ = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
-	//printGLMMatrix(model_matrix_);
+	//PrintGLMMatrix(model_matrix_);
 	vertex_buffer_ = new VertexBuffer();
 	element_buffer_ = new ElementBuffer();
 	LoadPly(modelPath, vertex_buffer_, element_buffer_);
 
 	shader = new Shader;
 	shader->Init("trimesh.vert", "trimesh.frag");
+
+	shader->SetVector4("U_LightAmbient", 1.0f, 0.0f, 0.0f, 1.0f);
+	shader->SetVector4("U_LightAmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void TriMesh::Draw(glm::mat4& viewMatrix, glm::mat4& projectionMatrix)
+void TriMesh::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	glEnable(GL_DEPTH_TEST);
 	vertex_buffer_->Bind();

@@ -1,6 +1,18 @@
 #pragma once
 
 #include "ggl.h"
+#include <unordered_map>
+
+struct UniformVector4f
+{
+	GLint location_;
+
+	float value_[4];
+
+	UniformVector4f();
+
+	UniformVector4f(float x, float y, float z, float w, GLint location);
+};
 
 /**
  * 对于一个要画的物体，我们通常要写它的 VertexShader 和 FragmentShader
@@ -20,8 +32,13 @@ private:
 	GLint normal_location_;
 
 	GLint model_matrix_location_;
+
 	GLint view_matrix_location_;
+
 	GLint projection_matrix_location_;
+
+	/** 键： shader 中的 vec4 类型的变量名 **/
+	std::unordered_map<std::string, UniformVector4f*> vec4_map_;
 
 public:
 	int GetPositionLocation() const { return position_location_; }
@@ -35,4 +52,6 @@ public:
 	void Init(const std::string& vs, const std::string& fs);
 
 	void Bind(float *M, float *V, float *P);
+
+	void SetVector4(const std::string &name, float x, float y, float z, float w);
 };
