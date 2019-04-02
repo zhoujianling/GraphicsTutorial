@@ -41,6 +41,8 @@ private:
 	std::unordered_map<std::string, UniformVector4f*> vec4_map_;
 
 public:
+	int GetProgramId() const { return program_id_; }
+
 	int GetPositionLocation() const { return position_location_; }
 
 	int GetColorLocation() const { return color_location_; }

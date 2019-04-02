@@ -16,7 +16,7 @@ private:
 
 	Shader *shader;
 
-	glm::mat4 modelMatrix;
+	glm::mat4 model_matrix_;
 
 public:
 	TriMesh();

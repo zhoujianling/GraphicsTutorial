@@ -19,6 +19,11 @@ extern "C" {
 		float x, y, z;
 	} Vec3f;
 
+	typedef struct vec6f
+	{
+		float x, y, z, nx, ny, nz;
+	} Vec6f;
+
 	typedef struct face
 	{
 		unsigned char count;
@@ -33,6 +38,14 @@ extern "C" {
 		Face* faces;
 	} TriMesh;
 
+	typedef struct triangle_mesh_normal
+	{
+		int n_verts;
+		int n_faces;
+		Vec6f* vertices;
+		Face* faces;
+	} TriMeshNormal;
+
 	const char *elem_names[] = { "vertex", "face" };
 
 	PlyProperty vert_props[] = {
@@ -41,12 +54,21 @@ extern "C" {
 	  {const_cast<char *>("z"), Float32, Float32, offsetof(Vec3f,z), 0, 0, 0, 0},
 	};
 
+	PlyProperty vert_n_props[] = {
+	  {const_cast<char *>("x"), Float32, Float32, offsetof(Vec6f,x), 0, 0, 0, 0},
+	  {const_cast<char *>("y"), Float32, Float32, offsetof(Vec6f,y), 0, 0, 0, 0},
+	  {const_cast<char *>("z"), Float32, Float32, offsetof(Vec6f,z), 0, 0, 0, 0},
+	  {const_cast<char *>("nx"), Float32, Float32, offsetof(Vec6f,nx), 0, 0, 0, 0},
+	  {const_cast<char *>("ny"), Float32, Float32, offsetof(Vec6f,ny), 0, 0, 0, 0},
+	  {const_cast<char *>("nz"), Float32, Float32, offsetof(Vec6f,nz), 0, 0, 0, 0},
+	};
+
 
 	PlyProperty face_props[] = {
 	  {const_cast<char *>("vertex_indices"), Int32, Int32, offsetof(Face,vertex_indices), 1, Uint8, Uint8, offsetof(Face,count)},
 	};
 
-	void read_ply_file(const char* filename, TriMesh* mesh)
+	void read_ply_file(const char* filename, TriMeshNormal* mesh)
 	{
 		int elem_count;
 		char *elem_name;
@@ -56,6 +78,7 @@ extern "C" {
 		FILE *fp = fopen(filename, "rb");
 		if (!fp) { return; }
 		PlyFile *in_ply = read_ply(fp);
+		
 
 		for (i = 0; i < in_ply->num_elem_types; i++)
 		{
@@ -63,15 +86,33 @@ extern "C" {
 
 			if (!strcmp("vertex", elem_name))
 			{
-				mesh->vertices = (Vec3f*)malloc(sizeof(Vec3f) * elem_count);
+				int prop_cnt = in_ply->elems[i]->nprops;
+				mesh->vertices = (Vec6f*)malloc(sizeof(Vec6f) * elem_count);
+				//memset(mesh->vertices, 0, sizeof(Vec6f) * elem_count);
 				mesh->n_verts = elem_count;
-
-				setup_property_ply(in_ply, &vert_props[0]);
-				setup_property_ply(in_ply, &vert_props[1]);
-				setup_property_ply(in_ply, &vert_props[2]);
-
-				for (j = 0; j < elem_count; j++) {
-					get_element_ply(in_ply, (void *)&mesh->vertices[j]);
+				if (prop_cnt == 3)
+				{
+					setup_property_ply(in_ply, &vert_props[0]);
+					setup_property_ply(in_ply, &vert_props[1]);
+					setup_property_ply(in_ply, &vert_props[2]);
+	
+					for (j = 0; j < elem_count; j++) {
+						get_element_ply(in_ply, (void *)&mesh->vertices[j]);
+					}
+					
+				} else if (prop_cnt == 6)
+				{
+					setup_property_ply(in_ply, &vert_n_props[0]);
+					setup_property_ply(in_ply, &vert_n_props[1]);
+					setup_property_ply(in_ply, &vert_n_props[2]);
+					setup_property_ply(in_ply, &vert_n_props[3]);
+					setup_property_ply(in_ply, &vert_n_props[4]);
+					setup_property_ply(in_ply, &vert_n_props[5]);
+	
+					for (j = 0; j < elem_count; j++) {
+						get_element_ply(in_ply, (void *)&mesh->vertices[j]);
+					}
+					
 				}
 			}
 
@@ -97,7 +138,7 @@ extern "C" {
 void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element_buffer)
 {
 	memset(buffer, 0, sizeof(float) * buffer->GetVerticesCount() * 16);
-	TriMesh trimesh;
+	TriMeshNormal trimesh;
 	read_ply_file(modelPath.c_str(), &trimesh);
 	buffer->SetVertexCount(trimesh.n_verts);
 	for (int i = 0; i < trimesh.n_verts; i ++)
@@ -108,6 +149,7 @@ void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element
 		vertex.position[1] = vt.y;
 		vertex.position[2] = vt.z;
 		buffer->SetPosition(i, vt.x, vt.y, vt.z);
+		buffer->SetNormal(i, vt.nx, vt.ny, vt.nz);
 		buffer->SetColor(i, 1.0f, 1.0f, 1.0f);
 	}
 	element_buffer->SetBufferLength(trimesh.n_faces * 3);

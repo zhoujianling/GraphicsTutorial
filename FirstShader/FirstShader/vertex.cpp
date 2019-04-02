@@ -49,7 +49,6 @@ void VertexBuffer::SetTexcoord(int index, float u, float v)
 void VertexBuffer::Bind()
 {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-	// 这玩意有啥用？
 	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(Vertex) * vertex_count_, vertices_);
 }
 

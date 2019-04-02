@@ -48,7 +48,7 @@ void SetViewPortSize(float width, float height)
 void Init()
 {
 	ground.Init();
-	mesh.Init("Res/Dog.ply");
+	mesh.Init("Res/Dog.Normal.ply");
 	// InitVBO();
 	// InitEBO();
 	// InitShader();
@@ -243,6 +243,6 @@ void OnMouseMove(const float delta_x, const float delta_y)
 	const auto angle_rotate_by_y_axis = delta_x / 1000.0f; 
 	// 在 y 轴滑动，相机沿 x轴转动，位移值近似逼近 pitch 的角度
 	const auto angle_rotate_by_x_axis = delta_y / 1000.0f; 
-	camera.Yaw(- angle_rotate_by_y_axis / 180.0f * PI);
-	camera.Pitch(- angle_rotate_by_x_axis / 180.0f * PI);
+	camera.Yaw(- angle_rotate_by_y_axis );
+	camera.Pitch(- angle_rotate_by_x_axis);
 }
