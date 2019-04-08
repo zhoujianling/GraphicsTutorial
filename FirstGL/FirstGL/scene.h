@@ -11,4 +11,4 @@ void OnKeyDown(char code);
 // ¼üÅÌµ¯ÆğÊÂ¼ş
 void OnKeyUp(char code);
 
-void OnMouseMove(float deltaX, float deltaY);
+void OnMouseMove(float delta_x, float delta_y);

@@ -7,37 +7,37 @@ class Camera
 
 private:
 	/** 相机位置 **/
-	Vector3f mPos;
+	Vector3f position_;
 
 	/** 相机看向哪个点 **/
-	Vector3f mViewCenter;
+	Vector3f view_center_;
 
 	/** 相机头顶向量 **/
-	Vector3f mUp;
+	Vector3f up_;
 
 	// 控制相机在 XoZ 平面上的移动
-	bool movingLeft;
+	bool is_moving_left_;
 
-	bool movingRight;
+	bool is_moving_right_;
 
-	bool movingForwards;
+	bool is_moving_forwards_;
 
-	bool movingBackwards;
+	bool is_moving_backwards_;
 
 public:
 	Camera();
 	
-	void Update(float deltaTime);
+	void Update(float delta_time);
 
-	void SetMovingLeft(const bool& l) { this->movingLeft = l; }
+	void SetMovingLeft(const bool& l) { this->is_moving_left_ = l; }
 
-	void SetMovingRight(const bool& l) { this->movingRight = l; }
+	void SetMovingRight(const bool& l) { this->is_moving_right_ = l; }
 
-	void SetMovingForward(const bool& l) { this->movingForwards= l; }
+	void SetMovingForward(const bool& l) { this->is_moving_forwards_= l; }
 
-	void SetMovingBackward(const bool& l) { this->movingBackwards = l; }
+	void SetMovingBackward(const bool& l) { this->is_moving_backwards_ = l; }
 
-	Vector3f GetPosition() const { return this->mPos; }
+	Vector3f GetPosition() const { return this->position_; }
 
 	void Pitch(float angle);
 

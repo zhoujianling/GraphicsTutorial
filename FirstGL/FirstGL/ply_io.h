@@ -9,7 +9,7 @@ Header for PLY polygon files.
 A PLY file contains a single polygonal _object_.
 
 An object is composed of lists of _elements_.  Typical elements are
-vertices, faces, edges and materials.
+vertices_, faces, edges and materials.
 
 Each type of element for a given object has one or more _properties_
 associated with the element type.  For instance, a vertex element may

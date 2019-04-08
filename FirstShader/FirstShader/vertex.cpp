@@ -4,6 +4,13 @@
 #include "io.h"
 #include "iostream"
 
+VertexBuffer::VertexBuffer():
+vertices_(nullptr),
+vertex_count_(0),
+vbo_(0)
+{
+}
+
 void VertexBuffer::SetVertexCount(int c)
 {
 	if (c <= 0) {

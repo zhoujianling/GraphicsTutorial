@@ -9,21 +9,20 @@ Model::Model()
 	
 }
 
-void Model::Init(const char* modelPath)
+void Model::Init(const char* model_path)
 {
-	int nFileSize = 0;
-	int len = strlen(modelPath);
+	int len = strlen(model_path);
 	if (len < 4) return;
-	const auto &suffix = std::string(modelPath + len - 3);
+	const auto &suffix = std::string(model_path + len - 3);
 	if (suffix == "obj")
 	{
-		LoadObj(modelPath, this);
+		LoadObj(model_path, this);
 	} else if (suffix == "ply")
 	{
-		LoadPly(modelPath, this);
+		LoadPly(model_path, this);
 	} else
 	{
-		std::cerr << "Unsupported types:" << modelPath << std::endl;
+		std::cerr << "Unsupported types:" << model_path << std::endl;
 		return;
 	}
 }
@@ -31,22 +30,22 @@ void Model::Init(const char* modelPath)
 void Model::Draw()
 {
 	glEnable(GL_LIGHTING);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mAmbientMaterial);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mDiffuseMaterial);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecularMaterial);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_material_);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_material_);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular_material_);
 	glPushMatrix();
 	// 要后移一点，不然容易跟相机重合，看不到模型
 	glTranslatef(0.0f, 0.0f, -3.0f);
 	glRotated(90.0, 0, 1.0, 0);
 	glBegin(GL_TRIANGLES);
 	// 假设绘制的是三角化的网格模型
-	for (auto i = 0; i < faceIndices.size(); i ++)
+	for (auto i = 0; i < face_indices_.size(); i ++)
 	{
-		Vertex vertex = vertices[faceIndices[i]];
-		//glTexCoord2fv(vertex.texcoord);
-		//glNormal3fv(vertex.normal);
+		auto vertex = vertices_[face_indices_[i]];
+		//glTexCoord2fv(vertex.tex_coord_);
+		//glNormal3fv(vertex.normal_);
 		glColor3ub(125, 200, 0);
-		glVertex3fv(vertex.position);
+		glVertex3fv(vertex.position_);
 		
 	}
 	glEnd();

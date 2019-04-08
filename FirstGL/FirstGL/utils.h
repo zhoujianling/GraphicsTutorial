@@ -3,19 +3,19 @@
 #include "ggl.h"
 
 /** 加载文件内容到内存 **/
-unsigned char* LoadFile(const char* filePath, int& fileSize);
+unsigned char* LoadFile(const char* file_path, int& file_Size);
 
 /** 解码 BMP 图片 **/
-unsigned char* DecodeBMP(unsigned char* bmpData, int& width, int& height);
+unsigned char* DecodeBMP(unsigned char* bmp_data, int& width, int& height);
 
 /** 
  * 创建二维纹理 
  * @param type: 像素类型
  * @return 返回纹理对象的标识符
  **/
-GLuint CreateTexture2D(unsigned char* pixelData, int with, int height, GLenum type);
+GLuint CreateTexture2D(unsigned char* pixel_data, int width, int height, GLenum type);
 
-GLuint CreateTexture2DFromBmp(const char *bmpPath);
+GLuint CreateTexture2DFromBmp(const char *bmp_Path);
 
 GLuint CreateDisplayList(std::function<void()> foo);
 

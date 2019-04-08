@@ -4,19 +4,17 @@
 class Sprite
 {
 protected:
-	GLfloat mAmbientMaterial[4];
+	GLfloat ambient_material_[4];
 
-	GLfloat mDiffuseMaterial[4];
+	GLfloat diffuse_material_[4];
 
-	GLfloat mSpecularMaterial[4];
+	GLfloat specular_material_[4];
 
 public:
 
 	Sprite();
 
-	virtual ~Sprite()
-	{
-	}
+	virtual ~Sprite() = default;
 
 	// 设置模型表面材质的环境光反射系数
 	void SetAmbientMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat a);

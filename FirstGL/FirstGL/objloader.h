@@ -282,7 +282,7 @@ namespace objl
 				return false;
 		}
 
-		// Generate a cross produect normal for a triangle
+		// Generate a Cross produect normal_ for a triangle
 		Vector3 GenTriNormal(Vector3 t1, Vector3 t2, Vector3 t3)
 		{
 			Vector3 u = t2 - t1;
@@ -307,7 +307,7 @@ namespace objl
 			// Calulate Triangle's Normal
 			Vector3 n = GenTriNormal(tri1, tri2, tri3);
 
-			// Project the point onto this normal
+			// Project the point onto this normal_
 			Vector3 proj = math::ProjV3(point, n);
 
 			// If the distance from the triangle to the point is 0
@@ -394,7 +394,7 @@ namespace objl
 			return "";
 		}
 
-		// Get element at given index position
+		// Get element at given index position_
 		template <class T>
 		inline const T & getElement(const std::vector<T> &elements, std::string &index)
 		{
@@ -474,7 +474,7 @@ namespace objl
 					{
 						std::cout
 							<< "\r- " << meshname
-							<< "\t| vertices > " << Positions.size()
+							<< "\t| vertices_ > " << Positions.size()
 							<< "\t| texcoords > " << TCoords.size()
 							<< "\t| normals > " << Normals.size()
 							<< "\t| triangles > " << (Vertices.size() / 3)
@@ -574,10 +574,10 @@ namespace objl
 
 					Normals.push_back(vnor);
 				}
-				// Generate a Face (vertices & indices)
+				// Generate a Face (vertices_ & indices)
 				if (algorithm::firstToken(curline) == "f")
 				{
-					// Generate the vertices
+					// Generate the vertices_
 					std::vector<Vertex> vVerts;
 					GenVerticesFromRawOBJ(vVerts, Positions, TCoords, Normals, curline);
 
@@ -723,7 +723,7 @@ namespace objl
 		std::vector<Material> LoadedMaterials;
 
 	private:
-		// Generate vertices from a list of positions, 
+		// Generate vertices_ from a list of positions, 
 		//	tcoords, normals and a face line
 		void GenVerticesFromRawOBJ(std::vector<Vertex>& oVerts,
 			const std::vector<Vector3>& iPositions,
@@ -745,14 +745,14 @@ namespace objl
 
 				algorithm::split(sface[i], svert, "/");
 
-				// Check for just position - v1
+				// Check for just position_ - v1
 				if (svert.size() == 1)
 				{
-					// Only position
+					// Only position_
 					vtype = 1;
 				}
 
-				// Check for position & texture - v1/vt1
+				// Check for position_ & texture - v1/vt1
 				if (svert.size() == 2)
 				{
 					// Position & Texture
@@ -834,7 +834,7 @@ namespace objl
 			}
 		}
 
-		// Triangulate a list of vertices into a face by printing
+		// Triangulate a list of vertices_ into a face by printing
 		//	inducies corresponding with triangles within it
 		void VertexTriangluation(std::vector<unsigned int>& oIndices,
 			const std::vector<Vertex>& iVerts)
@@ -855,7 +855,7 @@ namespace objl
 				return;
 			}
 
-			// Create a list of vertices
+			// Create a list of vertices_
 			std::vector<Vertex> tVerts = iVerts;
 
 			while (true)
@@ -951,7 +951,7 @@ namespace objl
 					if (angle <= 0 && angle >= 180)
 						continue;
 
-					// If any vertices are within this triangle
+					// If any vertices_ are within this triangle
 					bool inTri = false;
 					for (int j = 0; j < int(iVerts.size()); j++)
 					{
@@ -989,7 +989,7 @@ namespace objl
 					}
 
 					// reset i to the start
-					// -1 since loop will add 1 to it
+					// -1 since loop will Add 1 to it
 					i = -1;
 				}
 
@@ -997,7 +997,7 @@ namespace objl
 				if (oIndices.size() == 0)
 					break;
 
-				// if no more vertices
+				// if no more vertices_
 				if (tVerts.size() == 0)
 					break;
 			}

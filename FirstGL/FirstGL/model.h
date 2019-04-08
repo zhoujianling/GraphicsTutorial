@@ -9,38 +9,38 @@
 struct Vertex
 {
 	/** x,y,z坐标 **/
-	GLfloat position[3];
+	GLfloat position_[3];
 
 	/** UV 纹理坐标 **/
-	GLfloat texcoord[2];
+	GLfloat tex_coord_[2];
 
 	/** 法线信息 **/
-	GLfloat normal[3];
+	GLfloat normal_[3];
 };
 
 class Model : public Sprite
 {
 private:
-	std::vector<Vertex> vertices;
+	std::vector<Vertex> vertices_;
 
-	std::vector<int> faceIndices;
+	std::vector<int> face_indices_;
 
 
 public:
 
 	Model();
 
-	void Init(const char *modelPath);
+	void Init(const char *model_path);
 
 	void Draw() override;
 
 	std::vector<Vertex>& GetVertices()
 	{
-		return this->vertices;
+		return this->vertices_;
 	}
 
 	std::vector<int>& GetFaces()
 	{
-		return this->faceIndices;
+		return this->face_indices_;
 	}
 };

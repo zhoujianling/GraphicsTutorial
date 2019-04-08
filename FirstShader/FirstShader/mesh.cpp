@@ -13,11 +13,11 @@ TriMesh::TriMesh()
 	//glRotated(90.0, 0, 1.0, 0);
 }
 
-void TriMesh::Init(std::string modelPath)
+void TriMesh::Init(const std::string model_path)
 {
 	vertex_buffer_ = new VertexBuffer();
 	element_buffer_ = new ElementBuffer();
-	LoadPly(modelPath, vertex_buffer_, element_buffer_);
+	LoadPly(model_path, vertex_buffer_, element_buffer_);
 
 	shader = new Shader;
 	shader->Init("trimesh.vert", "trimesh.frag");
@@ -29,12 +29,12 @@ void TriMesh::Init(std::string modelPath)
 	shader->SetVector4("U_LightDiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
 }
 
-void TriMesh::Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
+void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 {
 	glEnable(GL_DEPTH_TEST);
 	vertex_buffer_->Bind();
 	element_buffer_->Bind();
-	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(viewMatrix), glm::value_ptr(projectionMatrix));
+	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
 	auto it = glm::inverseTranspose(model_matrix_);
 	auto it_location = glGetUniformLocation(shader->GetProgramId(), "IT_ModelMatrix");
 	glUniformMatrix4fv(it_location, 1, GL_FALSE, glm::value_ptr(it));

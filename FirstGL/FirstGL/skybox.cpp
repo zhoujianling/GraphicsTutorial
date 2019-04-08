@@ -1,36 +1,43 @@
 #include "skybox.h"
 #include "utils.h"
 
-void SkyBox::Init(const char* imageDir, Camera *c)
+SkyBox::SkyBox():
+textures_{0, 0, 0, 0, 0, 0},
+fast_draw_call_(0),
+curr_camera_(nullptr)
 {
-	this->currCamera = c;
+}
+
+void SkyBox::Init(const char* image_dir, Camera *c)
+{
+	this->curr_camera_ = c;
 
 	char temp[256];
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Front.bmp");
-	mTextures[0] = CreateTexture2DFromBmp(temp);
+	textures_[0] = CreateTexture2DFromBmp(temp);
 
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Back.bmp");
-	mTextures[1] = CreateTexture2DFromBmp(temp);
+	textures_[1] = CreateTexture2DFromBmp(temp);
 
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Left.bmp");
-	mTextures[2] = CreateTexture2DFromBmp(temp);
+	textures_[2] = CreateTexture2DFromBmp(temp);
 
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Right.bmp");
-	mTextures[3] = CreateTexture2DFromBmp(temp);
+	textures_[3] = CreateTexture2DFromBmp(temp);
 
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Top.bmp");
-	mTextures[4] = CreateTexture2DFromBmp(temp);
+	textures_[4] = CreateTexture2DFromBmp(temp);
 
-	strcpy(temp, imageDir);
+	strcpy(temp, image_dir);
 	strcat(temp, "Bottom.bmp");
-	mTextures[5] = CreateTexture2DFromBmp(temp);
+	textures_[5] = CreateTexture2DFromBmp(temp);
 
-	mFastDrawCall = CreateDisplayList([this]() -> void {DrawCommand();});
+	fast_draw_call_ = CreateDisplayList([this]() -> void {DrawCommand();});
 }
 
 /**
@@ -42,7 +49,7 @@ void SkyBox::DrawCommand()
 	glEnable(GL_TEXTURE_2D);
 
 	// Front
-	glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+	glBindTexture(GL_TEXTURE_2D, textures_[0]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -62,7 +69,7 @@ void SkyBox::DrawCommand()
 	glEnd();
 
 	// Back
-	glBindTexture(GL_TEXTURE_2D, mTextures[1]);
+	glBindTexture(GL_TEXTURE_2D, textures_[1]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -82,7 +89,7 @@ void SkyBox::DrawCommand()
 	glEnd();
 
 	// Left 中
-	glBindTexture(GL_TEXTURE_2D, mTextures[2]);
+	glBindTexture(GL_TEXTURE_2D, textures_[2]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -102,7 +109,7 @@ void SkyBox::DrawCommand()
 	glEnd();
 
 	// Right 中
-	glBindTexture(GL_TEXTURE_2D, mTextures[3]);
+	glBindTexture(GL_TEXTURE_2D, textures_[3]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -122,7 +129,7 @@ void SkyBox::DrawCommand()
 	glEnd();
 
 	// Top 中
-	glBindTexture(GL_TEXTURE_2D, mTextures[4]);
+	glBindTexture(GL_TEXTURE_2D, textures_[4]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -142,7 +149,7 @@ void SkyBox::DrawCommand()
 	glEnd();
 
 	// Bottom 中
-	glBindTexture(GL_TEXTURE_2D, mTextures[5]);
+	glBindTexture(GL_TEXTURE_2D, textures_[5]);
 	glBegin(GL_QUADS);
 	glColor4ub(255, 255, 255, 255);
 	glTexCoord2f(0.f, 0.f);
@@ -174,10 +181,10 @@ void SkyBox::DrawCommand()
 void SkyBox::Draw()
 {
 	glPushMatrix();
-	glTranslatef(currCamera->GetPosition().v1,
-		currCamera->GetPosition().v2, 
-		currCamera->GetPosition().v3);
-	glCallList(mFastDrawCall);
+	glTranslatef(curr_camera_->GetPosition().v1,
+		curr_camera_->GetPosition().v2, 
+		curr_camera_->GetPosition().v3);
+	glCallList(fast_draw_call_);
 	glPopMatrix();
 	//glLoadIdentity();
 

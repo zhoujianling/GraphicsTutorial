@@ -12,7 +12,7 @@ DirectionLight light(GL_LIGHT0);
 PointLight light1(GL_LIGHT1);
 PointLight light2(GL_LIGHT2);
 Ground ground;
-SkyBox skyBox;
+SkyBox sky_box;
 Model model;
 Camera camera;
 //Particle particle;
@@ -32,7 +32,7 @@ void Init()
 	gluPerspective(50.0f, 800.0f / 600.0f, 0.1f, 1000.f);
 	glMatrixMode(GL_MODELVIEW); // 切换当前矩阵到模型视口矩阵
 	glLoadIdentity();
-	skyBox.Init("Res/", &camera);
+	sky_box.Init("Res/", &camera);
 	//model.Init("Res/Box.obj");
 	model.Init("Res/Dog.ply");
 	ground.Init();
@@ -77,7 +77,7 @@ void Draw()
 	light2.Enable();
 	light2.Update(camera.GetPosition().v1, camera.GetPosition().v2, camera.GetPosition().v3);
 
-	skyBox.Draw();
+	sky_box.Draw();
 	ground.Draw();
 	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
 	model.Draw();
@@ -123,12 +123,12 @@ void OnKeyUp(char code)
 	}
 }
 
-void OnMouseMove(float deltaX, float deltaY)
+void OnMouseMove(float delta_x, float delta_y)
 {
 	// 在 x 轴滑动，相机沿 y轴转动，位移值近似逼近 yaw 的角度
-	float angleRotateByYAxis = deltaX / 1000.0f; 
+	const float angle_rotate_by_y_axis = delta_x / 1000.0f; 
 	// 在 y 轴滑动，相机沿 x轴转动，位移值近似逼近 pitch 的角度
-	float angleRotateByXAxis = deltaY / 1000.0f; 
-	camera.Yaw(- angleRotateByYAxis);
-	camera.Pitch(- angleRotateByXAxis);
+	const auto angle_rotate_by_x_axis = delta_y / 1000.0f; 
+	camera.Yaw(- angle_rotate_by_y_axis);
+	camera.Pitch(- angle_rotate_by_x_axis);
 }

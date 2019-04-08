@@ -8,67 +8,67 @@
 #pragma comment (lib, "glu32.lib") 
 #pragma comment (lib, "winmm.lib") 
 
-POINT originalPos;
+POINT original_pos;
 
-bool rotateView = false;
+bool is_rotating_view = false;
 
-unsigned char* LoadFile(const char* filePath, int& fileSize)
+unsigned char* LoadFile(const char* file_path, int& file_Size)
 {
-	unsigned char *fileContent = nullptr;
-	fileSize = 0;
+	unsigned char *file_content = nullptr;
+	file_Size = 0;
 
-	FILE *fp = fopen(filePath, "rb");
+	FILE *fp = fopen(file_path, "rb");
 	if (fp == nullptr)
 	{
-		return fileContent;
+		return file_content;
 	}
 	fseek(fp, 0, SEEK_END); // 移动文件指针到尾部
 	int nlen = ftell(fp);
 	if (nlen > 0)
 	{
 		rewind(fp); // 移到头部
-		fileContent = new unsigned char[nlen + 1];
-		fread(fileContent, sizeof(unsigned char), nlen, fp);
-		fileContent[nlen] = 0;
-		fileSize = nlen;
+		file_content = new unsigned char[nlen + 1];
+		fread(file_content, sizeof(unsigned char), nlen, fp);
+		file_content[nlen] = 0;
+		file_Size = nlen;
 	}
 	fclose(fp);
-	return fileContent;
+	return file_content;
 }
 
 /**
  * @param msg: 1 表示用户关闭了窗口， 2 表示用户用户拖拽了窗口
- * @param wParam: 额外的信息 
+ * @param w_param: 额外的信息 
  */
-LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM w_param, LPARAM l_param)
 {
 	switch (msg)
 	{
 	case WM_KEYDOWN:
-		OnKeyDown(wParam);
+		OnKeyDown(w_param);
 		return 0;
 	case WM_KEYUP:
-		OnKeyUp(wParam);
+		OnKeyUp(w_param);
 		return 0;
 	case WM_RBUTTONDOWN:
-		GetCursorPos(&originalPos);
+		GetCursorPos(&original_pos);
 		ShowCursor(false);
-		rotateView = true;
+		is_rotating_view = true;
 		return 0;
 	case WM_RBUTTONUP:
-		SetCursorPos(originalPos.x, originalPos.y);
+		SetCursorPos(original_pos.x, original_pos.y);
 		ShowCursor(true);
-		rotateView = false;
+		is_rotating_view = false;
 		return 0;
 	case WM_MOUSEMOVE:
-		if (rotateView)
+		if (is_rotating_view)
 		{
-			POINT currentPos;
-			GetCursorPos(&currentPos);
-			int deltaX = currentPos.x - originalPos.x;
-			int deltaY = currentPos.y - originalPos.y;
-			OnMouseMove(deltaX, deltaY);
-			SetCursorPos(originalPos.x, originalPos.y);
+			POINT current_pos;
+			GetCursorPos(&current_pos);
+			const int delta_x = current_pos.x - original_pos.x;
+			const int delta_y = current_pos.y - original_pos.y;
+			OnMouseMove(delta_x, delta_y);
+			SetCursorPos(original_pos.x, original_pos.y);
 		}
 			return 0;
 	case WM_CLOSE:
@@ -76,23 +76,23 @@ LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		return 0;
 	}
-	return DefWindowProc(hwn, msg, wParam, lParam);
+	return DefWindowProc(hwn, msg, w_param, l_param);
 }
 
-void SetWindowContent(WNDCLASSEX *windowClass, HINSTANCE hInstance)
+void SetWindowContent(WNDCLASSEX *window_class, HINSTANCE h_instance)
 {
-	windowClass -> cbClsExtra = 0;
-	windowClass -> cbSize = sizeof(WNDCLASSEX);
-	windowClass -> cbWndExtra = 0;
-	windowClass -> hbrBackground = nullptr;
-	windowClass -> hCursor = LoadCursor(nullptr, IDC_ARROW);
-	windowClass -> hIcon = nullptr;
-	windowClass -> hIconSm = nullptr;
-	windowClass -> hInstance = hInstance;
-	windowClass -> lpfnWndProc = GLWindowProc; // 用户操作处理回调函数指针
-	windowClass -> lpszClassName = "GLWindow"; // ClassName 不能乱改?
-	windowClass -> lpszMenuName = nullptr;
-	windowClass -> style = CS_VREDRAW | CS_HREDRAW; // 垂直重绘 + 水平重绘
+	window_class -> cbClsExtra = 0;
+	window_class -> cbSize = sizeof(WNDCLASSEX);
+	window_class -> cbWndExtra = 0;
+	window_class -> hbrBackground = nullptr;
+	window_class -> hCursor = LoadCursor(nullptr, IDC_ARROW);
+	window_class -> hIcon = nullptr;
+	window_class -> hIconSm = nullptr;
+	window_class -> hInstance = h_instance;
+	window_class -> lpfnWndProc = GLWindowProc; // 用户操作处理回调函数指针
+	window_class -> lpszClassName = "GLWindow"; // ClassName 不能乱改?
+	window_class -> lpszMenuName = nullptr;
+	window_class -> style = CS_VREDRAW | CS_HREDRAW; // 垂直重绘 + 水平重绘
 	
 }
 
@@ -103,7 +103,7 @@ void SetWindowContent(WNDCLASSEX *windowClass, HINSTANCE hInstance)
 HDC SetOpenGlEnv(HWND hwnd)
 {
 	// ==================
-	HDC hdc = GetDC(hwnd); // 获取设备上下文
+	auto hdc = GetDC(hwnd); // 获取设备上下文
 	PIXELFORMATDESCRIPTOR pfd; // 像素格式配置类
 	memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
 	pfd.nVersion = 1;
@@ -113,9 +113,9 @@ HDC SetOpenGlEnv(HWND hwnd)
 	pfd.cStencilBits = 8; // 蒙版缓冲区
 	pfd.iPixelType = PFD_TYPE_RGBA;
 	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	int pixelFormat = ChoosePixelFormat(hdc, &pfd); // windows 帮我们选择 pixelFormat
-	SetPixelFormat(hdc, pixelFormat, &pfd);
-	HGLRC rc = wglCreateContext(hdc);// handle GL render context 创建渲染环境
+	int pixel_format = ChoosePixelFormat(hdc, &pfd); // windows 帮我们选择 pixelFormat
+	SetPixelFormat(hdc, pixel_format, &pfd);
+	const auto rc = wglCreateContext(hdc);// handle GL render context 创建渲染环境
 	wglMakeCurrent(hdc, rc); // 使渲染环境生效
 	Init();
 	
@@ -128,9 +128,9 @@ HDC SetOpenGlEnv(HWND hwnd)
  */
 INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, int nShowCommand) {
 	// 注册窗口
-	WNDCLASSEX windowClass; // 这是一个结构体, 描述窗口信息
-	SetWindowContent(&windowClass, hInstance);
-	auto atom = RegisterClassEx(&windowClass); // 注册窗口
+	WNDCLASSEX window_class; // 这是一个结构体, 描述窗口信息
+	SetWindowContent(&window_class, hInstance);
+	const auto atom = RegisterClassEx(&window_class); // 注册窗口
 
 	RECT rect;
 	rect.left = 0;
@@ -139,8 +139,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 	rect.bottom = 600;
 	// 这个函数保证视口的rect 为 800 x 600，加上标题栏等烂七八糟的，重新得到 rect 的大小
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, 0);
-	const int windowWidth = rect.right - rect.left;
-	const int windowHeight = rect.bottom - rect.top;
+	const int window_width = rect.right - rect.left;
+	const int window_height = rect.bottom - rect.top;
 
 	if (atom == 0) {
 		MessageBox(nullptr, "notice", "Error", MB_OK);
@@ -148,7 +148,7 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 	}
 
 	HWND hwnd = CreateWindowEx(NULL, "GLWindow", "GL", WS_OVERLAPPEDWINDOW, 
-		100, 100, windowWidth, windowHeight, 
+		100, 100, window_width, window_height, 
 		nullptr, nullptr, hInstance, nullptr);
 	const auto hdc = SetOpenGlEnv(hwnd); // 初始化 OpenGL 渲染环境
 	ShowWindow(hwnd, SW_SHOW); //

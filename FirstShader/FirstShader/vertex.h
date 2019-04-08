@@ -33,6 +33,7 @@ private:
 	GLuint vbo_;
 
 public:
+	VertexBuffer();
 
 	Vertex *GetVertex() 
 	{

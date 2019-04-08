@@ -238,7 +238,7 @@ RECENT REVISION HISTORY:
 // stb_image supports loading HDR images in general, and currently the Radiance
 // .HDR file format specifically. You can still load any file through the existing
 // interface; if you attempt to load an HDR file, it will be automatically remapped
-// to LDR, assuming gamma 2.2 and an arbitrary scale factor defaulting to 1;
+// to LDR, assuming gamma 2.2 and an arbitrary Scale factor defaulting to 1;
 // both of these constants can be reconfigured through this interface:
 //
 //     stbi_hdr_to_ldr_gamma(2.2f);
@@ -920,25 +920,25 @@ static int stbi__addsizes_valid(int a, int b)
 static int stbi__mul2sizes_valid(int a, int b)
 {
 	if (a < 0 || b < 0) return 0;
-	if (b == 0) return 1; // mul-by-0 is always safe
+	if (b == 0) return 1; // Mul-by-0 is always safe
 	// portable way to check for no overflows in a*b
 	return a <= INT_MAX / b;
 }
 
-// returns 1 if "a*b + add" has no negative terms/factors and doesn't overflow
+// returns 1 if "a*b + Add" has no negative terms/factors and doesn't overflow
 static int stbi__mad2sizes_valid(int a, int b, int add)
 {
 	return stbi__mul2sizes_valid(a, b) && stbi__addsizes_valid(a*b, add);
 }
 
-// returns 1 if "a*b*c + add" has no negative terms/factors and doesn't overflow
+// returns 1 if "a*b*c + Add" has no negative terms/factors and doesn't overflow
 static int stbi__mad3sizes_valid(int a, int b, int c, int add)
 {
 	return stbi__mul2sizes_valid(a, b) && stbi__mul2sizes_valid(a*b, c) &&
 		stbi__addsizes_valid(a*b*c, add);
 }
 
-// returns 1 if "a*b*c*d + add" has no negative terms/factors and doesn't overflow
+// returns 1 if "a*b*c*d + Add" has no negative terms/factors and doesn't overflow
 #if !defined(STBI_NO_LINEAR) || !defined(STBI_NO_HDR)
 static int stbi__mad4sizes_valid(int a, int b, int c, int d, int add)
 {
@@ -1005,9 +1005,9 @@ STBIDEF void stbi_set_flip_vertically_on_load(int flag_true_if_should_flip)
 
 static void *stbi__load_main(stbi__context *s, int *x, int *y, int *comp, int req_comp, stbi__result_info *ri, int bpc)
 {
-	memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we add new fields
+	memset(ri, 0, sizeof(*ri)); // make sure it's initialized if we Add new fields
 	ri->bits_per_channel = 8; // default is 8 so most paths don't have to be changed
-	ri->channel_order = STBI_ORDER_RGB; // all current input & output are this, but this is here so we can add BGR order
+	ri->channel_order = STBI_ORDER_RGB; // all current input & output are this, but this is here so we can Add BGR order
 	ri->num_channels = 0;
 
 #ifndef STBI_NO_JPEG
@@ -1835,7 +1835,7 @@ static int stbi__build_huffman(stbi__huffman *h, int *count)
 	code = 0;
 	k = 0;
 	for (j = 1; j <= 16; ++j) {
-		// compute delta to add to code to compute symbol id
+		// compute delta to Add to code to compute symbol id
 		h->delta[j] = k - code;
 		if (h->size[k] == j) {
 			while (h->size[k] == j)
@@ -2003,7 +2003,7 @@ stbi_inline static int stbi__jpeg_get_bit(stbi__jpeg *j)
 	return k & 0x80000000;
 }
 
-// given a value that's at position X in the zigzag stream,
+// given a value that's at position_ X in the zigzag stream,
 // where does it appear in the 8x8 matrix coded as row-major?
 static const stbi_uc stbi__jpeg_dezigzag[64 + 15] =
 {
@@ -2048,7 +2048,7 @@ static int stbi__jpeg_decode_block(stbi__jpeg *j, short data[64], stbi__huffman 
 		r = fac[c];
 		if (r) { // fast-AC path
 			k += (r >> 4) & 15; // run
-			s = r & 15; // combined length
+			s = r & 15; // combined Length
 			j->code_buffer <<= s;
 			j->code_bits -= s;
 			// decode into unzigzag'd location
@@ -2125,7 +2125,7 @@ static int stbi__jpeg_decode_block_prog_ac(stbi__jpeg *j, short data[64], stbi__
 			r = fac[c];
 			if (r) { // fast-AC path
 				k += (r >> 4) & 15; // run
-				s = r & 15; // combined length
+				s = r & 15; // combined Length
 				j->code_buffer <<= s;
 				j->code_bits -= s;
 				zig = stbi__jpeg_dezigzag[k++];
@@ -2319,11 +2319,11 @@ static void stbi__idct_block(stbi_uc *out, int out_stride, short data[64])
 		// no fast case since the first 1D IDCT spread components out
 		STBI__IDCT_1D(v[0], v[1], v[2], v[3], v[4], v[5], v[6], v[7])
 			// constants scaled things up by 1<<12, plus we had 1<<2 from first
-			// loop, plus horizontal and vertical each scale by sqrt(8) so together
+			// loop, plus horizontal and vertical each Scale by sqrt(8) so together
 			// we've got an extra 1<<3, so 1<<17 total we need to remove.
 			// so we want to round that, which means adding 0.5 * 1<<17,
 			// aka 65536. Also, we'll end up with -128 to 127 that we want
-			// to encode as 0..255 by adding 128, so we'll add that before the shift
+			// to encode as 0..255 by adding 128, so we'll Add that before the shift
 			x0 += 65536 + (128 << 17);
 		x1 += 65536 + (128 << 17);
 		x2 += 65536 + (128 << 17);
@@ -2369,17 +2369,17 @@ static void stbi__idct_simd(stbi_uc *out, int out_stride, short data[64])
       __m128i out##_l = _mm_srai_epi32(_mm_unpacklo_epi16(_mm_setzero_si128(), (in)), 4); \
       __m128i out##_h = _mm_srai_epi32(_mm_unpackhi_epi16(_mm_setzero_si128(), (in)), 4)
 
-   // wide add
+   // wide Add
 #define dct_wadd(out, a, b) \
       __m128i out##_l = _mm_add_epi32(a##_l, b##_l); \
       __m128i out##_h = _mm_add_epi32(a##_h, b##_h)
 
-   // wide sub
+   // wide Sub
 #define dct_wsub(out, a, b) \
       __m128i out##_l = _mm_sub_epi32(a##_l, b##_l); \
       __m128i out##_h = _mm_sub_epi32(a##_h, b##_h)
 
-   // butterfly a/b, add bias, then shift by "s" and pack
+   // butterfly a/b, Add bias, then shift by "s" and pack
 #define dct_bfly32o(out0, out1, a,b,bias,s) \
       { \
          __m128i abiased_l = _mm_add_epi32(a##_l, bias); \
@@ -2555,12 +2555,12 @@ static void stbi__idct_simd(stbi_uc *out, int out_stride, short data[64])
    int32x4_t out##_l = vshll_n_s16(vget_low_s16(inq), 12); \
    int32x4_t out##_h = vshll_n_s16(vget_high_s16(inq), 12)
 
-	// wide add
+	// wide Add
 #define dct_wadd(out, a, b) \
    int32x4_t out##_l = vaddq_s32(a##_l, b##_l); \
    int32x4_t out##_h = vaddq_s32(a##_h, b##_h)
 
-// wide sub
+// wide Sub
 #define dct_wsub(out, a, b) \
    int32x4_t out##_l = vsubq_s32(a##_l, b##_l); \
    int32x4_t out##_h = vsubq_s32(a##_h, b##_h)
@@ -2624,7 +2624,7 @@ static void stbi__idct_simd(stbi_uc *out, int out_stride, short data[64])
 	row6 = vld1q_s16(data + 6 * 8);
 	row7 = vld1q_s16(data + 7 * 8);
 
-	// add DC bias
+	// Add DC bias
 	row0 = vaddq_s16(row0, vsetq_lane_s16(1024, vdupq_n_s16(0), 0));
 
 	// column pass
@@ -3547,7 +3547,7 @@ static void stbi__YCbCr_to_RGB_simd(stbi_uc *out, stbi_uc const *y, stbi_uc cons
 #endif
 
 #ifdef STBI_NEON
-	// in this version, step=3 support would be easy to add. but is there demand?
+	// in this version, step=3 support would be easy to Add. but is there demand?
 	if (step == 4) {
 		// this is a fairly straightforward implementation and not super-optimized.
 		uint8x8_t signflip = vdup_n_u8(0x80);
@@ -4182,7 +4182,7 @@ static int stbi__parse_uncompressed_block(stbi__zbuf *a)
 		a->num_bits -= 8;
 	}
 	STBI_ASSERT(a->num_bits == 0);
-	// now fill header the normal way
+	// now fill header the normal_ way
 	while (k < 4)
 		header[k++] = stbi__zget8(a);
 	len = header[1] * 256 + header[0];
@@ -4571,7 +4571,7 @@ static int stbi__create_png_image_raw(stbi__png *a, stbi_uc *raw, stbi__uint32 r
 			stbi_uc *in = a->out + stride * j + x * out_n - img_width_bytes;
 			// unpack 1/2/4-bit into a 8-bit buffer. allows us to keep the common 8-bit path optimal at minimal cost for 1/2/4-bit
 			// png guarante byte alignment, if width is not multiple of 8/4/2 we'll decode dummy trailing data that will be skipped in the later loop
-			stbi_uc scale = (color == 0) ? stbi__depth_scale_table[depth] : 1; // scale grayscale values to 0..255 range
+			stbi_uc scale = (color == 0) ? stbi__depth_scale_table[depth] : 1; // Scale grayscale values to 0..255 range
 
 			// note that the final byte might overshoot and write more data than desired.
 			// we can allocate enough data that this never writes out of memory, but it
@@ -5390,7 +5390,7 @@ static void *stbi__bmp_load(stbi__context *s, int *x, int *y, int *comp, int req
 		}
 		if (!easy) {
 			if (!mr || !mg || !mb) { STBI_FREE(out); return stbi__errpuc("bad masks", "Corrupt BMP"); }
-			// right shift amt to put high bit in position #7
+			// right shift amt to put high bit in position_ #7
 			rshift = stbi__high_bit(mr) - 7; rcount = stbi__bitcount(mr);
 			gshift = stbi__high_bit(mg) - 7; gcount = stbi__bitcount(mg);
 			bshift = stbi__high_bit(mb) - 7; bcount = stbi__bitcount(mb);
@@ -5499,7 +5499,7 @@ static int stbi__tga_info(stbi__context *s, int *x, int *y, int *comp)
 		stbi__skip(s, 4);       // skip image x and y origin
 		tga_colormap_bpp = sz;
 	}
-	else { // "normal" image w/o colormap - only RGB or grey allowed, +/- RLE
+	else { // "normal_" image w/o colormap - only RGB or grey allowed, +/- RLE
 		if ((tga_image_type != 2) && (tga_image_type != 3) && (tga_image_type != 10) && (tga_image_type != 11)) {
 			stbi__rewind(s);
 			return 0; // only RGB or grey allowed, +/- RLE
@@ -5556,7 +5556,7 @@ static int stbi__tga_test(stbi__context *s)
 		if ((sz != 8) && (sz != 15) && (sz != 16) && (sz != 24) && (sz != 32)) goto errorEnd;
 		stbi__skip(s, 4);       // skip image x and y origin
 	}
-	else { // "normal" image w/o colormap
+	else { // "normal_" image w/o colormap
 		if ((sz != 2) && (sz != 3) && (sz != 10) && (sz != 11)) goto errorEnd; // only RGB or grey allowed, +/- RLE
 		stbi__skip(s, 9); // skip colormap specification and image x/y origin
 	}
@@ -5647,7 +5647,7 @@ static void *stbi__tga_load(stbi__context *s, int *x, int *y, int *comp, int req
 	tga_data = (unsigned char*)stbi__malloc_mad3(tga_width, tga_height, tga_comp, 0);
 	if (!tga_data) return stbi__errpuc("outofmem", "Out of memory");
 
-	// skip to the data's starting position (offset usually = 0)
+	// skip to the data's starting position_ (offset usually = 0)
 	stbi__skip(s, tga_offset);
 
 	if (!tga_indexed && !tga_is_RLE && !tga_rgb16) {
@@ -6932,7 +6932,7 @@ static float *stbi__hdr_load(stbi__context *s, int *x, int *y, int *comp, int re
 			c2 = stbi__get8(s);
 			len = stbi__get8(s);
 			if (c1 != 2 || c2 != 2 || (len & 0x80)) {
-				// not run-length encoded, so we have to actually use THIS data as a decoded
+				// not run-Length encoded, so we have to actually use THIS data as a decoded
 				// pixel (note this can't be a valid pixel--one of RGB must be >= 128)
 				stbi_uc rgbe[4];
 				rgbe[0] = (stbi_uc)c1;
@@ -6947,7 +6947,7 @@ static float *stbi__hdr_load(stbi__context *s, int *x, int *y, int *comp, int re
 			}
 			len <<= 8;
 			len |= stbi__get8(s);
-			if (len != width) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("invalid decoded scanline length", "corrupt HDR"); }
+			if (len != width) { STBI_FREE(hdr_data); STBI_FREE(scanline); return stbi__errpf("invalid decoded scanline Length", "corrupt HDR"); }
 			if (scanline == NULL) {
 				scanline = (stbi_uc *)stbi__malloc_mad2(width, 4, 0);
 				if (!scanline) {
@@ -7450,7 +7450,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
 						 uniform handling of optional "return" values;
 						 thread-safe initialization of zlib tables
 	  2.14  (2017-03-03) remove deprecated STBI_JPEG_OLD; fixes for Imagenet JPGs
-	  2.13  (2016-11-29) add 16-bit API, only supported for PNG right now
+	  2.13  (2016-11-29) Add 16-bit API, only supported for PNG right now
 	  2.12  (2016-04-02) fix typo in 2.11 PSD fix that caused crashes
 	  2.11  (2016-04-02) allocate large structures on the stack
 						 remove white matting for transparent PSD
@@ -7509,7 +7509,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
 	  1.39  (2014-06-15)
 			  fix to TGA optimization when req_comp != number of components in TGA;
 			  fix to GIF loading because BMP wasn't rewinding (whoops, no GIFs in my test suite)
-			  add support for BMP version 5 (more ignored fields)
+			  Add support for BMP version 5 (more ignored fields)
 	  1.38  (2014-06-06)
 			  suppress MSVC warnings on integer casts truncating values
 			  fix accidental rename of 'skip' field of I/O
@@ -7587,7 +7587,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
 			  fix bug: the stbi__bmp_load() and stbi__tga_load() functions didn't work at all
 	  1.00    interface to zlib that skips zlib header
 	  0.99    correct handling of alpha in palette
-	  0.98    TGA loader by lonesock; dynamically add loaders (untested)
+	  0.98    TGA loader by lonesock; dynamically Add loaders (untested)
 	  0.97    jpeg errors on too large a file; also catch another malloc failure
 	  0.96    fix detection of invalid v value - particleman@mollyrocket forum
 	  0.95    during header scan, seek to markers in case of padding

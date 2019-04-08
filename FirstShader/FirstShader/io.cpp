@@ -135,16 +135,16 @@ extern "C" {
 
 }
 
-void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element_buffer)
+void LoadPly(const std::string& model_path, VertexBuffer *buffer, ElementBuffer *element_buffer)
 {
 	memset(buffer, 0, sizeof(float) * buffer->GetVerticesCount() * 16);
 	TriMeshNormal trimesh;
-	read_ply_file(modelPath.c_str(), &trimesh);
+	read_ply_file(model_path.c_str(), &trimesh);
 	buffer->SetVertexCount(trimesh.n_verts);
 	for (int i = 0; i < trimesh.n_verts; i ++)
 	{
 		const auto& vt = trimesh.vertices[i];
-		Vertex vertex;
+		Vertex vertex{};
 		vertex.position[0] = vt.x;
 		vertex.position[1] = vt.y;
 		vertex.position[2] = vt.z;
@@ -203,12 +203,12 @@ void LoadPly(std::string modelPath, VertexBuffer *buffer, ElementBuffer *element
 // 	}
 // }
 
-void LoadRGBImage(std::string imagePath, unsigned char *& data, int &width, int &height)
+void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height)
 {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
 	// stbi_set_flip_vertically_on_load(true); 
 	int channel;
-	data = stbi_load(imagePath.c_str(), &width, &height, &channel, STBI_rgb);
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb);
 //	stbi_image_free(data);
 }
 

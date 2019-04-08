@@ -21,9 +21,9 @@ private:
 public:
 	TriMesh();
 
-	void Init(std::string modelPath);
+	void Init(std::string model_path);
 
-	void Draw(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
 	//TriMesh();
 
 	//void Translate(float x, float y, float z);

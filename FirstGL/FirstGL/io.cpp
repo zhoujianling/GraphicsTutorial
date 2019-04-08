@@ -94,19 +94,19 @@ extern "C" {
 
 }
 
-void LoadPly(std::string modelPath, Model *model)
+void LoadPly(std::string model_path, Model *model)
 {
 	model->GetVertices().clear();
 	model->GetFaces().clear();
 	TriMesh trimesh;
-	read_ply_file(modelPath.c_str(), &trimesh);
+	read_ply_file(model_path.c_str(), &trimesh);
 	for (int i = 0; i < trimesh.n_verts; i ++)
 	{
 		const auto& vt = trimesh.vertices[i];
 		Vertex vertex;
-		vertex.position[0] = vt.x;
-		vertex.position[1] = vt.y;
-		vertex.position[2] = vt.z;
+		vertex.position_[0] = vt.x;
+		vertex.position_[1] = vt.y;
+		vertex.position_[2] = vt.z;
 		model->GetVertices().push_back(vertex);
 	}
 	for (int i = 0; i < trimesh.n_faces; i ++)
@@ -124,10 +124,10 @@ void LoadPly(std::string modelPath, Model *model)
 	}
 }
 
-void LoadObj(std::string modelPath, Model *model)
+void LoadObj(std::string model_path, Model *model)
 {
 	objl::Loader loader;
-	const auto success = loader.LoadFile(modelPath);
+	const auto success = loader.LoadFile(model_path);
 	if (! success)
 	{
 		fprintf(stderr, "Fail to load obj!\n");
@@ -142,14 +142,14 @@ void LoadObj(std::string modelPath, Model *model)
 	for (const auto &vt : loadedMesh.Vertices)
 	{
 		Vertex vertex;
-		vertex.position[0] = vt.Position.X;
-		vertex.position[1] = vt.Position.Y;
-		vertex.position[2] = vt.Position.Z;
-		vertex.normal[0] = vt.Normal.X;
-		vertex.normal[1] = vt.Normal.Y;
-		vertex.normal[2] = vt.Normal.Z;
-		vertex.texcoord[0] = vt.TextureCoordinate.X;
-		vertex.texcoord[1] = vt.TextureCoordinate.Y;
+		vertex.position_[0] = vt.Position.X;
+		vertex.position_[1] = vt.Position.Y;
+		vertex.position_[2] = vt.Position.Z;
+		vertex.normal_[0] = vt.Normal.X;
+		vertex.normal_[1] = vt.Normal.Y;
+		vertex.normal_[2] = vt.Normal.Z;
+		vertex.tex_coord_[0] = vt.TextureCoordinate.X;
+		vertex.tex_coord_[1] = vt.TextureCoordinate.Y;
 		model->GetVertices().push_back(vertex);
 	}
 	for (const auto &index : loadedMesh.Indices)
@@ -158,12 +158,12 @@ void LoadObj(std::string modelPath, Model *model)
 	}
 }
 
-void LoadRGBImage(std::string imagePath, unsigned char *& data, int &width, int &height)
+void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height)
 {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
 	// stbi_set_flip_vertically_on_load(true); 
 	int channel;
-	data = stbi_load(imagePath.c_str(), &width, &height, &channel, STBI_rgb);
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb);
 //	stbi_image_free(data);
 }
 

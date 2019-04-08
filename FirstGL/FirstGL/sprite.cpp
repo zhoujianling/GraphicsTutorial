@@ -2,33 +2,33 @@
 
 Sprite::Sprite()
 :
-mAmbientMaterial{0, 0, 0, 0}, 
-mDiffuseMaterial{0, 0, 0, 0}, 
-mSpecularMaterial{0, 0, 0, 0}
+ambient_material_{0, 0, 0, 0}, 
+diffuse_material_{0, 0, 0, 0}, 
+specular_material_{0, 0, 0, 0}
 {
 }
 
 void Sprite::SetAmbientMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	mAmbientMaterial[0] = r;
-	mAmbientMaterial[1] = g;
-	mAmbientMaterial[2] = b;
-	mAmbientMaterial[3] = a;
+	ambient_material_[0] = r;
+	ambient_material_[1] = g;
+	ambient_material_[2] = b;
+	ambient_material_[3] = a;
 }
 
 void Sprite::SetDiffuseMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	mDiffuseMaterial[0] = r;
-	mDiffuseMaterial[1] = g;
-	mDiffuseMaterial[2] = b;
-	mDiffuseMaterial[3] = a;
+	diffuse_material_[0] = r;
+	diffuse_material_[1] = g;
+	diffuse_material_[2] = b;
+	diffuse_material_[3] = a;
 }
 
 
 void Sprite::SetSpecularMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
 {
-	mSpecularMaterial[0] = r;
-	mSpecularMaterial[1] = g;
-	mSpecularMaterial[2] = b;
-	mSpecularMaterial[3] = a;
+	specular_material_[0] = r;
+	specular_material_[1] = g;
+	specular_material_[2] = b;
+	specular_material_[3] = a;
 }

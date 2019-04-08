@@ -16,9 +16,9 @@ void Ground::Draw()
 	glEnable(GL_DEPTH_TEST);
 
 	glEnable(GL_LIGHTING);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mAmbientMaterial);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mDiffuseMaterial);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mSpecularMaterial);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, ambient_material_);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse_material_);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, specular_material_);
 	// 开启颜色追踪材质，让光照效果依赖于物体本身的颜色
 	glEnable(GL_COLOR_MATERIAL);
 
@@ -28,16 +28,16 @@ void Ground::Draw()
 	// 画地面的棋盘格
 	for (int z = 0; z < 20; z ++)
 	{
-		float zStart = 100.0f - z * 10.0f;
+		float z_start = 100.0f - z * 10.0f;
 		for (int x = 0; x < 20;  x ++)
 		{
-			float xStart = x * 10.0f - 100.0f;
+			float x_start = x * 10.0f - 100.0f;
 			unsigned char color = (z % 2) ^ (x % 2) ? 41 : 200;
 			glColor4ub(color, color, color, 255);
-			glVertex3f(xStart, -1.0f, zStart);
-			glVertex3f(xStart + 10.f, -1.0f, zStart);
-			glVertex3f(xStart + 10.f, -1.0f, zStart - 10.0f);
-			glVertex3f(xStart, -1.0f, zStart - 10.0f);
+			glVertex3f(x_start, -1.0f, z_start);
+			glVertex3f(x_start + 10.f, -1.0f, z_start);
+			glVertex3f(x_start + 10.f, -1.0f, z_start - 10.0f);
+			glVertex3f(x_start, -1.0f, z_start - 10.0f);
 		}
 	}
 	glEnd();

@@ -7,17 +7,19 @@ class SkyBox final
 {
 
 private:
-	GLuint mTextures[6];
+	GLuint textures_[6];
 
-	GLuint mFastDrawCall;
+	GLuint fast_draw_call_;
 
-	Camera* currCamera = nullptr;
+	Camera* curr_camera_;
 
 public:
+	SkyBox();
+
 	/**
 	 * @param: 天空盒的6张图片所在的目录路径 
 	 **/
-	void Init(const char *imageDir, Camera *camera);
+	void Init(const char *image_dir, Camera *camera);
 
 	/** 绘制天空盒 **/
 	void DrawCommand();

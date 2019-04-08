@@ -6,23 +6,23 @@
 class Particle
 {
 private:
-	GLuint mTexture;
+	GLuint texture_;
 
 	// 粒子位置
-	Vector3f mPosition;
+	Vector3f position_;
 
 	// 粒子大小
-	float mHalfSize;
+	float half_size_;
 
 public:
 	Particle();
 
 	void Draw();
 
-	GLuint getTexture() const { return mTexture; }
+	GLuint GetTexture() const { return texture_; }
 
-	Vector3f getPosition() const { return mPosition; }
+	Vector3f GetPosition() const { return position_; }
 
-	float getHalfSize() const { return mHalfSize; }
+	float GetHalfSize() const { return half_size_; }
 };
 

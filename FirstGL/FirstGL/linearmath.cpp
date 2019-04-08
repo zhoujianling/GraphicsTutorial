@@ -12,7 +12,7 @@ v1(x), v2(y), v3(z)
 {
 }
 
-Vector3f Vector3f::mul(const Vector3f& b)
+Vector3f Vector3f::Mul(const Vector3f& b)
 {
 	Vector3f r;
 	r.v1 = v1 * b.v1 + v1 * b.v1;
@@ -21,7 +21,7 @@ Vector3f Vector3f::mul(const Vector3f& b)
 	return r;
 }
 
-Vector3f Vector3f::cross(const Vector3f& b)
+Vector3f Vector3f::Cross(const Vector3f& b)
 {
 	Vector3f r;
 	r.v1 = v2 * b.v3 - v3 * b.v2;
@@ -30,7 +30,7 @@ Vector3f Vector3f::cross(const Vector3f& b)
 	return r;
 }
 
-Vector3f Vector3f::add(const Vector3f& b)
+Vector3f Vector3f::Add(const Vector3f& b)
 {
 	Vector3f r;
 	r.v1 = v1 + b.v1;
@@ -39,7 +39,7 @@ Vector3f Vector3f::add(const Vector3f& b)
 	return r;
 }
 
-Vector3f Vector3f::sub(const Vector3f& b)
+Vector3f Vector3f::Sub(const Vector3f& b)
 {
 	Vector3f r;
 	r.v1 = v1 - b.v1;
@@ -48,7 +48,7 @@ Vector3f Vector3f::sub(const Vector3f& b)
 	return r;
 }
 
-Vector3f Vector3f::scale(float s)
+Vector3f Vector3f::Scale(float s)
 {
 	Vector3f r;
 	r.v1 = v1 * s;
@@ -59,32 +59,32 @@ Vector3f Vector3f::scale(float s)
 
 Vector3f Vector3f::operator*(const Vector3f& b)
 {
-	return mul(b);
+	return Mul(b);
 }
 
 Vector3f Vector3f::operator*(float s)
 {
-	return scale(s);
+	return Scale(s);
 }
 
 Vector3f Vector3f::operator-(const Vector3f& v)
 {
-	return sub(v);
+	return Sub(v);
 }
 
 Vector3f Vector3f::operator+(const Vector3f& v)
 {
-	return add(v);
+	return Add(v);
 }
 
-float Vector3f::length() const
+float Vector3f::Length() const
 {
 	return sqrt(v1 * v1 + v2 * v2 + v3 * v3);
 }
 
-void Vector3f::normalize()
+void Vector3f::Normalize()
 {
-	const auto& length = this->length();
+	const auto& length = this->Length();
 	if (length == 0) return;
 	v1 = v1 / length;
 	v2 = v2 / length;
@@ -119,7 +119,7 @@ Matrix33f::Matrix33f(float array[9])
 }
 
 /** Matrix33 * Vector3 **/
-Vector3f Matrix33f::mul(const Vector3f& vector)
+Vector3f Matrix33f::Mul(const Vector3f& vector)
 {
 	const auto vx = vector.v1;
 	const auto vy = vector.v2;
@@ -132,7 +132,7 @@ Vector3f Matrix33f::mul(const Vector3f& vector)
 
 Vector3f Matrix33f::operator*(const Vector3f& vec)
 {
-	return mul(vec);
+	return Mul(vec);
 }
 
 

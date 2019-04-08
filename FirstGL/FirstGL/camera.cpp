@@ -4,68 +4,68 @@
 
 /** 初始化为OpenGL 默认视口矩阵的状态 **/
 Camera::Camera() :
-mPos(0.0f, 0.0f, 0.0f),
-mViewCenter(0.0f, 0.0f, -1.0f),
-mUp(0.0f, 1.0f, 0.0f),
-movingLeft(false),
-movingRight(false),
-movingForwards(false),
-movingBackwards(false)
+position_(0.0f, 0.0f, 0.0f),
+view_center_(0.0f, 0.0f, -1.0f),
+up_(0.0f, 1.0f, 0.0f),
+is_moving_left_(false),
+is_moving_right_(false),
+is_moving_forwards_(false),
+is_moving_backwards_(false)
 {
 }
 
-void Camera::Update(float deltaTime)
+void Camera::Update(float delta_time)
 {
-	float moveSpeed = 2.0f;
-	Vector3f forwardDirection = mViewCenter - mPos;
-	forwardDirection.normalize();
-	Vector3f rightDirection = forwardDirection.cross(mUp);
-	rightDirection.normalize();
+	float move_speed = 2.0f;
+	Vector3f forward_direction = view_center_ - position_;
+	forward_direction.Normalize();
+	Vector3f right_direction = forward_direction.Cross(up_);
+	right_direction.Normalize();
 
-	if (movingLeft)
+	if (is_moving_left_)
 	{
-		const auto& delta = rightDirection * deltaTime * moveSpeed;
-		mPos = mPos - delta;
-		mViewCenter = mViewCenter - delta;
+		const auto& delta = right_direction * delta_time * move_speed;
+		position_ = position_ - delta;
+		view_center_ = view_center_ - delta;
 	}
-	if (movingRight)
+	if (is_moving_right_)
 	{
-		const auto& delta = rightDirection * deltaTime * moveSpeed;
-		mPos = mPos + delta;
-		mViewCenter = mViewCenter + delta;
+		const auto& delta = right_direction * delta_time * move_speed;
+		position_ = position_ + delta;
+		view_center_ = view_center_ + delta;
 	}
-	if (movingForwards)
+	if (is_moving_forwards_)
 	{
-		const auto& delta = forwardDirection * deltaTime * moveSpeed;
+		const auto& delta = forward_direction * delta_time * move_speed;
 		std::cout << "x: " << delta.v1 << " y: " << delta.v2 << " z: " << delta.v3 << std::endl;
-		mPos = mPos + delta;
-		mViewCenter = mViewCenter + delta;
+		position_ = position_ + delta;
+		view_center_ = view_center_ + delta;
 	}
-	if (movingBackwards)
+	if (is_moving_backwards_)
 	{
-		const auto& delta = forwardDirection * deltaTime * moveSpeed;
+		const auto& delta = forward_direction * delta_time * move_speed;
 		std::cout << "x: " << delta.v1 << " y: " << delta.v2 << " z: " << delta.v3 << std::endl;
-		mPos = mPos - delta;
-		mViewCenter = mViewCenter - delta;
+		position_ = position_ - delta;
+		view_center_ = view_center_ - delta;
 	}
 	glLoadIdentity();
-	gluLookAt(mPos.v1, mPos.v2, mPos.v3,
-		mViewCenter.v1, mViewCenter.v2, mViewCenter.v3,
-		mUp.v1, mUp.v2, mUp.v3);
+	gluLookAt(position_.v1, position_.v2, position_.v3,
+		view_center_.v1, view_center_.v2, view_center_.v3,
+		up_.v1, up_.v2, up_.v3);
 }
 
 void Camera::Pitch(float angle)
 {
-	auto viewDirection = mViewCenter - mPos;
-	viewDirection.normalize();
-	auto rightDirection = viewDirection.cross(mUp);
-	rightDirection.normalize();
-	RotateView(angle, rightDirection.v1, rightDirection.v2, rightDirection.v3);
+	auto view_direction = view_center_ - position_;
+	view_direction.Normalize();
+	auto right_direction = view_direction.Cross(up_);
+	right_direction.Normalize();
+	RotateView(angle, right_direction.v1, right_direction.v2, right_direction.v3);
 }
 
 void Camera::Yaw(float angle)
 {
-	RotateView(angle, mUp.v1, mUp.v2, mUp.v3);
+	RotateView(angle, up_.v1, up_.v2, up_.v3);
 }
 
 /**
@@ -73,7 +73,7 @@ void Camera::Yaw(float angle)
  */
 void Camera::RotateView(float angle, float x, float y, float z)
 {
-	Vector3f viewDirection = mViewCenter - mPos;
+	Vector3f view_direction = view_center_ - position_;
 
 	float C = cosf(angle);
 	float S = sinf(angle);
@@ -82,8 +82,8 @@ void Camera::RotateView(float angle, float x, float y, float z)
 		{x * x * (1 - C) + C, x * y * (1 - C) - z * S, x * z * (1 - C) + y * S,
 	y * x * (1 - C) + z * S, y * y * (1 - C) + C, y * z * (1 - C) - x * S,
 	z * x * (1 - C) - y * S, z * y * (1 - C) + x * S, z * z * (1 - C) + C});
-	const auto& newDirection = matrix33 * viewDirection;
-	mViewCenter = mPos + newDirection;
+	const auto& new_direction = matrix33 * view_direction;
+	view_center_ = position_ + new_direction;
 }
 
 

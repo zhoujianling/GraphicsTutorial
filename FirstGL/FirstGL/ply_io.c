@@ -12,7 +12,7 @@ Greg Turk
 A PLY file contains a single polygonal _object_.
 
 An object is composed of lists of _elements_.  Typical elements are
-vertices, faces, edges and materials.
+vertices_, faces, edges and materials.
 
 Each type of element for a given object has one or more _properties_
 associated with the element type.  For instance, a vertex element may
@@ -91,7 +91,7 @@ char **get_words(FILE *, int *, char **);
 void write_binary_item(FILE *, int, unsigned int, double, int);
 void write_ascii_item(FILE *, int, unsigned int, double, int);
 
-/* add information to a PLY file descriptor */
+/* Add information to a PLY file descriptor */
 void add_element(PlyFile *, char **, int);
 void add_property(PlyFile *, char **, int);
 void add_comment(PlyFile *, char *);
@@ -574,7 +574,7 @@ void put_element_ply(PlyFile *plyfile, void *elem_ptr)
 				item = elem_data + prop->offset;
 				str = (char **)item;
 
-				/* write the length */
+				/* write the Length */
 				len = strlen(*str) + 1;
 				fwrite(&len, sizeof(int), 1, fp);
 
@@ -871,7 +871,7 @@ called ply_get_element_setup().
 Entry:
   plyfile   - file identifier
   elem_name - which element we're talking about
-  prop      - property to add to those that will be returned
+  prop      - property to Add to those that will be returned
 ******************************************************************************/
 
 void ply_get_property(
@@ -986,7 +986,7 @@ void setup_other_props(PlyFile *plyfile, PlyElement *elem)
 
 	for (type_size = 8; type_size > 0; type_size /= 2) {
 
-		/* add up the space taken by each property, and save this information */
+		/* Add up the space taken by each property, and save this information */
 		/* away in the property descriptor */
 
 		for (i = 0; i < elem->nprops; i++) {
@@ -1391,7 +1391,7 @@ Entry:
   prop_name - name of property to find
 
 Exit:
-  index - index to position in list
+  index - index to position_ in list
   returns a pointer to the property, or NULL if not found
 ******************************************************************************/
 
@@ -2274,7 +2274,7 @@ void add_element(PlyFile *plyfile, char **words, int nwords)
 		plyfile->elems = (PlyElement **)realloc(plyfile->elems,
 			sizeof(PlyElement *) * (plyfile->num_elem_types + 1));
 
-	/* add the new element to the object's list */
+	/* Add the new element to the object's list */
 	plyfile->elems[plyfile->num_elem_types] = elem;
 	plyfile->num_elem_types++;
 }
@@ -2347,7 +2347,7 @@ void add_property(PlyFile *plyfile, char **words, int nwords)
 		prop->is_list = PLY_SCALAR;
 	}
 
-	/* add this property to the list of properties of the current element */
+	/* Add this property to the list of properties of the current element */
 
 	elem = plyfile->elems[plyfile->num_elem_types - 1];
 
@@ -2549,7 +2549,7 @@ void append_comment_ply(PlyFile *ply, char *comment)
 		ply->comments = (char **)realloc(ply->comments,
 			sizeof(char *) * (ply->num_comments + 1));
 
-	/* add comment to list */
+	/* Add comment to list */
 	ply->comments[ply->num_comments] =_strdup(comment);
 	ply->num_comments++;
 }
@@ -2589,7 +2589,7 @@ void append_obj_info_ply(PlyFile *ply, char *obj_info)
 		ply->obj_info = (char **)realloc(ply->obj_info,
 			sizeof(char *) * (ply->num_obj_info + 1));
 
-	/* add info to list */
+	/* Add info to list */
 	ply->obj_info[ply->num_obj_info] =_strdup(obj_info);
 	ply->num_obj_info++;
 }
@@ -2697,7 +2697,7 @@ call to the routine get_element_ply().
 
 Entry:
   plyfile - file identifier
-  prop    - property to add to those that will be returned
+  prop    - property to Add to those that will be returned
 ******************************************************************************/
 
 void setup_property_ply(

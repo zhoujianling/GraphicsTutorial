@@ -6,7 +6,7 @@ class Light
 {
 protected:
 	// 用于确定这个光源来自 GL_LIGHT0 - GL_LIGHT7 中的哪一个
-	GLenum mLightIdentifier;
+	GLenum light_identifier_;
 
 	Light();
 
@@ -48,7 +48,7 @@ public:
 class PointLight: public Light
 {
 private:
-	float position[3];
+	float position_[3];
 
 public:
 	PointLight(GLenum light);
