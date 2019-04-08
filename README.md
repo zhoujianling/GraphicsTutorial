@@ -6,3 +6,6 @@
 
 ## FirstShader
 一个 Visual Studio 工程，使用了 OpenGL 可编程管线和 GLM 库。实现的功能同上。
+
+---
+![效果图](https://jimmie00x0000.github.io/anim/GraphicTutorialShader.gif)
