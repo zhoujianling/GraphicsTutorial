@@ -26,7 +26,14 @@ public:
 	void Init(std::string model_path);
 
 	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
-	//TriMesh();
+
+	void SetAmbientMaterial(float r, float g, float b, float a);
+
+	void SetDiffuseMaterial(float r, float g, float b, float a);
+
+	void SetSpecularMaterial(float r, float g, float b, float a);
+
+	void SetTexture(const std::string & texture_image_path);
 
 	//void Translate(float x, float y, float z);
 };

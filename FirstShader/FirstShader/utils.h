@@ -17,6 +17,11 @@ unsigned char* DecodeBMP(unsigned char* bmp_data, int& width, int& height);
  **/
 GLuint CreateTexture2D(unsigned char* pixelData, int with, int height, GLenum type);
 
+/**
+ * 从bmp图片中创建纹理（对{ @link CreateTexture2D} 的封装）
+ * @param bmp_path: bmp图片的文件路径
+ * @return 返回纹理对象的标识符
+ */
 GLuint CreateTexture2DFromBmp(const char *bmp_path);
 
 GLuint CreateDisplayList(std::function<void()> foo);

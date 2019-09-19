@@ -53,7 +53,7 @@ void Shader::Init(const std::string &vs, const std::string &fs)
 }
 
 /**
- * 做 M V P 矩阵的绑定
+ * 做 M V P 矩阵的绑定，每次 Draw 模型之前都要 bind 一次
  * 此时与顶点数据是解耦的，但是知道不同位置的数据的语义，做语义绑定
  * 顶点数据取决于调用 glDrawElements() 之前 glBindBuffer() 里面传入的 vbo
  */
@@ -72,6 +72,14 @@ void Shader::Bind(float* M, float* V, float* P)
 	glVertexAttribPointer(texcoord_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 8));;
 	glEnableVertexAttribArray(normal_location_);
 	glVertexAttribPointer(normal_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 12));;
+
+	int texture_index = 0;
+	for (auto && kv : textures_map_)
+	{
+		glActiveTexture(GL_TEXTURE0 + texture_index); // 重置状态机，设置当前纹理编号
+		glBindTexture(GL_TEXTURE_2D, kv.second->texture_);
+		glUniform1i(kv.second->location_, texture_index++);
+	}
 
 	for (auto kv : vec4_map_)
 	{
@@ -95,5 +103,25 @@ void Shader::SetVector4(const std::string& name, float x, float y, float z, floa
 		iter->second->value_[1] = y;
 		iter->second->value_[2] = z;
 		iter->second->value_[3] = w;
+	}
+}
+
+void Shader::SetTexture(const std::string& name, const std::string& texture_image_path)
+{
+	if (textures_map_.find(name) == textures_map_.end()) 
+	{
+		GLint location = glGetUniformLocation(program_id_, name.c_str());
+		if (location != -1)
+		{
+			UniformTexture * texture = new UniformTexture();
+			texture->location_ = location;
+			texture->texture_ = CreateTexture2DFromBmp(texture_image_path.c_str());
+			textures_map_[name] = texture;
+		}
+	} else
+	{
+		auto ptr = textures_map_[name];
+		glDeleteTextures(1, &ptr->texture_);
+		ptr->texture_ = CreateTexture2DFromBmp(texture_image_path.c_str());
 	}
 }

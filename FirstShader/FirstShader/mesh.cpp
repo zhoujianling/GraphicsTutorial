@@ -26,7 +26,8 @@ void TriMesh::Init(const std::string model_path)
 
 	if (shader != nullptr) delete shader;
 	shader = new Shader;
-	shader->Init("trimesh.vert", "trimesh.frag");
+	// shader->Init("trimesh.vert", "trimesh.frag");
+	shader->Init("model_gooch.vert", "model_gooch.frag");
 
 	shader->SetVector4("U_LightPosition", 0.0f, 1.0f, 1.0f, 1.0f);
 	shader->SetVector4("U_LightAmbient", 1.0f, 0.0f, 0.0f, 1.0f);
@@ -44,18 +45,14 @@ void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 	glEnable(GL_DEPTH_TEST);
 	vertex_buffer_->Bind();
 	element_buffer_->Bind();
-	// std::cout << "camera pos: "
-	// 	<< -glm::value_ptr(view_matrix)[12]
-	// 	<< -glm::value_ptr(view_matrix)[13]
-	// 	<< -glm::value_ptr(view_matrix)[14]
-	// 	<< std::endl;
+
 	auto ptr = glm::value_ptr((view_matrix));
 	shader->SetVector4("U_CameraPosition", -ptr[12], -ptr[13], -ptr[14], 1.0);
 	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
 	auto it = glm::inverseTranspose(model_matrix_);
 	auto it_location = glGetUniformLocation(shader->GetProgramId(), "IT_ModelMatrix");
 	glUniformMatrix4fv(it_location, 1, GL_FALSE, glm::value_ptr(it));
-	// 
+
 	//glDrawElements(GL_TRIANGLES, vertex_buffer_->GetVerticesCount(), GL_UNSIGNED_INT, nullptr);
 	
 	glDrawElements(GL_TRIANGLES, element_buffer_->GetLength(), GL_UNSIGNED_INT, (void*)0);
@@ -64,4 +61,24 @@ void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 	vertex_buffer_->UnBind();
 	element_buffer_->UnBind();
 	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void TriMesh::SetAmbientMaterial(float r, float g, float b, float a)
+{
+	shader->SetVector4("U_AmbientMaterial", r, g, b, a);
+}
+
+void TriMesh::SetSpecularMaterial(float r, float g, float b, float a)
+{
+	shader->SetVector4("U_SpecularMaterial", r, g, b, a);
+}
+
+void TriMesh::SetTexture(const std::string& texture_image_path)
+{
+	shader->SetTexture("U_Texture", texture_image_path);
+}
+
+void TriMesh::SetDiffuseMaterial(float r, float g, float b, float a)
+{
+	shader->SetVector4("U_DiffuseMaterial", r, g, b, a);
 }

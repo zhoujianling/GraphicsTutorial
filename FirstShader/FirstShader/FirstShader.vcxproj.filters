@@ -109,5 +109,11 @@
     <None Include="trimesh.frag">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="model_gooch.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_gooch.frag">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

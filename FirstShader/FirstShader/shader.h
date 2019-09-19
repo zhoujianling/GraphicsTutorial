@@ -3,9 +3,21 @@
 #include "ggl.h"
 #include <unordered_map>
 
+struct UniformTexture
+{
+	GLint location_; // 纹理变量的插槽
+
+	GLuint texture_; // 纹理的唯一标识符
+
+	UniformTexture(): location_(-1), texture_(0){}
+};
+
+/**
+ * 表示 shader 文件中一个 uniform vec4 类型的变量
+ */
 struct UniformVector4f
 {
-	GLint location_;
+	GLint location_; // 变量对应插槽
 
 	float value_[4];
 
@@ -40,6 +52,8 @@ private:
 	/** 键： shader 中的 vec4 类型的变量名 **/
 	std::unordered_map<std::string, UniformVector4f*> vec4_map_;
 
+	std::unordered_map<std::string, UniformTexture*> textures_map_;
+
 public:
 	int GetProgramId() const { return program_id_; }
 
@@ -55,5 +69,7 @@ public:
 
 	void Bind(float *M, float *V, float *P);
 
-	void SetVector4(const std::string &name, float x, float y, float z, float w);
+	void SetVector4(const std::string & name, float x, float y, float z, float w);
+
+	void SetTexture(const std::string & name, const std::string & texture_image_path);
 };

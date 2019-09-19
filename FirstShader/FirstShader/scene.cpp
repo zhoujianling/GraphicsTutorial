@@ -49,9 +49,8 @@ void Init()
 {
 	ground.Init();
 	mesh.Init("Res/Dog.Normal.ply");
-	// InitVBO();
-	// InitEBO();
-	// InitShader();
+	// mesh.SetTexture("Res/Texture.bmp");
+
 	model_matrix = glm::identity<glm::mat4>();
 	view_matrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
 
@@ -60,23 +59,6 @@ void Init()
 	// PrintGLMMatrix(projectionMatrix, "projection ");
 
 
-	// light.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
-	// light.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
-	// light.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// light.SetPosition(0.0f, 1.0f, 0.0f);
-	// light1.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
-	// light1.SetDiffuseColor(0.8f, 0.8f, 0.8f, 1.0f);
-	// light1.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// light1.SetPosition(0.0f, 0.0f, 0.0f); // 点光源放到原点
-	// light1.SetConstantAttenuation(0.1f);
-	// light1.SetLinearAttenuation(0.2f);
-	// // 第二个点光源
-	// light2.SetAmbientColor(0.1f, 0.1f, 0.1f, 1.0f);
-	// light2.SetDiffuseColor(0.1f, 0.4f, 0.7f, 1.0f);
-	// light2.SetSpecularColor(1.0f, 1.0f, 1.0f, 1.0f);
-	// light2.SetPosition(0.0f, 0.0f, -20.0f); // 
-	// light2.SetConstantAttenuation(0.5f);
-	// light2.SetLinearAttenuation(0.2f);
 
 }
 

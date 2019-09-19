@@ -165,6 +165,8 @@
   <ItemGroup>
     <None Include="ground.frag" />
     <None Include="ground.vert" />
+    <None Include="model_gooch.frag" />
+    <None Include="model_gooch.vert" />
     <None Include="Res\test.fs" />
     <None Include="Res\test.vs" />
     <None Include="trimesh.frag" />

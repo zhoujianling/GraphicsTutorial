@@ -30,9 +30,10 @@ GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum t
 	glBindTexture(GL_TEXTURE_2D, texture); // 2d 纹理， 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); // 纹理过小怎么办，线性插值
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); // 线性插值
-	// 以下指定过滤方式， 第二个参数还可以为 GL_REPEAT, UV 若大于 1.0， 则重复搬运纹理
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // UV坐标超过1.0怎么办， 去纹理边界（1.0）处取
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); // UV坐标超过1.0怎么办 
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP); // UV坐标超过1.0怎么办， 去纹理边界（1.0）处取
+	// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP); // UV坐标超过1.0怎么办 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT); // UV坐标超过1.0怎么办，重复搬运 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT); // UV坐标超过1.0怎么办 
 	// 将内存里的图片数据拷贝到显存里
 	// 第二个参数 0， 是指 mipmap 的 level
 	// border 必须为 0
