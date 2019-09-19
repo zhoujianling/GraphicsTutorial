@@ -13,12 +13,18 @@ TriMesh::TriMesh()
 	//glRotated(90.0, 0, 1.0, 0);
 }
 
+TriMesh::~TriMesh()
+{
+	if (shader != nullptr) delete shader;
+}
+
 void TriMesh::Init(const std::string model_path)
 {
 	vertex_buffer_ = new VertexBuffer();
 	element_buffer_ = new ElementBuffer();
 	LoadPly(model_path, vertex_buffer_, element_buffer_);
 
+	if (shader != nullptr) delete shader;
 	shader = new Shader;
 	shader->Init("trimesh.vert", "trimesh.frag");
 
@@ -27,6 +33,10 @@ void TriMesh::Init(const std::string model_path)
 	shader->SetVector4("U_LightAmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
 	shader->SetVector4("U_LightDiffuse", 1.0f, 1.0f, 1.0f, 1.0f);
 	shader->SetVector4("U_LightDiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
+	shader->SetVector4("U_LightSpecular", 1.0f, 1.0f, 1.0f, 1.0f);
+	shader->SetVector4("U_LightSpecularMaterial", 1.0f, 1.0f, 1.0f, 1.0f);
+	shader->SetVector4("U_CameraPosition", 0.0f, 0.0f, 0.0f, 1.0f);
+	shader->SetVector4("U_LightOpt", 32.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
@@ -34,6 +44,13 @@ void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 	glEnable(GL_DEPTH_TEST);
 	vertex_buffer_->Bind();
 	element_buffer_->Bind();
+	// std::cout << "camera pos: "
+	// 	<< -glm::value_ptr(view_matrix)[12]
+	// 	<< -glm::value_ptr(view_matrix)[13]
+	// 	<< -glm::value_ptr(view_matrix)[14]
+	// 	<< std::endl;
+	auto ptr = glm::value_ptr((view_matrix));
+	shader->SetVector4("U_CameraPosition", -ptr[12], -ptr[13], -ptr[14], 1.0);
 	shader->Bind(glm::value_ptr(model_matrix_), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
 	auto it = glm::inverseTranspose(model_matrix_);
 	auto it_location = glGetUniformLocation(shader->GetProgramId(), "IT_ModelMatrix");

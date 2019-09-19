@@ -21,6 +21,8 @@ private:
 public:
 	TriMesh();
 
+	~TriMesh();
+
 	void Init(std::string model_path);
 
 	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
