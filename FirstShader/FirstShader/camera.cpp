@@ -24,6 +24,7 @@ up_(0.0f, 1.0f, 0.0f)
 void Camera::Init(float ratio)
 {
 	view_matrix_ = glm::lookAt<float, glm::defaultp>(position_, look_at_, up_);
+	// 最新API中，第一个参数 角度改成了弧度。
 	projection_matrix_ = perspective(PI / 3.0F, ratio, 0.1f, 1000.0f);
 }
 

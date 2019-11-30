@@ -7,16 +7,50 @@
 
 struct BoundingBox {
 	/* the center of bounding box */
-	glm::fvec3 m_center;
+	glm::fvec3 center_;
 
 	/* the length of three sides */
-	glm::fvec3 m_extent;
+	glm::fvec3 extent_;
 
 public:
-	BoundingBox(): m_center(0.0, 0.0, 0.0), m_extent(0.0, 0.0, 0.0) {}
+	BoundingBox(): center_(0.0, 0.0, 0.0), extent_(0.0, 0.0, 0.0) {}
 
 	BoundingBox(const glm::vec3& c, const glm::vec3& e) :
-		m_center(c), m_extent(e) {}
+		center_(c), extent_(e) {}
+
+#define CEB(index, a, b, c) \
+	vertex_buffer.GetVertex()[(index)].position[0] = center_.x a extent_.x; \
+	vertex_buffer.GetVertex()[(index)].position[1] = center_.y b extent_.y; \
+	vertex_buffer.GetVertex()[(index)].position[2] = center_.z c extent_.z; \
+	vertex_buffer.GetVertex()[(index)].position[3] = 1.0f; \
+	vertex_buffer.SetColor((index), 1.0, 0.0, 0.0, 1.0)
+
+#define VVB(index, a, b) \
+	element_buffer.GetBuffer()[(index * 2 + 0)] = a; \
+	element_buffer.GetBuffer()[(index * 2 + 1)] = b 
+
+	void ToWireframe(VertexBuffer& vertex_buffer, ElementBuffer& element_buffer) const {
+		vertex_buffer.SetVertexCount(8);
+		element_buffer.SetBufferLength(12 * 2);
+		CEB(0, +, +, +);
+		CEB(1, +, +, -);
+		CEB(2, +, -, +);
+		CEB(3, +, -, -);
+		CEB(4, -, -, -);
+		CEB(5, -, -, +);
+		CEB(6, -, +, -);
+		CEB(7, -, +, +);
+		VVB(0, 0, 1);  VVB(1, 0, 2); VVB(2, 1, 3); VVB(3, 2, 3);
+		VVB(4, 4, 5);  VVB(5, 4, 6); VVB(6, 5, 7); VVB(7, 6, 7);
+		VVB(8, 0, 7);  VVB(9, 1, 6); VVB(10, 2, 5); VVB(11, 3, 4);
+		for (int i = 0; i < 8; i++) {
+			std::cout << "(" << vertex_buffer.GetVertex()[i].position[0] << ", "
+				<< vertex_buffer.GetVertex()[i].position[1] << ", "
+				<< vertex_buffer.GetVertex()[i].position[2] << ") " << std::endl;
+		}
+	}
+#undef VVB
+#undef CEB
 };
 
 
@@ -24,13 +58,11 @@ class TriMesh// : public Sprite
 {
 private:
 
-	VertexBuffer *vertex_buffer_;
+	VertexBuffer vertex_buffer_;
 
-	ElementBuffer *element_buffer_;
+	ElementBuffer element_buffer_;
 
-	Shader *shader;
-
-	Shader* m_bbox_shader;
+	Shader shader;
 
 	glm::mat4 model_matrix_;
 

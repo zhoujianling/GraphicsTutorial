@@ -2,68 +2,46 @@
 #include "utils.h"
 #include "io.h"
 #include <iostream>
-#include "ground.h"
-#include "mesh.h"
-#include "camera.h"
-#include "wireframe.h"
 #include "Include/glm/glm.hpp"
 #include "Include/glm/gtc/type_ptr.hpp"
 
-Ground ground;
-TriMesh mesh;
-Camera camera;
-WireFrame wire_frame;
 
-GLuint vbo;
-// 指示如何组织顶点数据来绘制图元
-GLuint ebo;
-GLuint program;
-GLuint texture_id;
-GLint position_location;
-GLint texcoord_location; // 纹理UV坐标的插槽
-GLint texture_location; // 纹理信息的插槽
-GLint color_location;
-GLint model_matrix_location;
-GLint view_matrix_location;
-GLint projection_matrix_location;
+Scene::Scene():
+	w_pressing(false),
+	s_pressing(false),
+	a_pressing(false),
+	d_pressing(false)
+{
+}
 
-glm::mat4 model_matrix;
-glm::mat4 view_matrix;
-glm::mat4 projection_matrix;
-
-bool w_pressing = false;
-bool s_pressing = false;
-bool a_pressing = false;
-bool d_pressing = false;
-
-void SetViewPortSize(float width, float height)
+void Scene::SetViewPortSize(float width, float height)
 {
 	glViewport(0, 0, width, height);
 	camera.Init(width / height);
-	// 最新API中，第一个参数 角度改成了弧度。
-	projection_matrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
+	// projection_matrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
 }
 
 /**
  * 屏幕正中心是世界坐标系原点
  * z 轴指向屏幕外面, 所以 z 坐标要设负值
  */
-void Init()
+void Scene::Init()
 {
 	ground.Init();
-	mesh.Init("Res/Dog.Normal.ply");
+	meshes.push_back(TriMesh());
+	meshes[0].Init("Res/Dog.Normal.ply");
 	//wire_frame.Init("Res/Dog.Normal.ply");
 
 	ElementBuffer element_buffer_temp;
 	ElementBuffer element_buffer_edge;
 	VertexBuffer vertex_buffer_temp;
-	LoadPly("Res/Dog.Normal.ply", &vertex_buffer_temp, &element_buffer_temp);
-	ConvertFaces2Edges(element_buffer_temp, element_buffer_edge);
-	wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
-	// mesh.SetTexture("Res/Texture.bmp");
+	//LoadPly("Res/Dog.Normal.ply", &vertex_buffer_temp, &element_buffer_temp);
+	//ConvertFaces2Edges(element_buffer_temp, element_buffer_edge);
+	//wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
+	meshes[0].GetBoundingBox().ToWireframe(vertex_buffer_temp, element_buffer_temp);
+	wire_frame.Init(vertex_buffer_temp, element_buffer_temp);
 
-	model_matrix = glm::identity<glm::mat4>();
-	view_matrix = glm::lookAt<float, glm::defaultp>({0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f, 0.0f});
+	// mesh.SetTexture("Res/Texture.bmp");
 
 	// PrintGLMMatrix(model_matrix_, "model ");
 	// PrintGLMMatrix(viewMatrix, "view ");
@@ -74,7 +52,7 @@ void Init()
 }
 
 
-void UpdateScene()
+void Scene::UpdateScene()
 {
 	const auto delta_time = GetFrameTime();
 	std::cout << "\rDelta time: " << delta_time;
@@ -106,7 +84,7 @@ void UpdateScene()
 	camera.Translate(delta);
 }
 
-void Draw()
+void Scene::Draw()
 {
 	glClearColor(0.1f, 0.3f, 0.5f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
@@ -117,52 +95,15 @@ void Draw()
 	// ground.Draw(view_matrix, projection_matrix);
 	// mesh.Draw(view_matrix, projection_matrix);
 	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	// mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	//mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	for (auto& mesh : meshes) {
+		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	}
 	wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
-	// GLenum error = glGetError();
-	// if (error != GL_NO_ERROR) {
-	// 	printf("error: 0x%x\n", error);
-	// }
-
-	// glUseProgram(program);	
-	// // 为 GPU 上的顶点着色程序传递数据（几个matrix)
-	// // 第一个传插槽， 第二个参数 几个矩阵， 第三个参数 需不需要转置， 第四个，矩阵的位置
-	// glUniformMatrix4fv(model_matrix_location_, 1, GL_FALSE, glm::value_ptr(model_matrix_));
-	// glUniformMatrix4fv(view_matrix_location_, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	// glUniformMatrix4fv(projection_matrix_location_, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	// glBindTexture(GL_TEXTURE_2D, texture_id);
-	// glUniform1i(textureLocation, 0);
-	//
-	// glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	// glEnableVertexAttribArray(position_location_);
-	// // 第一个传插槽， 第二个 数据有几个分量， 第三个 数据类型， 第四个 是否归一化， 第五个 数据大小， 第六个 
-	// glVertexAttribPointer(position_location_, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, nullptr);
-	// glEnableVertexAttribArray(color_location_);
-	// glVertexAttribPointer(color_location_, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 4));
-	// glEnableVertexAttribArray(texcoord_location_);
-	// glVertexAttribPointer(texcoord_location_, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 10, (void*)(sizeof(float) * 8));
-	// // glDrawArrays(GL_TRIANGLES, 0, 3);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	// // 传递数据到显卡进行绘制，每 3 个顶点画一个三角形， 最后一个参数是数据的起始位置
-	// glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
-	// glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	// glUseProgram(0);
-
-
-	// camera.Update(frameTime);
-
-	// light1.Enable();
-	// light1.Update(camera.GetPosition().v1, camera.GetPosition().v2, camera.GetPosition().v3);
-	// light2.Enable();
-	// light2.Update(camera.GetPosition().v1, camera.GetPosition().v2, camera.GetPosition().v3);
-
-	//glEnable(GL_DEPTH_TEST); // 保证近的物体会挡住远的物体
-	//particle.Draw();
-	// DrawModel();
 }
 
-void OnKeyDown(char code)
+void Scene::OnKeyDown(char code)
 {
 	switch (code)
 	{
@@ -181,7 +122,7 @@ void OnKeyDown(char code)
 	}
 }
 
-void OnKeyUp(char code)
+void Scene::OnKeyUp(char code)
 {
 	switch (code)
 	{
@@ -200,7 +141,7 @@ void OnKeyUp(char code)
 	}
 }
 
-void OnMouseMove(const float delta_x, const float delta_y)
+void Scene::OnMouseMove(const float delta_x, const float delta_y)
 {
 	// 在 x 轴滑动，相机沿 y轴转动，位移值近似逼近 yaw 的角度
 	const auto angle_rotate_by_y_axis = delta_x / 1000.0f; 

@@ -14,6 +14,8 @@ POINT original_pos;
 
 bool is_rotating_view = false;
 
+Scene scene;
+
 unsigned char* LoadFile(const char* file_path, int& file_size)
 {
 	unsigned char *file_content = nullptr;
@@ -47,10 +49,10 @@ LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_KEYDOWN:
-		OnKeyDown(wParam);
+		scene.OnKeyDown(wParam);
 		return 0;
 	case WM_KEYUP:
-		OnKeyUp(wParam);
+		scene.OnKeyUp(wParam);
 		return 0;
 	case WM_RBUTTONDOWN:
 		GetCursorPos(&original_pos);
@@ -69,7 +71,7 @@ LRESULT CALLBACK GLWindowProc(HWND hwn, UINT msg, WPARAM wParam, LPARAM lParam)
 			GetCursorPos(&current_pos);
 			const int delta_x = current_pos.x - original_pos.x;
 			const int delta_y = current_pos.y - original_pos.y;
-			OnMouseMove(delta_x, delta_y);
+			scene.OnMouseMove(delta_x, delta_y);
 			SetCursorPos(original_pos.x, original_pos.y);
 		}
 		return 0;
@@ -128,9 +130,9 @@ HDC SetOpenGlEnv(HWND hwnd)
 	}
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
-	SetViewPortSize(800.0f, 600.0f);
+	scene.SetViewPortSize(800.0f, 600.0f);
 
-	Init();
+	scene.Init();
 
 	return hdc;
 }
@@ -183,8 +185,8 @@ INT WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInstance, LPSTR cmdLine, i
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		UpdateScene();
-		Draw();
+		scene.UpdateScene();
+		scene.Draw();
 		SwapBuffers(hdc); // 交换 OpenGl 的缓冲区，把后面的缓冲区交换到前面来
 	}
 	return 0;
