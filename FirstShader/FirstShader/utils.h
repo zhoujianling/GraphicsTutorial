@@ -2,7 +2,7 @@
 
 #include "ggl.h"
 #include "Include/glm/gtx/string_cast.hpp"
-#include "iostream"
+#include <iostream>
 
 /** 加载文件内容到内存 **/
 unsigned char* LoadFile(const char* file_path, int& file_size);
@@ -55,6 +55,13 @@ GLuint CreateShaderProgram(GLuint vs_shader, GLuint fs_shader);
  * @param data 具体的数据
  */
 GLuint CreateBufferObject(GLenum buffer_type, GLsizeiptr size, GLenum usage, void *data = nullptr);
+
+struct Edge {
+	unsigned int vi;
+	unsigned int vj;
+};
+class ElementBuffer;
+void ConvertFaces2Edges(ElementBuffer& face_buffer, ElementBuffer& target_buffer);
 
 template<typename T>
 void PrintGLMMatrix(T const& m, const std::string  prompt = "")

@@ -11,11 +11,45 @@ vbo_(0)
 {
 }
 
+VertexBuffer::~VertexBuffer()
+{
+	std::cerr << "Debug: " << "VertexBuffer is destroying ..." << std::endl;
+	if (vertices_ != nullptr) {
+		ClearBuffer();
+	}
+}
+
+VertexBuffer::VertexBuffer(const VertexBuffer& buffer)
+{
+	this->vbo_ = buffer.vbo_;
+	this->vertex_count_ = buffer.vertex_count_;
+	this->vertices_ = new Vertex[this->vertex_count_];
+	memcpy(this->vertices_, buffer.vertices_, sizeof(Vertex) * this->vertex_count_);
+}
+
+VertexBuffer& VertexBuffer::operator=(const VertexBuffer& buffer)
+{
+	// TODO: 在此处插入 return 语句
+	if (this != &buffer) {
+		if (this->vertices_ != nullptr) ClearBuffer();
+		this->vbo_ = buffer.vbo_;
+		this->vertex_count_ = buffer.vertex_count_;
+		this->vertices_ = new Vertex[this->vertex_count_];
+		memcpy(this->vertices_, buffer.vertices_, sizeof(Vertex) * this->vertex_count_);
+	}
+	return *this;
+}
+
 void VertexBuffer::SetVertexCount(int c)
 {
 	if (c <= 0) {
 		std::cerr << "count <= 0" << std::endl;
 		return;
+	}
+	if (this->vertices_ != nullptr) {
+		delete this->vertices_;
+		this->vertices_ = nullptr;
+		this->vertex_count_ = 0;
 	}
 	this->vertex_count_ = c;
 	this->vertices_ = new Vertex[c];
@@ -64,7 +98,13 @@ void VertexBuffer::UnBind()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Vertex& VertexBuffer::Get(int index)
+void VertexBuffer::ClearBuffer()
+{
+	delete vertices_;
+	this->vertex_count_ = 0;
+}
+
+Vertex& VertexBuffer::Get(int index) const
 {
 	return vertices_[index];
 }
@@ -73,8 +113,49 @@ ElementBuffer::ElementBuffer():indices_buffer_(nullptr), length_(0)
 {
 }
 
+ElementBuffer::ElementBuffer(const ElementBuffer& buffer)
+{
+	this->ebo = buffer.ebo;
+	this->length_ = buffer.length_;
+	this->indices_buffer_ = new unsigned int[buffer.length_];
+	memcpy(this->indices_buffer_, buffer.indices_buffer_, sizeof(unsigned int) * buffer.length_);
+}
+
+// todo move ctor
+// todo move assignment operator
+
+ElementBuffer& ElementBuffer::operator=(const ElementBuffer& buffer)
+{
+	// TODO: 在此处插入 return 语句
+	if (this != &buffer) {
+		if (this->indices_buffer_ != nullptr) {
+			ClearBuffer();
+		}
+		this->ebo = buffer.ebo;
+		this->length_ = buffer.length_;
+		this->indices_buffer_ = new unsigned int[buffer.length_];
+		memcpy(this->indices_buffer_, buffer.indices_buffer_, sizeof(unsigned int) * buffer.length_);
+	}
+	return *this;
+}
+
+ElementBuffer::~ElementBuffer()
+{
+	if (indices_buffer_ != nullptr) {
+		ClearBuffer();
+	}
+}
+
 void ElementBuffer::SetBufferLength(int len)
 {
+	if (len < 1) {
+		std::cerr << "Error: buffer length: " << len << std::endl;
+	}
+	if (this->indices_buffer_ != nullptr) {
+		delete this->indices_buffer_;
+		this->indices_buffer_ = nullptr;
+		this->length_ = 0;
+	}
 	length_ = len;
 	indices_buffer_ = new unsigned int[len];
 	memset(indices_buffer_, 0, len * sizeof(unsigned int));
@@ -92,5 +173,12 @@ void ElementBuffer::Bind()
 void ElementBuffer::UnBind()
 {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void ElementBuffer::ClearBuffer()
+{
+	delete indices_buffer_;
+	this->indices_buffer_ = nullptr;
+	this->length_ = 0;
 }
 

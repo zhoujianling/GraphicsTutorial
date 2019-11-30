@@ -17,3 +17,7 @@ void OnKeyDown(char code);
 void OnKeyUp(char code);
 
 void OnMouseMove(float delta_x, float delta_y);
+
+class Scene {
+
+};

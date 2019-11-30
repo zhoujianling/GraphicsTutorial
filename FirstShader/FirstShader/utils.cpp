@@ -1,6 +1,7 @@
 #include "utils.h"
 #include "io.h"
-#include "iostream"
+#include <iostream>
+#include <unordered_set>
 
 
 unsigned char* DecodeBMP(unsigned char* bmp_data, int& width, int& height)
@@ -164,4 +165,30 @@ GLuint CreateBufferObject(const GLenum buffer_type, GLsizeiptr size, GLenum usag
 	// 重置当前缓冲区指向
 	glBindBuffer(buffer_type, 0);
 	return buffer_object;
+}
+
+void ConvertFaces2Edges( ElementBuffer& face_buffer, ElementBuffer& target_buffer)
+{
+	// ......
+	using namespace std;
+	// declare equal and hash for customized struct
+	auto edge_hash = [](const Edge& edge) {return 31 * edge.vi + edge.vj; };
+	auto edge_equal = [](const Edge& lhs, const Edge& rhs) {
+		return (lhs.vi == rhs.vi && lhs.vj == rhs.vj) || (lhs.vi == rhs.vj && lhs.vj == rhs.vi);
+	};
+	// use a hashset to skip duplicate edges when visiting edges in Graph
+	unordered_set<Edge, decltype(edge_hash), decltype(edge_equal)> edges(20, edge_hash, edge_equal);
+	for (int i = 0; i < face_buffer.GetLength() / 3; i++) {
+		edges.insert({ face_buffer.GetBuffer()[i * 3 + 0], face_buffer.GetBuffer()[i * 3 + 1] });
+		edges.insert({ face_buffer.GetBuffer()[i * 3 + 0], face_buffer.GetBuffer()[i * 3 + 2] });
+		edges.insert({ face_buffer.GetBuffer()[i * 3 + 2], face_buffer.GetBuffer()[i * 3 + 1] });
+	}
+	target_buffer.SetBufferLength(edges.size() * 2);
+	int edge_i = 0;
+	for (auto edge : edges) {
+		target_buffer.GetBuffer()[edge_i + 0] = edge.vi;
+		target_buffer.GetBuffer()[edge_i + 1] = edge.vj;
+		edge_i += 2;
+	}
+	// ......
 }

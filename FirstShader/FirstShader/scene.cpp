@@ -1,15 +1,18 @@
 #include "scene.h"
 #include "utils.h"
+#include "io.h"
 #include <iostream>
 #include "ground.h"
 #include "mesh.h"
 #include "camera.h"
+#include "wireframe.h"
 #include "Include/glm/glm.hpp"
 #include "Include/glm/gtc/type_ptr.hpp"
 
 Ground ground;
 TriMesh mesh;
 Camera camera;
+WireFrame wire_frame;
 
 GLuint vbo;
 // 指示如何组织顶点数据来绘制图元
@@ -49,6 +52,14 @@ void Init()
 {
 	ground.Init();
 	mesh.Init("Res/Dog.Normal.ply");
+	//wire_frame.Init("Res/Dog.Normal.ply");
+
+	ElementBuffer element_buffer_temp;
+	ElementBuffer element_buffer_edge;
+	VertexBuffer vertex_buffer_temp;
+	LoadPly("Res/Dog.Normal.ply", &vertex_buffer_temp, &element_buffer_temp);
+	ConvertFaces2Edges(element_buffer_temp, element_buffer_edge);
+	wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
 	// mesh.SetTexture("Res/Texture.bmp");
 
 	model_matrix = glm::identity<glm::mat4>();
@@ -63,41 +74,10 @@ void Init()
 }
 
 
-
-// void InitEBO()
-// {
-// 	unsigned short indices[] = { 0, 1, 2 };
-// 	ebo = CreateBufferObject(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned short) * 3, GL_STATIC_DRAW, indices);
-// }
-
-//
-// void InitShader()
-// {
-// 	int fileSize = 0;
-// 	unsigned char *shaderCode = LoadFile("Res/test.vs", fileSize);
-// 	GLuint vsShader = CompileShader(GL_VERTEX_SHADER, (char*)shaderCode);
-// 	delete shaderCode;
-// 	
-// 	shaderCode = LoadFile("Res/test.fs", fileSize);
-// 	GLuint fsShader = CompileShader(GL_FRAGMENT_SHADER, (char*)shaderCode);
-// 	delete shaderCode;
-// 	program = CreateShaderProgram(vsShader, fsShader);
-// 	glDeleteShader(vsShader);
-// 	glDeleteShader(fsShader);
-// 	position_location_ = glGetAttribLocation(program, "position");
-// 	color_location_ = glGetAttribLocation(program, "color");
-// 	texcoord_location_ = glGetAttribLocation(program, "texcoord");
-// 	model_matrix_location_ = glGetUniformLocation(program, "ModelMatrix");
-// 	view_matrix_location_ = glGetUniformLocation(program, "ViewMatrix");
-// 	textureLocation = glGetUniformLocation(program, "U_Texture");
-// 	projection_matrix_location_ = glGetUniformLocation(program, "ProjectionMatrix");
-//
-// 	texture_id = CreateTexture2DFromBmp("Res/Texture.bmp");
-// }
-
 void UpdateScene()
 {
 	const auto delta_time = GetFrameTime();
+	std::cout << "\rDelta time: " << delta_time;
 	
 	// update camera
 	const auto move_speed = 2.0f;
@@ -137,7 +117,8 @@ void Draw()
 	// ground.Draw(view_matrix, projection_matrix);
 	// mesh.Draw(view_matrix, projection_matrix);
 	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	// mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
 	// GLenum error = glGetError();
 	// if (error != GL_NO_ERROR) {

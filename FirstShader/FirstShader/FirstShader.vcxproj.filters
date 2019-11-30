@@ -45,6 +45,9 @@
     <ClCompile Include="camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="wireframe.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene.h">
@@ -89,6 +92,9 @@
     <ClInclude Include="camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="wireframe.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\test.fs">
@@ -113,6 +119,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="model_gooch.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="wireframe.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="wireframe.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

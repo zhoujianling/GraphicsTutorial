@@ -35,6 +35,11 @@ private:
 public:
 	VertexBuffer();
 
+	~VertexBuffer();
+
+	VertexBuffer(const VertexBuffer& buffer);
+	VertexBuffer& operator= (const VertexBuffer& buffer);
+
 	Vertex *GetVertex() 
 	{
 		return this->vertices_;
@@ -59,7 +64,9 @@ public:
 
 	void UnBind();
 
-	Vertex& Get(int index);
+	void ClearBuffer();
+
+	Vertex& Get(int index) const;
 };
 
 class ElementBuffer
@@ -75,6 +82,12 @@ public:
 
 	ElementBuffer();
 
+	ElementBuffer(const ElementBuffer& buffer);
+
+	ElementBuffer& operator= (const ElementBuffer& buffer);
+
+	~ElementBuffer();
+
 	void SetBufferLength(int len);
 
 	unsigned int *GetBuffer()
@@ -85,6 +98,8 @@ public:
 	void Bind();
 
 	void UnBind();
+
+	void ClearBuffer();
 
 	int GetLength() const { return length_; }
 };
