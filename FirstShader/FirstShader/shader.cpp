@@ -13,6 +13,15 @@ location_(location)
 {
 }
 
+Shader::~Shader() {
+	for (auto& kv : textures_map_) {
+		delete kv.second;
+	}
+	for (auto& kv : vec4_map_) {
+		delete kv.second;
+	}
+}
+
 void Shader::Init(const std::string &vs, const std::string &fs)
 {
 
@@ -46,8 +55,7 @@ void Shader::Init(const std::string &vs, const std::string &fs)
 		view_matrix_location_ = glGetUniformLocation(program_id_, "ViewMatrix");
 		projection_matrix_location_ = glGetUniformLocation(program_id_, "ProjectionMatrix");
 		std::cerr << "succeed in binding slots"<< std::endl;
-	} else
-	{
+	} else {
 		std::cerr << "fail to create shader program "<< std::endl;
 	}
 }
@@ -90,15 +98,14 @@ void Shader::Bind(float* M, float* V, float* P)
 void Shader::SetVector4(const std::string& name, float x, float y, float z, float w)
 {
 	auto iter = vec4_map_.find(name);
-	if (iter == vec4_map_.end())
-	{
+	if (iter == vec4_map_.end()) {
 		GLint location = glGetUniformLocation(program_id_, name.c_str());
-		if (location != -1)
-		{
+		if (location != -1) {
 			vec4_map_[name] = new UniformVector4f(x, y, z, w, location);
+		} else {
+			std::cerr << "Error: Fail to get location of " << name << " when setting vector" << std::endl;
 		}
-	} else
-	{
+	} else {
 		iter->second->value_[0] = x;
 		iter->second->value_[1] = y;
 		iter->second->value_[2] = z;
@@ -108,20 +115,20 @@ void Shader::SetVector4(const std::string& name, float x, float y, float z, floa
 
 void Shader::SetTexture(const std::string& name, const std::string& texture_image_path)
 {
-	if (textures_map_.find(name) == textures_map_.end()) 
-	{
+	if (textures_map_.find(name) == textures_map_.end())  {
 		GLint location = glGetUniformLocation(program_id_, name.c_str());
-		if (location != -1)
-		{
+		if (location != -1) {
 			UniformTexture * texture = new UniformTexture();
 			texture->location_ = location;
-			texture->texture_ = CreateTexture2DFromBmp(texture_image_path.c_str());
+			std::cerr << "reading imgae " << std::endl;
+			texture->texture_ = CreateTexture2DFromImage(texture_image_path.c_str());
 			textures_map_[name] = texture;
+		} else {
+			std::cerr << "Error: Fail to get location of " << name << " when setting texture" << std::endl;
 		}
-	} else
-	{
+	} else {
 		auto ptr = textures_map_[name];
 		glDeleteTextures(1, &ptr->texture_);
-		ptr->texture_ = CreateTexture2DFromBmp(texture_image_path.c_str());
+		ptr->texture_ = CreateTexture2DFromImage(texture_image_path.c_str());
 	}
 }

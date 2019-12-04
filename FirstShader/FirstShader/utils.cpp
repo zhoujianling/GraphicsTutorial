@@ -3,26 +3,27 @@
 #include <iostream>
 #include <unordered_set>
 
-
-unsigned char* DecodeBMP(unsigned char* bmp_data, int& width, int& height)
+GLenum glCheckError_(const char* file, int line)
 {
-	if (0x4D42 == *reinterpret_cast<unsigned short*>(bmp_data))
+	GLenum errorCode;
+	while ((errorCode = glGetError()) != GL_NO_ERROR)
 	{
-		const auto pixel_data_offset = *reinterpret_cast<int*>(bmp_data + 10);
-		width = *reinterpret_cast<int*>(bmp_data + 18);
-		height = *reinterpret_cast<int*>(bmp_data + 22);
-		const auto bmp_img_data = bmp_data + pixel_data_offset;
-		// BGR -> RGB
-		for (int i = 0; i < width * height * 3; i += 3)
+		std::string error;
+		switch (errorCode)
 		{
-			unsigned char temp = bmp_img_data[i];
-			bmp_img_data[i] = bmp_img_data[i + 2];
-			bmp_img_data[i + 2] = temp;
+		case GL_INVALID_ENUM:                  error = "INVALID_ENUM"; break;
+		case GL_INVALID_VALUE:                 error = "INVALID_VALUE"; break;
+		case GL_INVALID_OPERATION:             error = "INVALID_OPERATION"; break;
+		case GL_STACK_OVERFLOW:                error = "STACK_OVERFLOW"; break;
+		case GL_STACK_UNDERFLOW:               error = "STACK_UNDERFLOW"; break;
+		case GL_OUT_OF_MEMORY:                 error = "OUT_OF_MEMORY"; break;
+		case GL_INVALID_FRAMEBUFFER_OPERATION: error = "INVALID_FRAMEBUFFER_OPERATION"; break;
 		}
-		return bmp_img_data;
+		std::cout << error << " | " << file << " (" << line << ")" << std::endl;
 	}
-	return nullptr;
+	return errorCode;
 }
+
 
 GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum type)
 {
@@ -43,15 +44,15 @@ GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum t
 	return texture;
 }
 
-GLuint CreateTexture2DFromBmp(const char *bmp_path)
+GLuint CreateTexture2DFromImage(const char *bmp_path)
 {
-	int n_file_size = 0;
-	const auto bmp_file_data = LoadFile(bmp_path, n_file_size);
-	if (bmp_file_data == nullptr)
-	{
-		fprintf(stderr, "Error, cannot open file.\n");
-		return 0; // 出错，返回 0 号黑色纹理单元
-	}
+	//int n_file_size = 0;
+	//const auto bmp_file_data = LoadFile(bmp_path, n_file_size);
+	//if (bmp_file_data == nullptr)
+	//{
+	//	fprintf(stderr, "Error, cannot open file.\n");
+	//	return 0; // 出错，返回 0 号黑色纹理单元
+	//}
 	auto width = 0, height = 0;
 	unsigned char *bmp_image_data = nullptr;
 	LoadRGBImage(bmp_path, bmp_image_data, width, height);
@@ -59,9 +60,10 @@ GLuint CreateTexture2DFromBmp(const char *bmp_path)
 	if (width <= 0 || height <= 0)
 	{
 		fprintf(stderr, "Error, cannot decode image.\n");
-		delete bmp_file_data;
+		delete bmp_image_data;
 		return 0;
 	}
+	std::cerr << "Debug: load image, width " << width << ", height " << height << std::endl;
 
 	const GLuint texture_id = CreateTexture2D(bmp_image_data, width, height, GL_RGB);
 	//	delete bmpFileData;
@@ -164,6 +166,7 @@ GLuint CreateBufferObject(const GLenum buffer_type, GLsizeiptr size, GLenum usag
 	glBufferData(buffer_type, size, data, usage);
 	// 重置当前缓冲区指向
 	glBindBuffer(buffer_type, 0);
+	glCheckError();
 	return buffer_object;
 }
 

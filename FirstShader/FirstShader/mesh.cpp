@@ -6,17 +6,25 @@ using glm::vec3;
 using glm::identity;
 using glm::identity;
 
+using namespace zjl;
 
-TriMesh::TriMesh()
+TriMesh::TriMesh():model_matrix_(identity<mat4>()),is_transparent_(false)
 {
-	model_matrix_ = glm::translate(identity<mat4>(), { 0.0f, 0.0f, -1.9f });
-	model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
-	glTranslatef(0.0f, 0.0f, -3.0f);
+	
+	// model_matrix_ = glm::translate(identity<mat4>(), { 0.0f, 0.0f, -1.9f });
+	// model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
+	// glTranslatef(0.0f, 0.0f, -3.0f);
 	//glRotated(90.0, 0, 1.0, 0);
 }
 
 TriMesh::~TriMesh()
 {
+}
+
+void TriMesh::Init(const VertexBuffer& vb, const ElementBuffer& eb) {
+	this->vertex_buffer_ = vb;
+	this->element_buffer_ = eb;
+
 }
 
 void TriMesh::ComputeBoundingBox()
@@ -39,17 +47,12 @@ void TriMesh::ComputeBoundingBox()
 	int a = 0;
 }
 
-void TriMesh::Init(const std::string model_path)
-{
-	//vertex_buffer_ = new VertexBuffer();
-	//element_buffer_ = new ElementBuffer();
-	LoadPly(model_path, &vertex_buffer_, &element_buffer_);
-
-	// shader.Init("trimesh.vert", "trimesh.frag");
-	shader.Init("model_gooch.vert", "model_gooch.frag");
+void TriMesh::InitShader() {
+	shader.Init("trimesh.vert", "trimesh.frag");
+	// shader.Init("model_gooch.vert", "model_gooch.frag");
 
 	shader.SetVector4("U_LightPosition", 0.0f, 1.0f, 1.0f, 1.0f);
-	shader.SetVector4("U_LightAmbient", 1.0f, 0.0f, 0.0f, 1.0f);
+	shader.SetVector4("U_LightAmbient", 1.0f, 1.0f, 1.0f, 1.0f);
 	shader.SetVector4("U_LightAmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
 	shader.SetVector4("U_LightDiffuse", 1.0f, 1.0f, 1.0f, 1.0f);
 	shader.SetVector4("U_LightDiffuseMaterial", 0.6f, 0.6f, 0.6f, 1.0f);
@@ -58,13 +61,48 @@ void TriMesh::Init(const std::string model_path)
 	shader.SetVector4("U_CameraPosition", 0.0f, 0.0f, 0.0f, 1.0f);
 	shader.SetVector4("U_LightOpt", 32.0f, 0.0f, 0.0f, 1.0f);
 
-	this->ComputeBoundingBox();
+	// std::cerr << "Debug: texture_color_name: " << this->texture_color_name_ << std::endl;
+	if (! this->texture_color_name_.empty()) {
+		shader.SetTexture("U_Texture", this->texture_color_name_);
+	}
+}
 
+void TriMesh::Init(const std::string model_path)
+{
+	//vertex_buffer_ = new VertexBuffer();
+	//element_buffer_ = new ElementBuffer();
+	
+	LoadModel(model_path, vertex_buffer_, element_buffer_);
+
+	shader.Init("trimesh.vert", "trimesh.frag");
+	// shader.Init("model_gooch.vert", "model_gooch.frag");
+
+	// this->ComputeBoundingBox();
+
+}
+
+TriMesh& TriMesh::MoveBy(glm::fvec3 world_position)
+{
+	// model_matrix_
+	model_matrix_ = glm::translate(model_matrix_, world_position);
+	return *this;
+}
+
+TriMesh& TriMesh::RotateBy(glm::fvec3 axis, float radian)
+{
+	// TODO: 在此处插入 return 语句
+	// model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
+	model_matrix_ = glm::rotate(model_matrix_, radian, axis);
+	return *this;
 }
 
 void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 {
 	glEnable(GL_DEPTH_TEST);
+	if (is_transparent_) {
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	}
 	vertex_buffer_.Bind();
 	element_buffer_.Bind();
 
@@ -82,7 +120,7 @@ void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 	//
 	vertex_buffer_.UnBind();
 	element_buffer_.UnBind();
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glDisable(GL_BLEND);
 }
 
 void TriMesh::SetAmbientMaterial(float r, float g, float b, float a)
@@ -95,10 +133,10 @@ void TriMesh::SetSpecularMaterial(float r, float g, float b, float a)
 	shader.SetVector4("U_SpecularMaterial", r, g, b, a);
 }
 
-void TriMesh::SetTexture(const std::string& texture_image_path)
-{
-	shader.SetTexture("U_Texture", texture_image_path);
-}
+//void TriMesh::SetTexture(const std::string& texture_image_path)
+//{
+//	shader.SetTexture("U_Texture", texture_image_path);
+//}
 
 void TriMesh::SetDiffuseMaterial(float r, float g, float b, float a)
 {

@@ -43,24 +43,28 @@ public:
 		VVB(0, 0, 1);  VVB(1, 0, 2); VVB(2, 1, 3); VVB(3, 2, 3);
 		VVB(4, 4, 5);  VVB(5, 4, 6); VVB(6, 5, 7); VVB(7, 6, 7);
 		VVB(8, 0, 7);  VVB(9, 1, 6); VVB(10, 2, 5); VVB(11, 3, 4);
-		for (int i = 0; i < 8; i++) {
-			std::cout << "(" << vertex_buffer.GetVertex()[i].position[0] << ", "
-				<< vertex_buffer.GetVertex()[i].position[1] << ", "
-				<< vertex_buffer.GetVertex()[i].position[2] << ") " << std::endl;
-		}
+		//for (int i = 0; i < 8; i++) {
+		//	std::cout << "(" << vertex_buffer.GetVertex()[i].position[0] << ", "
+		//		<< vertex_buffer.GetVertex()[i].position[1] << ", "
+		//		<< vertex_buffer.GetVertex()[i].position[2] << ") " << std::endl;
+		//}
 	}
 #undef VVB
 #undef CEB
 };
 
-
+namespace zjl {
 class TriMesh// : public Sprite
 {
+private:
+	bool is_transparent_;
 private:
 
 	VertexBuffer vertex_buffer_;
 
 	ElementBuffer element_buffer_;
+
+	std::string	texture_color_name_;
 
 	Shader shader;
 
@@ -75,7 +79,15 @@ public:
 
 	~TriMesh();
 
+	void InitShader();
+
+	void Init(const VertexBuffer& vb, const ElementBuffer& eb);
+
 	void Init(std::string model_path);
+
+	TriMesh& MoveBy(glm::fvec3 world_position);
+
+	TriMesh& RotateBy(glm::fvec3 axis, float radian);
 
 	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
 
@@ -85,9 +97,23 @@ public:
 
 	void SetSpecularMaterial(float r, float g, float b, float a);
 
-	void SetTexture(const std::string & texture_image_path);
+	VertexBuffer& GetVertexBuffer() { return this->vertex_buffer_; }
+
+	ElementBuffer& GetElementBuffer() { return this->element_buffer_; }
+
+	// void SetTexture(const std::string & texture_image_path);
+
+	void SetTextureColorFile(const std::string& texture_color) { this->texture_color_name_ = texture_color; }
+
+	void SetTransparent(bool is_t) { 
+		if (is_t) {
+			for (int i = 0; i < vertex_buffer_.GetVerticesCount(); i++) vertex_buffer_.GetVertex()[i].color[3] = 0.5;
+		}
+		this->is_transparent_ = is_t; }
 
 	const BoundingBox& GetBoundingBox() const { return this->bbox_; }
 
 	//void Translate(float x, float y, float z);
+};
+
 };

@@ -55,6 +55,9 @@ private:
 	std::unordered_map<std::string, UniformTexture*> textures_map_;
 
 public:
+
+	~Shader();
+
 	int GetProgramId() const { return program_id_; }
 
 	int GetPositionLocation() const { return position_location_; }

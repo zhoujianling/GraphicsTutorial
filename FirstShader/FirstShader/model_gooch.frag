@@ -43,6 +43,7 @@ void main() {
 
 	// compute final color 
 	// color = ambien_color + diffuse_color + specular_color;
+	color[3] = 0.3;
 	gl_FragColor = color;
 	//gl_FragColor = V_Color;
 }

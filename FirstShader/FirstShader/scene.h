@@ -12,7 +12,7 @@ private:
 	//TriMesh mesh;
 	Camera camera;
 	WireFrame wire_frame;
-	std::vector<TriMesh> meshes;
+	std::vector<zjl::TriMesh> meshes;
 
 	bool w_pressing;
 	bool s_pressing;

@@ -3,17 +3,17 @@
 precision mediump float;
 #endif
 
-uniform sampler2D U_Texture;
 // position of directional light
 uniform vec4 U_LightPosition;
 uniform vec4 U_LightDiffuse;
 uniform vec4 U_LightDiffuseMaterial;
-uniform vec4 U_LightAmient;
-uniform vec4 U_LightAmientMaterial;
+uniform vec4 U_LightAmbient;
+uniform vec4 U_LightAmbientMaterial;
 uniform vec4 U_LightSpecular;
 uniform vec4 U_LightSpecularMaterial;
 uniform vec4 U_CameraPosition;
 uniform vec4 U_LightOpt;
+uniform sampler2D U_Texture;
 
 varying vec4 V_Color;
 varying vec4 V_Normal;
@@ -22,7 +22,7 @@ varying vec4 V_TexCoord;
 
 void main() {
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
-	vec4 ambien_color  = U_LightAmient * U_LightAmientMaterial;
+	vec4 ambien_color  = U_LightAmbient * U_LightAmbientMaterial;
 	// compute diffuse color 
 	vec3 light_position = U_LightPosition.xyz;
 	vec3 light_position_copy = light_position;
@@ -41,10 +41,10 @@ void main() {
 	}
 	// consider the color of texture...
 	// vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
-	// color = ambien_color + diffuse_color * texture2D(U_Texture, V_TexCoord.xy) + specular_color; 
+	color = ambien_color + diffuse_color * texture2D(U_Texture, V_TexCoord.xy) + specular_color; 
 
 	// compute final color 
-	color = ambien_color + diffuse_color + specular_color;
+	// color = ambien_color + diffuse_color + specular_color;
 	gl_FragColor = color;
 	//gl_FragColor = V_Color;
 }

@@ -21,6 +21,16 @@ struct Vertex
 
 	/** 法线信息 **/
 	GLfloat normal[4];
+
+	Vertex() {
+		memset(position, 0, sizeof(GLfloat) * 4);
+		memset(color, 0, sizeof(GLfloat) * 4);
+		memset(texcoord, 0, sizeof(GLfloat) * 4);
+		memset(normal, 0, sizeof(GLfloat) * 4);
+		position[3] = 1.0;
+		color[3] = 1.0;
+		normal[3] = 1.0;
+	}
 };
 
 class VertexBuffer

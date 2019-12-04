@@ -5,6 +5,8 @@
 #include "Include/glm/glm.hpp"
 #include "Include/glm/gtc/type_ptr.hpp"
 
+using namespace zjl;
+
 
 Scene::Scene():
 	w_pressing(false),
@@ -28,26 +30,34 @@ void Scene::SetViewPortSize(float width, float height)
 void Scene::Init()
 {
 	ground.Init();
+	//meshes.push_back(TriMesh());
+	//meshes[0].Init("Res/Dog.Normal.ply");
+	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
+	LoadObj("Res/01Alocasia.obj", meshes);
+
 	meshes.push_back(TriMesh());
-	meshes[0].Init("Res/Dog.Normal.ply");
 	//wire_frame.Init("Res/Dog.Normal.ply");
 
 	ElementBuffer element_buffer_temp;
-	ElementBuffer element_buffer_edge;
 	VertexBuffer vertex_buffer_temp;
-	//LoadPly("Res/Dog.Normal.ply", &vertex_buffer_temp, &element_buffer_temp);
+	ElementBuffer element_buffer_edge;
+
+	meshes.back().Init("Res/wall.obj");
+	meshes.back().MoveBy({ 0.0f, 0.0f, -0.9f });
+	meshes.back().SetTransparent(true);
+
 	//ConvertFaces2Edges(element_buffer_temp, element_buffer_edge);
 	//wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
-	meshes[0].GetBoundingBox().ToWireframe(vertex_buffer_temp, element_buffer_temp);
-	wire_frame.Init(vertex_buffer_temp, element_buffer_temp);
+	// meshes[0].GetBoundingBox().ToWireframe(vertex_buffer_temp, element_buffer_temp);
+	// wire_frame.Init(vertex_buffer_temp, element_buffer_temp);
 
 	// mesh.SetTexture("Res/Texture.bmp");
 
-	// PrintGLMMatrix(model_matrix_, "model ");
-	// PrintGLMMatrix(viewMatrix, "view ");
 	// PrintGLMMatrix(projectionMatrix, "projection ");
 
-
+	for (auto& mesh : meshes) {
+		mesh.InitShader();
+	}
 
 }
 
@@ -89,17 +99,14 @@ void Scene::Draw()
 	glClearColor(0.1f, 0.3f, 0.5f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	// Gamma correction
+	glEnable(GL_FRAMEBUFFER_SRGB);
 
-	//viewMatrix = glm::scale(viewMatrix, { 1.0, -1.0, 1.0 });
-
-	// ground.Draw(view_matrix, projection_matrix);
-	// mesh.Draw(view_matrix, projection_matrix);
 	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	//mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 	for (auto& mesh : meshes) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 	}
-	wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	// wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
 }
 

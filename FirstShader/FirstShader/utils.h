@@ -7,8 +7,9 @@
 /** 加载文件内容到内存 **/
 unsigned char* LoadFile(const char* file_path, int& file_size);
 
-/** 解码 BMP 图片 **/
-unsigned char* DecodeBMP(unsigned char* bmp_data, int& width, int& height);
+GLenum glCheckError_(const char* file, int line);
+#define glCheckError() glCheckError_(__FILE__, __LINE__) 
+
 
 /**
  * 创建二维纹理
@@ -22,7 +23,7 @@ GLuint CreateTexture2D(unsigned char* pixelData, int with, int height, GLenum ty
  * @param bmp_path: bmp图片的文件路径
  * @return 返回纹理对象的标识符
  */
-GLuint CreateTexture2DFromBmp(const char *bmp_path);
+GLuint CreateTexture2DFromImage(const char *bmp_path);
 
 GLuint CreateDisplayList(std::function<void()> foo);
 

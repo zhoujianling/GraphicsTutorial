@@ -1,6 +1,7 @@
 #include "io.h"
 #include "Include/objloader.h"
 #include "Include/ply_io.h"
+#include "mesh.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Include/sbt_image.h"
@@ -135,6 +136,19 @@ extern "C" {
 
 }
 
+
+
+void LoadModel(const std::string& model_path, VertexBuffer& buffer, ElementBuffer& element_buffer) {
+	const std::string file_name_suffix = model_path.substr(model_path.rfind('.') + 1, model_path.npos);
+	if (file_name_suffix == "obj") {
+		LoadObj(model_path, buffer, element_buffer);
+	} else if (file_name_suffix == "ply") {
+		LoadPly(model_path, &buffer, &element_buffer);
+	} else {
+		std::cerr << "Warning: Can't load " << model_path << std::endl;
+	}
+}
+
 void LoadPly(const std::string& model_path, VertexBuffer *buffer, ElementBuffer *element_buffer)
 {
 	memset(buffer, 0, sizeof(float) * buffer->GetVerticesCount() * 16);
@@ -169,39 +183,98 @@ void LoadPly(const std::string& model_path, VertexBuffer *buffer, ElementBuffer 
 	}
 }
 
-// void LoadObj(std::string modelPath, VertexBuffer *model)
-// {
-// 	objl::Loader loader;
-// 	const auto success = loader.LoadFile(modelPath);
-// 	if (! success)
-// 	{
-// 		fprintf(stderr, "Fail to load obj!\n");
-// 		return;
-// 	}
-// 	if (loader.LoadedMeshes.empty())
-// 	{
-// 		fprintf(stderr, "No mesh is loaded!\n");
-// 		return;
-// 	}
-// 	const auto loadedMesh = loader.LoadedMeshes[0];
-// 	for (const auto &vt : loadedMesh.Vertices)
-// 	{
-// 		Vertex vertex;
-// 		vertex.position[0] = vt.Position.X;
-// 		vertex.position[1] = vt.Position.Y;
-// 		vertex.position[2] = vt.Position.Z;
-// 		vertex.normal[0] = vt.Normal.X;
-// 		vertex.normal[1] = vt.Normal.Y;
-// 		vertex.normal[2] = vt.Normal.Z;
-// 		vertex.texcoord[0] = vt.TextureCoordinate.X;
-// 		vertex.texcoord[1] = vt.TextureCoordinate.Y;
-// 		model->GetVertices().push_back(vertex);
-// 	}
-// 	for (const auto &index : loadedMesh.Indices)
-// 	{
-// 		model->GetFaces().push_back(index);
-// 	}
-// }
+void LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
+	std::string model_dir = ".";
+	auto slash_pos = model_path.rfind('/');
+	if (slash_pos != model_path.npos) {
+		model_dir = model_path.substr(0, slash_pos);
+	}
+ 	objl::Loader loader;
+ 	const auto success = loader.LoadFile(model_path);
+ 	if (! success) {
+ 		fprintf(stderr, "Fail to load obj!\n");
+ 		return;
+ 	}
+ 	if (loader.LoadedMeshes.empty()) {
+ 		fprintf(stderr, "No mesh is loaded!\n");
+ 		return;
+ 	}
+	for (const auto& loaded_mesh : loader.LoadedMeshes) {
+		meshes.push_back(zjl::TriMesh());
+		// std::cout << "name:" << loaded_mesh.MeshMaterial.name << std::endl;
+		std::vector<Vertex> vertices;
+		std::vector<unsigned int> face_indices;
+ 		for (const auto &vt : loaded_mesh.Vertices) {
+ 			Vertex vertex;
+ 			vertex.position[0] = vt.Position.X;
+ 			vertex.position[1] = vt.Position.Y;
+ 			vertex.position[2] = vt.Position.Z;
+ 			vertex.normal[0] = vt.Normal.X;
+ 			vertex.normal[1] = vt.Normal.Y;
+ 			vertex.normal[2] = vt.Normal.Z;
+ 			vertex.texcoord[0] = vt.TextureCoordinate.X;
+ 			vertex.texcoord[1] = vt.TextureCoordinate.Y;
+			vertices.push_back(vertex);
+ 		// model->GetVertices().push_back(vertex);
+ 		}
+ 		for (const auto &index : loaded_mesh.Indices) {
+			face_indices.push_back(index);
+ 			//model->GetFaces().push_back(index);
+ 		}
+		auto& vertices_buff = meshes.back().GetVertexBuffer(); 
+		auto& elements_buff = meshes.back().GetElementBuffer();
+		vertices_buff.SetVertexCount(vertices.size());
+		elements_buff.SetBufferLength(face_indices.size());
+		memcpy(vertices_buff.GetVertex(), vertices.data(), sizeof(Vertex) * vertices.size());
+		memcpy(elements_buff.GetBuffer(), face_indices.data(), sizeof(unsigned int) * face_indices.size());
+
+		std::string map_kd_filepath = model_dir + "/" + loaded_mesh.MeshMaterial.map_Kd;
+		// std::cout << "Debug: map kd file: " << map_kd_filepath << std::endl;
+		meshes.back().SetTextureColorFile(map_kd_filepath);
+	}
+}
+
+ void LoadObj(std::string modelPath, VertexBuffer& vertices_buff, ElementBuffer& elements_buff)
+ {
+ 	objl::Loader loader;
+ 	const auto success = loader.LoadFile(modelPath);
+ 	if (! success)
+ 	{
+ 		fprintf(stderr, "Fail to load obj!\n");
+ 		return;
+ 	}
+ 	if (loader.LoadedMeshes.empty())
+ 	{
+ 		fprintf(stderr, "No mesh is loaded!\n");
+ 		return;
+ 	}
+ 	const auto loadedMesh = loader.LoadedMeshes[0];
+	std::vector<Vertex> vertices;
+	std::vector<unsigned int> face_indices;
+ 	for (const auto &vt : loadedMesh.Vertices)
+ 	{
+ 		Vertex vertex;
+ 		vertex.position[0] = vt.Position.X;
+ 		vertex.position[1] = vt.Position.Y;
+ 		vertex.position[2] = vt.Position.Z;
+ 		vertex.normal[0] = vt.Normal.X;
+ 		vertex.normal[1] = vt.Normal.Y;
+ 		vertex.normal[2] = vt.Normal.Z;
+ 		vertex.texcoord[0] = vt.TextureCoordinate.X;
+ 		vertex.texcoord[1] = vt.TextureCoordinate.Y;
+		vertices.push_back(vertex);
+ 		// model->GetVertices().push_back(vertex);
+ 	}
+ 	for (const auto &index : loadedMesh.Indices)
+ 	{
+		face_indices.push_back(index);
+ 		//model->GetFaces().push_back(index);
+ 	}
+	vertices_buff.SetVertexCount(vertices.size());
+	elements_buff.SetBufferLength(face_indices.size());
+	memcpy(vertices_buff.GetVertex(), vertices.data(), sizeof(Vertex) * vertices.size());
+	memcpy(elements_buff.GetBuffer(), face_indices.data(), sizeof(unsigned int) * face_indices.size());
+ }
 
 void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height)
 {
@@ -212,3 +285,11 @@ void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int
 //	stbi_image_free(data);
 }
 
+void LoadRGBAImage(std::string image_path, unsigned char *& data, int &width, int &height)
+{
+	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
+	// stbi_set_flip_vertically_on_load(true); 
+	int channel;
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb_alpha);
+//	stbi_image_free(data);
+}
