@@ -24,6 +24,30 @@ GLenum glCheckError_(const char* file, int line)
 	return errorCode;
 }
 
+unsigned char* LoadFile(const char* file_path, int& file_size) {
+	unsigned char *file_content = nullptr;
+	file_size = 0;
+
+	FILE *fp = fopen(file_path, "rb");
+	if (fp == nullptr)
+	{
+		std::cerr << "Warning: Fail to open file: " << file_path << std::endl;
+		return file_content;
+	}
+	fseek(fp, 0, SEEK_END); // 移动文件指针到尾部
+	int nlen = ftell(fp);
+	if (nlen > 0)
+	{
+		rewind(fp); // 移到头部
+		file_content = new unsigned char[nlen + 1];
+		fread(file_content, sizeof(unsigned char), nlen, fp);
+		file_content[nlen] = 0;
+		file_size = nlen;
+	}
+	fclose(fp);
+	return file_content;
+}
+
 
 GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum type)
 {

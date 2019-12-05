@@ -2,6 +2,7 @@
 #include "ggl.h"
 #include "ground.h"
 #include "mesh.h"
+#include "model.h"
 #include "camera.h"
 #include "wireframe.h"
 #include "shadow.h"
@@ -13,7 +14,8 @@ private:
 	//TriMesh mesh;
 	Camera camera;
 	WireFrame wire_frame;
-	std::vector<zjl::TriMesh> meshes;
+	// std::vector<zjl::TriMesh> meshes;
+	std::vector<Model> models;
 	std::vector<Shadow> shadows;
 
 	bool w_pressing;

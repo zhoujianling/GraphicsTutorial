@@ -8,13 +8,8 @@ using glm::identity;
 
 using namespace zjl;
 
-TriMesh::TriMesh():model_matrix_(identity<mat4>()),is_transparent_(false)
+TriMesh::TriMesh():is_transparent_(false)
 {
-	
-	// model_matrix_ = glm::translate(identity<mat4>(), { 0.0f, 0.0f, -1.9f });
-	// model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
-	// glTranslatef(0.0f, 0.0f, -3.0f);
-	//glRotated(90.0, 0, 1.0, 0);
 }
 
 TriMesh::~TriMesh()
@@ -27,25 +22,6 @@ void TriMesh::Init(const VertexBuffer& vb, const ElementBuffer& eb) {
 
 }
 
-void TriMesh::ComputeBoundingBox()
-{
-	using namespace glm;
-	using namespace std;
-	
-	fvec3 mmin(numeric_limits<float>::max(), numeric_limits<float>::max(), numeric_limits<float>::max());
-	fvec3 mmax(numeric_limits<float>::min(), numeric_limits<float>::min(), numeric_limits<float>::min());
-	for (size_t vert_i = 0; vert_i < vertex_buffer_.GetVerticesCount(); vert_i++) {
-		mmin.x = min(mmin.x, vertex_buffer_.GetVertex()[vert_i].position[0]);
-		mmin.y = min(mmin.y, vertex_buffer_.GetVertex()[vert_i].position[1]);
-		mmin.z = min(mmin.z, vertex_buffer_.GetVertex()[vert_i].position[2]);
-		mmax.x = max(mmax.x, vertex_buffer_.GetVertex()[vert_i].position[0]);
-		mmax.y = max(mmax.y, vertex_buffer_.GetVertex()[vert_i].position[1]);
-		mmax.z = max(mmax.z, vertex_buffer_.GetVertex()[vert_i].position[2]);
-	}
-	bbox_.center_ = (mmax + mmin) * 0.5f;
-	bbox_.extent_ = (mmax - mmin) * 0.5f;
-	int a = 0;
-}
 
 void TriMesh::InitShader() {
 	shader.Init("trimesh.vert", "trimesh.frag");
@@ -81,22 +57,8 @@ void TriMesh::Init(const std::string model_path)
 
 }
 
-TriMesh& TriMesh::MoveBy(glm::fvec3 world_position)
-{
-	// model_matrix_
-	model_matrix_ = glm::translate(model_matrix_, world_position);
-	return *this;
-}
 
-TriMesh& TriMesh::RotateBy(glm::fvec3 axis, float radian)
-{
-	// TODO: 在此处插入 return 语句
-	// model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
-	model_matrix_ = glm::rotate(model_matrix_, radian, axis);
-	return *this;
-}
-
-void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
+void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix)
 {
 	glEnable(GL_DEPTH_TEST);
 	if (is_transparent_) {
@@ -108,8 +70,8 @@ void TriMesh::Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix)
 
 	auto ptr = glm::value_ptr((view_matrix));
 	shader.SetVector4("U_CameraPosition", -ptr[12], -ptr[13], -ptr[14], 1.0);
-	shader.Bind(glm::value_ptr(model_matrix_), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
-	auto it = glm::inverseTranspose(model_matrix_);
+	shader.Bind(glm::value_ptr(model_matrix), glm::value_ptr(view_matrix), glm::value_ptr(projection_matrix));
+	auto it = glm::inverseTranspose(model_matrix);
 	auto it_location = glGetUniformLocation(shader.GetProgramId(), "IT_ModelMatrix");
 	glUniformMatrix4fv(it_location, 1, GL_FALSE, glm::value_ptr(it));
 

@@ -33,13 +33,15 @@ void Scene::Init()
 	//meshes.push_back(TriMesh());
 	//meshes[0].Init("Res/Dog.Normal.ply");
 	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
-	LoadObj("Res/01Alocasia.obj", meshes);
+	// LoadObj("Res/01Alocasia.obj", meshes);
+	models.push_back(Model());
+	LoadObj("Res/01Alocasia.obj", models[0].GetMeshes());
 
 
-	for (auto& mesh : meshes) {
+	//for (auto& mesh : meshes) {
 		// shadows.emplace_back(mesh.GetVertexBuffer(), mesh.GetElementBuffer());
-		shadows.push_back(Shadow(mesh.GetVertexBuffer(), mesh.GetElementBuffer()));
-	}
+		//shadows.push_back(Shadow(mesh.GetVertexBuffer(), mesh.GetElementBuffer()));
+	//}
 
 	//meshes.push_back(TriMesh());
 	//wire_frame.Init("Res/Dog.Normal.ply");
@@ -61,8 +63,8 @@ void Scene::Init()
 
 	// PrintGLMMatrix(projectionMatrix, "projection ");
 
-	for (auto& mesh : meshes) {
-		mesh.InitShader();
+	for (auto& model : models) {
+		model.Init();
 	}
 
 }
@@ -111,8 +113,8 @@ void Scene::Draw() {
 	for (auto& shadow : shadows) {
 		shadow.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 	}
-	for (auto& mesh : meshes) {
-		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	for (auto& model : models) {
+		model.Draw(camera);
 	}
 	// wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 

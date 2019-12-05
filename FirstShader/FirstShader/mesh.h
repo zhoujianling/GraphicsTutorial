@@ -68,12 +68,6 @@ private:
 
 	Shader shader;
 
-	glm::mat4 model_matrix_;
-
-	BoundingBox bbox_;
-
-	void ComputeBoundingBox();
-
 public:
 	TriMesh();
 
@@ -85,11 +79,7 @@ public:
 
 	void Init(std::string model_path);
 
-	TriMesh& MoveBy(glm::fvec3 world_position);
-
-	TriMesh& RotateBy(glm::fvec3 axis, float radian);
-
-	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
+	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
 
 	void SetAmbientMaterial(float r, float g, float b, float a);
 
@@ -110,8 +100,6 @@ public:
 			for (int i = 0; i < vertex_buffer_.GetVerticesCount(); i++) vertex_buffer_.GetVertex()[i].color[3] = 0.5;
 		}
 		this->is_transparent_ = is_t; }
-
-	const BoundingBox& GetBoundingBox() const { return this->bbox_; }
 
 	//void Translate(float x, float y, float z);
 };
