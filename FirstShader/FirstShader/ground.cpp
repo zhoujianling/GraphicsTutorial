@@ -8,7 +8,7 @@ using glm::identity;
 void Ground::Init()
 {
 	//model_matrix_ = identity<mat4>();
-	model_matrix_ = glm::translate(identity<mat4>(), {0.0f, 0.0f, -0.6f});
+	model_matrix_ = glm::translate(identity<mat4>(), {0.0f, 0.0f, 0.0f});
 	//PrintGLMMatrix(model_matrix_);
 	buffer_ = new VertexBuffer();
 	buffer_->SetVertexCount(1600);

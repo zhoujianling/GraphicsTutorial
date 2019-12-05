@@ -40,6 +40,29 @@ VertexBuffer& VertexBuffer::operator=(const VertexBuffer& buffer)
 	return *this;
 }
 
+VertexBuffer::VertexBuffer(VertexBuffer&& buffer):vertices_(nullptr), vertex_count_(0), vbo_(0)
+{
+	vertices_ = buffer.vertices_;
+	vertex_count_ = buffer.vertex_count_;
+	vbo_ = buffer.vbo_;
+	buffer.vertices_ = nullptr;
+	buffer.vertex_count_ = 0;
+}
+
+VertexBuffer& VertexBuffer::operator=(VertexBuffer&& buffer)
+{
+	// TODO: 在此处插入 return 语句
+	if (this != &buffer) {
+		ClearBuffer();
+		vertices_ = buffer.vertices_;
+		vertex_count_ = buffer.vertex_count_;
+		vbo_ = buffer.vbo_;
+		buffer.vertices_ = nullptr;
+		buffer.vertex_count_ = 0;
+	}
+	return *this;
+}
+
 void VertexBuffer::SetVertexCount(int c)
 {
 	if (c <= 0) {
@@ -100,7 +123,7 @@ void VertexBuffer::UnBind()
 
 void VertexBuffer::ClearBuffer()
 {
-	delete vertices_;
+	delete[] vertices_;
 	this->vertex_count_ = 0;
 }
 
@@ -135,6 +158,29 @@ ElementBuffer& ElementBuffer::operator=(const ElementBuffer& buffer)
 		this->length_ = buffer.length_;
 		this->indices_buffer_ = new unsigned int[buffer.length_];
 		memcpy(this->indices_buffer_, buffer.indices_buffer_, sizeof(unsigned int) * buffer.length_);
+	}
+	return *this;
+}
+
+ElementBuffer::ElementBuffer(ElementBuffer&& buffer):indices_buffer_(nullptr), length_(0), ebo(0) {
+	std::cout << "move element buffer ..." << std::endl;
+	this->indices_buffer_ = buffer.indices_buffer_;
+	this->length_ = buffer.length_;
+	this->ebo = buffer.ebo;
+	buffer.indices_buffer_ = nullptr;
+	buffer.length_ = 0;
+}
+
+ElementBuffer& ElementBuffer::operator=(ElementBuffer&& buffer)
+{
+	// TODO: 在此处插入 return 语句
+	if (this != &buffer) {
+		ClearBuffer();
+		this->indices_buffer_ = buffer.indices_buffer_;
+		this->length_ = buffer.length_;
+		this->ebo = buffer.ebo;
+		buffer.indices_buffer_ = nullptr;
+		buffer.length_ = 0;
 	}
 	return *this;
 }

@@ -55,6 +55,9 @@ private:
 	std::unordered_map<std::string, UniformTexture*> textures_map_;
 
 public:
+	Shader() = default;
+	Shader(const Shader&);
+	Shader& operator= (const Shader&);
 
 	~Shader();
 

@@ -51,7 +51,7 @@ void TriMesh::InitShader() {
 	shader.Init("trimesh.vert", "trimesh.frag");
 	// shader.Init("model_gooch.vert", "model_gooch.frag");
 
-	shader.SetVector4("U_LightPosition", 0.0f, 1.0f, 1.0f, 1.0f);
+	shader.SetVector4("U_LightPosition", 0.0f, 2.5f, 2.5f, 1.0f);
 	shader.SetVector4("U_LightAmbient", 1.0f, 1.0f, 1.0f, 1.0f);
 	shader.SetVector4("U_LightAmbientMaterial", 0.1f, 0.1f, 0.1f, 1.0f);
 	shader.SetVector4("U_LightDiffuse", 1.0f, 1.0f, 1.0f, 1.0f);

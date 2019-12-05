@@ -13,6 +13,51 @@ location_(location)
 {
 }
 
+Shader::Shader(const Shader&shader):
+	program_id_(shader.program_id_),
+	position_location_(shader.position_location_),
+	color_location_(shader.color_location_),
+	texcoord_location_(shader.texcoord_location_),
+	normal_location_(shader.normal_location_),
+	model_matrix_location_(shader.model_matrix_location_),
+	view_matrix_location_(shader.view_matrix_location_),
+	projection_matrix_location_(shader.projection_matrix_location_),
+	textures_map_(shader.textures_map_), 
+	vec4_map_(shader.vec4_map_)
+{
+	for (auto& kv : textures_map_) {
+		kv.second = new UniformTexture(*kv.second);
+	}
+	for (auto& kv : vec4_map_) {
+		kv.second = new UniformVector4f(*kv.second);
+	}
+}
+
+Shader& Shader::operator=(const Shader&shader)
+{
+	// TODO: 在此处插入 return 语句
+	if (this != &shader) {
+		this->program_id_ = (shader.program_id_);
+		this->position_location_ = (shader.position_location_);
+		this->color_location_ = (shader.color_location_);
+		this->texcoord_location_ = (shader.texcoord_location_);
+		this->normal_location_ = (shader.normal_location_);
+		this->model_matrix_location_ = (shader.model_matrix_location_);
+		this->view_matrix_location_ = (shader.view_matrix_location_);
+		this->projection_matrix_location_ = (shader.projection_matrix_location_);
+		this->textures_map_ = (shader.textures_map_);
+		this->vec4_map_ = (shader.vec4_map_);
+		for (auto& kv : textures_map_) {
+			kv.second = new UniformTexture(*kv.second);
+		}
+		for (auto& kv : vec4_map_) {
+			kv.second = new UniformVector4f(*kv.second);
+		}
+
+	}
+	return *this;
+}
+
 Shader::~Shader() {
 	for (auto& kv : textures_map_) {
 		delete kv.second;
@@ -27,9 +72,12 @@ void Shader::Init(const std::string &vs, const std::string &fs)
 
 	auto file_size = 0;
 	const unsigned char *shader_code = LoadFile(vs.c_str(), file_size);
+	if (shader_code == nullptr) {
+		std::cerr << "fail to find vertex shader " << vs << std::endl;
+		return;
+	}
 	const auto vs_shader = CompileShader(GL_VERTEX_SHADER, (char*)shader_code);
-	if (vs_shader == 0)
-	{
+	if (vs_shader == 0) {
 		std::cerr << "fail to create vertex shader " << vs << std::endl;
 		return;
 	}
@@ -120,7 +168,7 @@ void Shader::SetTexture(const std::string& name, const std::string& texture_imag
 		if (location != -1) {
 			UniformTexture * texture = new UniformTexture();
 			texture->location_ = location;
-			std::cerr << "reading imgae " << std::endl;
+			// std::cerr << "reading imgae " << std::endl;
 			texture->texture_ = CreateTexture2DFromImage(texture_image_path.c_str());
 			textures_map_[name] = texture;
 		} else {

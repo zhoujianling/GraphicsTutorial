@@ -49,6 +49,9 @@ public:
 
 	VertexBuffer(const VertexBuffer& buffer);
 	VertexBuffer& operator= (const VertexBuffer& buffer);
+	VertexBuffer(VertexBuffer&& buffer);
+	VertexBuffer& operator= (VertexBuffer&& buffer);
+
 
 	Vertex *GetVertex() 
 	{
@@ -93,8 +96,9 @@ public:
 	ElementBuffer();
 
 	ElementBuffer(const ElementBuffer& buffer);
-
 	ElementBuffer& operator= (const ElementBuffer& buffer);
+	ElementBuffer(ElementBuffer&& buffer);
+	ElementBuffer& operator= (ElementBuffer&& buffer);
 
 	~ElementBuffer();
 

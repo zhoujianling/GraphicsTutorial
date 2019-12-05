@@ -1,89 +1,21 @@
 #pragma once
+#include "mesh.h"
+#include <vector>
 
-#include "ggl.h"
-#include <iostream>
-
-//#include "sprite.h"
-
-/**
- * 一个网格顶点
- */
-struct Vertex
-{
-	/** x,y,z坐标 **/
-	GLfloat position[4];
-
-	/** r,g,b,a **/
-	GLfloat color[4];
-
-	/** UV 纹理坐标 **/
-	GLfloat texcoord[4];
-
-	/** 法线信息 **/
-	GLfloat normal[4];
-};
-
-class VertexBuffer
-{
+class Camera;
+class Model { // hold an instance pointer -> renderManager which is an interface implemented by Scene?
 private:
-	Vertex *mVertices;
-
-	int mVertexCount;
-
-	GLuint mVBO;
-
+	std::vector<zjl::TriMesh> meshes_;
+	// bbox
+	// wire_frame
+	// shadow
 public:
+	Model();
 
-	Vertex *getVertex() 
-	{
-		return this->mVertices;
-	}
+	// ~Model();
 
-	int getVerticesCount() const
-	{
-		return this->mVertexCount;
-	}
+	void Draw(const Camera&);
 
-	void SetVertexCount(int c);
+	std::vector<zjl::TriMesh>& GetMeshes() { return this->meshes_; }
 
-	void SetPosition(int index, float x, float y, float z, float w = 1.0f);
-
-	void SetColor(int index, float r, float g, float b, float a = 1.0f);
-
-	void SetNormal(int index, float x, float y, float z, float a = 1.0f);
-
-	void SetTexcoord(int index, float u, float v);
-
-	void Bind();
-
-	void UnBind();
-
-	Vertex& Get(int index);
-};
-
-class TriMesh// : public Sprite
-{
-private:
-	std::vector<Vertex> vertices;
-
-	std::vector<int> faceIndices;
-
-
-public:
-
-	TriMesh();
-
-	//void Init(const char *modelPath);
-
-	//void Draw() override;
-
-	std::vector<Vertex>& GetVertices()
-	{
-		return this->vertices;
-	}
-
-	std::vector<int>& GetFaces()
-	{
-		return this->faceIndices;
-	}
 };

@@ -4,6 +4,7 @@
 #include "mesh.h"
 #include "camera.h"
 #include "wireframe.h"
+#include "shadow.h"
 #include <vector>
 
 class Scene {
@@ -13,6 +14,7 @@ private:
 	Camera camera;
 	WireFrame wire_frame;
 	std::vector<zjl::TriMesh> meshes;
+	std::vector<Shadow> shadows;
 
 	bool w_pressing;
 	bool s_pressing;

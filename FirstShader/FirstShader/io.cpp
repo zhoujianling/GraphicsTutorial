@@ -229,7 +229,6 @@ void LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 		memcpy(elements_buff.GetBuffer(), face_indices.data(), sizeof(unsigned int) * face_indices.size());
 
 		std::string map_kd_filepath = model_dir + "/" + loaded_mesh.MeshMaterial.map_Kd;
-		// std::cout << "Debug: map kd file: " << map_kd_filepath << std::endl;
 		meshes.back().SetTextureColorFile(map_kd_filepath);
 	}
 }
@@ -279,17 +278,18 @@ void LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height)
 {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
-	// stbi_set_flip_vertically_on_load(true); 
+	stbi_set_flip_vertically_on_load(true); 
 	int channel;
-	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb);
+	// 最后一个参数无需指定格式。。。
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, 0);
 //	stbi_image_free(data);
 }
 
 void LoadRGBAImage(std::string image_path, unsigned char *& data, int &width, int &height)
 {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
-	// stbi_set_flip_vertically_on_load(true); 
+	stbi_set_flip_vertically_on_load(1); 
 	int channel;
-	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb_alpha);
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb);
 //	stbi_image_free(data);
 }

@@ -35,16 +35,22 @@ void Scene::Init()
 	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
 	LoadObj("Res/01Alocasia.obj", meshes);
 
-	meshes.push_back(TriMesh());
+
+	for (auto& mesh : meshes) {
+		// shadows.emplace_back(mesh.GetVertexBuffer(), mesh.GetElementBuffer());
+		shadows.push_back(Shadow(mesh.GetVertexBuffer(), mesh.GetElementBuffer()));
+	}
+
+	//meshes.push_back(TriMesh());
 	//wire_frame.Init("Res/Dog.Normal.ply");
 
 	ElementBuffer element_buffer_temp;
 	VertexBuffer vertex_buffer_temp;
 	ElementBuffer element_buffer_edge;
 
-	meshes.back().Init("Res/wall.obj");
-	meshes.back().MoveBy({ 0.0f, 0.0f, -0.9f });
-	meshes.back().SetTransparent(true);
+	//meshes.back().Init("Res/wall.obj");
+	//meshes.back().MoveBy({ 0.0f, 0.0f, -0.9f });
+	//meshes.back().SetTransparent(true);
 
 	//ConvertFaces2Edges(element_buffer_temp, element_buffer_edge);
 	//wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
@@ -94,8 +100,7 @@ void Scene::UpdateScene()
 	camera.Translate(delta);
 }
 
-void Scene::Draw()
-{
+void Scene::Draw() {
 	glClearColor(0.1f, 0.3f, 0.5f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -103,6 +108,9 @@ void Scene::Draw()
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
 	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	for (auto& shadow : shadows) {
+		shadow.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	}
 	for (auto& mesh : meshes) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 	}

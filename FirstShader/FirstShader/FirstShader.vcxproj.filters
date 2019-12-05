@@ -48,6 +48,12 @@
     <ClCompile Include="wireframe.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="shadow.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="scene.h">
@@ -98,6 +104,12 @@
     <ClInclude Include="light.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="shadow.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Res\test.fs">
@@ -128,6 +140,12 @@
       <Filter>资源文件</Filter>
     </None>
     <None Include="wireframe.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="hard_shadow.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="hard_shadow.frag">
       <Filter>资源文件</Filter>
     </None>
   </ItemGroup>

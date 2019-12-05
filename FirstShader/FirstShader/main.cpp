@@ -24,6 +24,7 @@ unsigned char* LoadFile(const char* file_path, int& file_size)
 	FILE *fp = fopen(file_path, "rb");
 	if (fp == nullptr)
 	{
+		std::cerr << "Warning: Fail to open file: " << file_path << std::endl;
 		return file_content;
 	}
 	fseek(fp, 0, SEEK_END); // 移动文件指针到尾部
