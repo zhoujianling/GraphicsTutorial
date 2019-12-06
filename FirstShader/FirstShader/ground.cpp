@@ -8,8 +8,9 @@ using glm::identity;
 Ground::Ground():
 	cell_size(3.0f),
 	cell_num(30),
-	texture_color_name_("Res/Stone_tiles_floor_02_1K_Base_Color.png") {
-}
+	texture_color_name_("Res/Stone_tiles_floor_02_1K_Base_Color.png"), 
+	texture_normal_name_("Res/Stone_tiles_floor_02_1K_Normal.png")
+{}
 
 void Ground::InitGeometry() {
 	model_matrix_ = identity<mat4>();
@@ -62,6 +63,9 @@ void Ground::InitShader() {
 	// std::cout << "###Ground###" << std::endl;
 	if (! texture_color_name_.empty()) {
 		shader_.SetTexture("U_Texture", texture_color_name_);
+		if (!texture_normal_name_.empty()) {
+			shader_.SetTexture("U_TextureNormal", texture_normal_name_);
+		}
 	}
 }
 

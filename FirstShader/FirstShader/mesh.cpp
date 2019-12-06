@@ -64,6 +64,7 @@ void zjl::TriMesh::DrawShadow(glm::mat4 view_matrix, glm::mat4 projection_matrix
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
 	vertex_buffer_.Bind();
 	element_buffer_.Bind();
 
@@ -80,7 +81,6 @@ void zjl::TriMesh::DrawShadow(glm::mat4 view_matrix, glm::mat4 projection_matrix
 
 	vertex_buffer_.UnBind();
 	element_buffer_.UnBind();
-	glDisable(GL_BLEND);
 }
 
 

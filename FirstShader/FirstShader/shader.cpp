@@ -82,8 +82,7 @@ void Shader::Init(const std::string &vs, const std::string &fs) {
 	delete shader_code;
 	shader_code = LoadFile(fs.c_str(), file_size);
 	const auto fs_shader = CompileShader(GL_FRAGMENT_SHADER, (char*)shader_code);
-	if (fs_shader == 0)
-	{
+	if (fs_shader == 0) {
 		std::cerr << "fail to create fragment shader " << fs << std::endl;
 		return;
 	}
@@ -91,8 +90,7 @@ void Shader::Init(const std::string &vs, const std::string &fs) {
 	program_id_ = CreateShaderProgram(vs_shader, fs_shader);
 	glDeleteShader(vs_shader);
 	glDeleteShader(fs_shader);
-	if (program_id_ != 0)
-	{
+	if (program_id_ != 0) {
 		position_location_ = glGetAttribLocation(program_id_, "position");
 		color_location_ = glGetAttribLocation(program_id_, "color");
 		normal_location_ = glGetAttribLocation(program_id_, "normal");

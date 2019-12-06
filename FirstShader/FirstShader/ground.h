@@ -22,6 +22,8 @@ private:
 
 	std::string texture_color_name_;
 
+	std::string texture_normal_name_;
+
 public:
 
 	Ground();

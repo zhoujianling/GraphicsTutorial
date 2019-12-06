@@ -11,9 +11,22 @@ Model::Model():model_matrix_(identity<mat4>())
 {}
 
 void Model::Draw(const Camera& camera) {
+	glEnable(GL_STENCIL_TEST);
+	// 蒙版默认初始化为 0
+	glClearStencil(0);
+	glStencilMask(0xFF);
+	glStencilFunc(GL_NOTEQUAL, 0x1, 0xFF); // 当和 0XFF 做 and运算的结果 NOTEQUAL 1时，通过蒙版测试
+	// glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // ???
+	// glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 	for (auto& mesh : meshes_) {
 		mesh.DrawShadow(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
+	//glStencilMask(0x00);
 	}
+	// 关闭蒙版写入
+	glStencilMask(0x00);
+
+	glDisable(GL_STENCIL_TEST);
+
 	for (auto& mesh : meshes_) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
 	}

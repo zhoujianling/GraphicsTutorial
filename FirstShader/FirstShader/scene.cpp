@@ -109,14 +109,12 @@ void Scene::UpdateScene() {
 void Scene::Draw() {
 	glClearColor(0.1f, 0.3f, 0.5f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	// Gamma correction
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
 	ground.Draw(camera);
-	//for (auto& shadow : shadows) {
-		//shadow.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	//}
+
 	if (draw_wireframe_) {
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
@@ -127,7 +125,6 @@ void Scene::Draw() {
 	for (auto& model : models) {
 		model.Draw(camera);
 	}
-	// wire_frame.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
 
 }
 
