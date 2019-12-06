@@ -45,16 +45,13 @@
     <ClCompile Include="camera.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="wireframe.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="model.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="renderer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="wireframe.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -101,19 +98,16 @@
     <ClInclude Include="camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="wireframe.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="light.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="wireframe.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

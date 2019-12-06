@@ -15,10 +15,10 @@ uniform vec4 U_CameraPosition;
 uniform vec4 U_LightOpt;
 uniform sampler2D U_Texture;
 
-varying vec4 V_Color;
-varying vec4 V_Normal;
-varying vec4 V_WorldPosition;
-varying vec4 V_TexCoord;
+in vec4 V_Color;
+in vec4 V_Normal;
+in vec4 V_WorldPosition;
+in vec4 V_TexCoord;
 
 void main() {
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
@@ -41,7 +41,7 @@ void main() {
 	}
 	// consider the color of texture...
 	// vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
-	color = ambien_color + diffuse_color * texture2D(U_Texture, V_TexCoord.xy) + specular_color; 
+	color = ambien_color * texture2D(U_Texture, V_TexCoord.xy) + diffuse_color * texture2D(U_Texture, V_TexCoord.xy) + specular_color; 
 
 	// compute final color 
 	// color = ambien_color + diffuse_color + specular_color;

@@ -143,7 +143,6 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="renderer.cpp" />
-    <ClCompile Include="shadow.cpp" />
     <ClCompile Include="vertex.cpp" />
     <ClCompile Include="scene.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -164,7 +163,6 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="shadow.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="scene.h" />
     <ClInclude Include="shader.h" />

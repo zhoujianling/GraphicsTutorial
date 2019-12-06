@@ -90,8 +90,7 @@ void SetWindowContent(WNDCLASSEX *windowClass, HINSTANCE hInstance) {
  * 创建 OpenGL 渲染环境
  *
  */
-HDC SetOpenGlEnv(HWND hwnd)
-{
+HDC SetOpenGlEnv(HWND hwnd) {
 	// ==================
 	const auto hdc = GetDC(hwnd); // 获取设备上下文
 	PIXELFORMATDESCRIPTOR pfd; // 像素格式配置类

@@ -12,6 +12,9 @@ Model::Model():model_matrix_(identity<mat4>())
 
 void Model::Draw(const Camera& camera) {
 	for (auto& mesh : meshes_) {
+		mesh.DrawShadow(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
+	}
+	for (auto& mesh : meshes_) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
 	}
 	bbox_wire_.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
@@ -37,6 +40,12 @@ Model& Model::RotateBy(glm::fvec3 axis, float radian) {
 	// TODO: 在此处插入 return 语句
 	// model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
 	model_matrix_ = glm::rotate(model_matrix_, radian, axis);
+	return *this;
+}
+
+Model& Model::ScaleBy(float ratio) {
+	// TODO: 在此处插入 return 语句
+	model_matrix_ = glm::scale(model_matrix_, { ratio, ratio, ratio });
 	return *this;
 }
 

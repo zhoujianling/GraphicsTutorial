@@ -12,7 +12,8 @@ Scene::Scene():
 	w_pressing(false),
 	s_pressing(false),
 	a_pressing(false),
-	d_pressing(false)
+	d_pressing(false),
+	draw_wireframe_(false)
 {
 	tick_cnt_ = 0;
 }
@@ -29,13 +30,14 @@ void Scene::SetViewPortSize(float width, float height) {
 void Scene::Init() {
 	ground.InitGeometry();
 	ground.InitShader();
-	camera.Translate({ 0.0f, -0.6f, 2.0f });
+	camera.Translate({ 0.0f, -0.6f, 3.0f });
 	//meshes.push_back(TriMesh());
 	//meshes[0].Init("Res/Dog.Normal.ply");
 	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
 	// LoadObj("Res/01Alocasia.obj", meshes);
 	models.push_back(Model());
 	LoadObj("Res/01Alocasia.obj", models[0].GetMeshes());
+	models.back().ScaleBy(0.5f).MoveBy({0.0f, -0.5f, 0.0f});
 
 
 	//for (auto& mesh : meshes) {
@@ -96,10 +98,10 @@ void Scene::UpdateScene() {
 	}
 	camera.Translate(delta);
 
-	if (tick_cnt_ > 200 && tick_cnt_ < 400) {
-		//float s1 = 0.5 * 0.0003f * (tick_cnt_ - 200) * (tick_cnt_ - 200);
-		//float s2 = 0.5 * 0.0003f * (tick_cnt_ - 201) * (tick_cnt_ - 201);
-		//models[0].MoveBy({0.0f, -(s1 - s2), 0.0f});
+	if (tick_cnt_ > 100) {
+		float s1 = 0.6 * sin((tick_cnt_ - 200) * 1.0 / 120) ;
+		float s2 = 0.6 * sin((tick_cnt_ - 201) * 1.0 / 120) ;
+		models[0].MoveBy({0.0f, -(s1 - s2), 0.0f});
 	}
 	tick_cnt_ += 1;
 }
@@ -111,9 +113,16 @@ void Scene::Draw() {
 	// Gamma correction
 	glEnable(GL_FRAMEBUFFER_SRGB);
 
-	ground.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
-	for (auto& shadow : shadows) {
-		shadow.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	ground.Draw(camera);
+	//for (auto& shadow : shadows) {
+		//shadow.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix());
+	//}
+	if (draw_wireframe_) {
+		glPolygonMode(GL_FRONT, GL_LINE);
+		glPolygonMode(GL_BACK, GL_LINE);
+	} else {
+		glPolygonMode(GL_FRONT, GL_FILL);
+		glPolygonMode(GL_BACK, GL_FILL);
 	}
 	for (auto& model : models) {
 		model.Draw(camera);
@@ -122,10 +131,8 @@ void Scene::Draw() {
 
 }
 
-void Scene::OnKeyDown(char code)
-{
-	switch (code)
-	{
+void Scene::OnKeyDown(char code) {
+	switch (code) {
 	case 'A':
 		a_pressing = true;
 		break;
@@ -141,10 +148,8 @@ void Scene::OnKeyDown(char code)
 	}
 }
 
-void Scene::OnKeyUp(char code)
-{
-	switch (code)
-	{
+void Scene::OnKeyUp(char code) {
+	switch (code) {
 	case 'A':
 		a_pressing = false;
 		break;
@@ -157,11 +162,13 @@ void Scene::OnKeyUp(char code)
 	case 'W':
 		w_pressing = false;
 		break;
+	case 'M':
+		draw_wireframe_ = !draw_wireframe_;
+		break;
 	}
 }
 
-void Scene::OnMouseMove(const float delta_x, const float delta_y)
-{
+void Scene::OnMouseMove(const float delta_x, const float delta_y) {
 	// 在 x 轴滑动，相机沿 y轴转动，位移值近似逼近 yaw 的角度
 	const auto angle_rotate_by_y_axis = delta_x / 1000.0f; 
 	// 在 y 轴滑动，相机沿 x轴转动，位移值近似逼近 pitch 的角度

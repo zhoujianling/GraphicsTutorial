@@ -6,6 +6,7 @@
 #include "Include/glm/glm.hpp"
 #include "Include/glm/ext.hpp"
 
+class Camera;
 class Ground {
 private:
 
@@ -14,6 +15,10 @@ private:
 	Shader shader_;
 
 	glm::mat4 model_matrix_;
+
+	const float cell_size;
+
+	const int cell_num;
 
 	std::string texture_color_name_;
 
@@ -27,7 +32,7 @@ public:
 	//±‡“Î¡¥Ω” Shader
 	void InitShader();
 
-	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
+	void Draw(const Camera&);
 
 	float GetGroundHeight() const { return model_matrix_[1][3]; }
 };

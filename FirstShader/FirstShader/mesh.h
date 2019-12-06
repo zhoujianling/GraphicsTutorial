@@ -68,6 +68,8 @@ private:
 
 	Shader shader;
 
+	Shader shadow_shader_;
+
 public:
 	TriMesh();
 
@@ -75,9 +77,11 @@ public:
 
 	void InitShader();
 
-	void Init(const VertexBuffer& vb, const ElementBuffer& eb);
+	void InitGeometry(const VertexBuffer& vb, const ElementBuffer& eb);
 
-	void Init(std::string model_path);
+	void InitGeometry(std::string model_path);
+
+	void DrawShadow(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
 
 	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
 

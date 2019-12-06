@@ -29,6 +29,8 @@ public:
 
 	Model& RotateBy(glm::fvec3 axis, float radian);
 
+	Model& ScaleBy(float ratio);
+
 	std::vector<zjl::TriMesh>& GetMeshes() { return this->meshes_; }
 
 	void ComputeBoundingBox();

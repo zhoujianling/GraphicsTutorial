@@ -33,8 +33,7 @@ Shader::Shader(const Shader&shader):
 	}
 }
 
-Shader& Shader::operator=(const Shader&shader)
-{
+Shader& Shader::operator=(const Shader&shader) {
 	// TODO: 在此处插入 return 语句
 	if (this != &shader) {
 		this->program_id_ = (shader.program_id_);
@@ -67,8 +66,7 @@ Shader::~Shader() {
 	}
 }
 
-void Shader::Init(const std::string &vs, const std::string &fs)
-{
+void Shader::Init(const std::string &vs, const std::string &fs) {
 
 	auto file_size = 0;
 	const unsigned char *shader_code = LoadFile(vs.c_str(), file_size);
@@ -113,8 +111,7 @@ void Shader::Init(const std::string &vs, const std::string &fs)
  * 此时与顶点数据是解耦的，但是知道不同位置的数据的语义，做语义绑定
  * 顶点数据取决于调用 glDrawElements() 之前 glBindBuffer() 里面传入的 vbo
  */
-void Shader::Bind(float* M, float* V, float* P)
-{
+void Shader::Bind(float* M, float* V, float* P) {
 	glUseProgram(program_id_);
 	glUniformMatrix4fv(model_matrix_location_, 1, GL_FALSE, M);
 	glUniformMatrix4fv(view_matrix_location_, 1, GL_FALSE, V);
@@ -130,21 +127,18 @@ void Shader::Bind(float* M, float* V, float* P)
 	glVertexAttribPointer(normal_location_, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*) (sizeof(float) * 12));;
 
 	int texture_index = 0;
-	for (auto && kv : textures_map_)
-	{
+	for (auto && kv : textures_map_) {
 		glActiveTexture(GL_TEXTURE0 + texture_index); // 重置状态机，设置当前纹理编号
 		glBindTexture(GL_TEXTURE_2D, kv.second->texture_);
 		glUniform1i(kv.second->location_, texture_index++);
 	}
 
-	for (auto kv : vec4_map_)
-	{
+	for (auto kv : vec4_map_) {
 		glUniform4fv(kv.second->location_, 1, kv.second->value_);
 	}
 }
 
-void Shader::SetVector4(const std::string& name, float x, float y, float z, float w)
-{
+void Shader::SetVector4(const std::string& name, float x, float y, float z, float w) {
 	auto iter = vec4_map_.find(name);
 	if (iter == vec4_map_.end()) {
 		GLint location = glGetUniformLocation(program_id_, name.c_str());
@@ -161,8 +155,7 @@ void Shader::SetVector4(const std::string& name, float x, float y, float z, floa
 	}
 }
 
-void Shader::SetTexture(const std::string& name, const std::string& texture_image_path)
-{
+void Shader::SetTexture(const std::string& name, const std::string& texture_image_path) {
 	if (textures_map_.find(name) == textures_map_.end())  {
 		GLint location = glGetUniformLocation(program_id_, name.c_str());
 		if (location != -1) {

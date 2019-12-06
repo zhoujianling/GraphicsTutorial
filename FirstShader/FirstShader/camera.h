@@ -49,5 +49,7 @@ public:
 
 	glm::vec3 UpDirection() const { return up_; }
 
+	glm::vec3 GetPosition() const { return this->position_; }
+
 	glm::vec3 RightHandDirection() const { return glm::cross(ForwardDirection(), up_); }
 };

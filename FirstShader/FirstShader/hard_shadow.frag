@@ -21,7 +21,7 @@ varying vec4 V_WorldPosition;
 varying vec4 V_TexCoord;
 
 void main() {
-	vec4 color = vec4(0.1, 0.1, 0.1, 1.0);
+	vec4 color = vec4(0.1, 0.1, 0.1, 0.5);
 	gl_FragColor = color;
 	//gl_FragColor = V_Color;
 }

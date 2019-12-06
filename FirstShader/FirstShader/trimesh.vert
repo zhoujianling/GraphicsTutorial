@@ -8,10 +8,11 @@ uniform mat4 ModelMatrix;
 uniform mat4 ViewMatrix;
 uniform mat4 ProjectionMatrix;
 uniform mat4 IT_ModelMatrix;
-varying vec4 V_Color;
-varying vec4 V_Normal;
-varying vec4 V_WorldPosition;
-varying vec4 V_TexCoord;
+
+out vec4 V_Color;
+out vec4 V_Normal;
+out vec4 V_WorldPosition;
+out vec4 V_TexCoord;
 
 void main() {
 	V_Color = color;
