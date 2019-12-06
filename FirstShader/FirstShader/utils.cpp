@@ -68,26 +68,17 @@ GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum t
 	return texture;
 }
 
-GLuint CreateTexture2DFromImage(const char *bmp_path)
-{
-	//int n_file_size = 0;
-	//const auto bmp_file_data = LoadFile(bmp_path, n_file_size);
-	//if (bmp_file_data == nullptr)
-	//{
-	//	fprintf(stderr, "Error, cannot open file.\n");
-	//	return 0; // 出错，返回 0 号黑色纹理单元
-	//}
+GLuint CreateTexture2DFromImage(const char *bmp_path) {
 	auto width = 0, height = 0;
 	unsigned char *bmp_image_data = nullptr;
 	LoadRGBImage(bmp_path, bmp_image_data, width, height);
 	//= DecodeBMP(bmpFileData, width, height);
-	if (width <= 0 || height <= 0)
-	{
+	if (width <= 0 || height <= 0) {
 		fprintf(stderr, "Error, cannot decode image.\n");
 		delete bmp_image_data;
 		return 0;
 	}
-	std::cerr << "Debug: load image, width " << width << ", height " << height << std::endl;
+	// std::cerr << "Debug: load image, width " << width << ", height " << height << std::endl;
 
 	const GLuint texture_id = CreateTexture2D(bmp_image_data, width, height, GL_RGB);
 	//	delete bmpFileData;

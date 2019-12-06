@@ -14,12 +14,17 @@ void Model::Draw(const Camera& camera) {
 	for (auto& mesh : meshes_) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
 	}
+	bbox_wire_.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
 }
 
 void Model::Init() {
+	ComputeBoundingBox();
+	bbox_.ToWireframe(bbox_wire_.GetVertexBuffer(), bbox_wire_.GetElementBuffer());
+
 	for (auto& mesh : meshes_) {
 		mesh.InitShader();
 	}
+	bbox_wire_.InitShader();
 }
 
 Model& Model::MoveBy(glm::fvec3 world_position) {
@@ -35,8 +40,7 @@ Model& Model::RotateBy(glm::fvec3 axis, float radian) {
 	return *this;
 }
 
-void Model::ComputeBoundingBox()
-{
+void Model::ComputeBoundingBox() {
 	using namespace glm;
 	using namespace std;
 	

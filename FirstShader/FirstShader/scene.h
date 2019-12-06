@@ -23,6 +23,8 @@ private:
 	bool a_pressing;
 	bool d_pressing;
 
+	int tick_cnt_;
+
 public:
 	Scene();
 

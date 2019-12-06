@@ -14,22 +14,22 @@ Scene::Scene():
 	a_pressing(false),
 	d_pressing(false)
 {
+	tick_cnt_ = 0;
 }
 
-void Scene::SetViewPortSize(float width, float height)
-{
+void Scene::SetViewPortSize(float width, float height) {
 	glViewport(0, 0, width, height);
 	camera.Init(width / height);
-	// projection_matrix = glm::perspective(60.0f / 180.0f * PI, width / height, 0.1f, 1000.0f);
 }
 
 /**
  * 屏幕正中心是世界坐标系原点
  * z 轴指向屏幕外面, 所以 z 坐标要设负值
  */
-void Scene::Init()
-{
-	ground.Init();
+void Scene::Init() {
+	ground.InitGeometry();
+	ground.InitShader();
+	camera.Translate({ 0.0f, -0.6f, 2.0f });
 	//meshes.push_back(TriMesh());
 	//meshes[0].Init("Res/Dog.Normal.ply");
 	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
@@ -70,8 +70,7 @@ void Scene::Init()
 }
 
 
-void Scene::UpdateScene()
-{
+void Scene::UpdateScene() {
 	const auto delta_time = GetFrameTime();
 	std::cout << "\rDelta time: " << delta_time;
 	
@@ -83,23 +82,26 @@ void Scene::UpdateScene()
 
 	auto delta = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	if (a_pressing)
-	{
+	if (a_pressing) {
 		delta = right_hand_direction * delta_time * move_speed * -1.0f;
 	}
-	if (d_pressing)
-	{
+	if (d_pressing) {
 		delta = right_hand_direction * delta_time * move_speed;
 	}
-	if (w_pressing)
-	{
+	if (w_pressing) {
 		delta = forward_direction * delta_time * move_speed;
 	}
-	if (s_pressing)
-	{
+	if (s_pressing) {
 		delta = forward_direction * delta_time * move_speed * -1.0f;
 	}
 	camera.Translate(delta);
+
+	if (tick_cnt_ > 200 && tick_cnt_ < 400) {
+		//float s1 = 0.5 * 0.0003f * (tick_cnt_ - 200) * (tick_cnt_ - 200);
+		//float s2 = 0.5 * 0.0003f * (tick_cnt_ - 201) * (tick_cnt_ - 201);
+		//models[0].MoveBy({0.0f, -(s1 - s2), 0.0f});
+	}
+	tick_cnt_ += 1;
 }
 
 void Scene::Draw() {

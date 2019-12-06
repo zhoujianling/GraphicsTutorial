@@ -14,9 +14,7 @@ private:
 
 	ElementBuffer element_buffer_;
 
-	Shader *shader;
-
-	glm::mat4 model_matrix_;
+	Shader shader;
 
 	//void ComputeBoundingBox();
 
@@ -29,11 +27,9 @@ public:
 	 * @param buffer: ¶¥µãbuffer
 	 * @param edge_buffer: ±ß buffer
 	**/
-	void Init(const VertexBuffer& buffer, const ElementBuffer& edge_buffer);
+	void InitShader();
 
-	void Init(std::string model_path);
-
-	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
+	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
 
 	void SetAmbientMaterial(float r, float g, float b, float a);
 
@@ -42,5 +38,9 @@ public:
 	void SetSpecularMaterial(float r, float g, float b, float a);
 
 	void SetTexture(const std::string & texture_image_path);
+
+	VertexBuffer& GetVertexBuffer() { return this->vertex_buffer_; }
+
+	ElementBuffer& GetElementBuffer() { return this->element_buffer_; }
 
 };

@@ -6,18 +6,29 @@
 #include "Include/glm/glm.hpp"
 #include "Include/glm/ext.hpp"
 
-class Ground
-{
+class Ground {
 private:
-	//GLuint vbo;
-	VertexBuffer *buffer_;
-	Shader *shader;
+
+	VertexBuffer buffer_;
+
+	Shader shader_;
+
 	glm::mat4 model_matrix_;
 
+	std::string texture_color_name_;
+
 public:
-	// 设置数据，编译链接 Shader
-	void Init();
+
+	Ground();
+
+	// 设置数据，
+	void InitGeometry();
+
+	//编译链接 Shader
+	void InitShader();
 
 	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix);
+
+	float GetGroundHeight() const { return model_matrix_[1][3]; }
 };
 

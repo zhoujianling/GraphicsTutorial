@@ -1,5 +1,6 @@
 #pragma once
 #include "mesh.h"
+#include "wireframe.h"
 #include <vector>
 
 class Camera;
@@ -10,6 +11,8 @@ private:
 	glm::mat4 model_matrix_;
 
 	BoundingBox bbox_;
+
+	WireFrame bbox_wire_;
 
 	// wire_frame
 	// shadow
