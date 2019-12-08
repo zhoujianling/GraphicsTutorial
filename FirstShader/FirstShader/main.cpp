@@ -113,6 +113,38 @@ HDC SetOpenGlEnv(HWND hwnd) {
 		<< std::endl; 
 		exit(EXIT_FAILURE);
 	}
+	int nPixelFormat2;
+
+	//BOOL bValidPixFormat;
+	//UINT nMaxFormats = 1;
+	//UINT nNumFormats;
+	//float pfAttribFList[] = { 0, 0 };
+	//int piAttribIList[] = {
+	//	WGL_DRAW_TO_WINDOW_ARB, GL_TRUE,
+	//	WGL_SUPPORT_OPENGL_ARB, GL_TRUE,
+	//	WGL_COLOR_BITS_ARB, 32,
+	//	WGL_RED_BITS_ARB, 8,
+	//	WGL_GREEN_BITS_ARB, 8,
+	//	WGL_BLUE_BITS_ARB, 8,
+	//	WGL_ALPHA_BITS_ARB, 8,
+	//	WGL_DEPTH_BITS_ARB, 16,
+	//	WGL_STENCIL_BITS_ARB, 0,
+	//	WGL_DOUBLE_BUFFER_ARB, GL_TRUE,
+	//	WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+	//	WGL_SAMPLE_BUFFERS_ARB, GL_TRUE,
+	//	WGL_SAMPLES_ARB, 16,
+	//	0, 0 };
+
+	//bValidPixFormat = wglChoosePixelFormatARB(mHDC, piAttribIList, pfAttribFList, nMaxFormats, &nPixelFormat2, &nNumFormats);
+
+	//if (!bValidPixFormat)
+	//{
+	//	MessageBox(NULL, "Invalid Pixel Format", "Error! (SetupWGLPixelFormat)", MB_OK);
+	//}
+
+	//SetPixelFormat(mHDC, nPixelFormat2, &pfd);
+	
+
 	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	scene.SetViewPortSize(default_viewport_width * 1.0f, default_viewport_height * 1.0f);
