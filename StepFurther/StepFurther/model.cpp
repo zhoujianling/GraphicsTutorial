@@ -1,6 +1,7 @@
 #include "mesh.h"
 #include "camera.h"
 #include "model.h"
+#include "scene.h"
 #include <algorithm>
 using glm::mat4;
 using glm::vec3;
@@ -10,7 +11,7 @@ using glm::identity;
 Model::Model():model_matrix_(identity<mat4>())
 {}
 
-void Model::Draw(const Camera& camera) {
+void Model::Draw(const Camera& camera, const RenderingOption& option) {
 	glEnable(GL_STENCIL_TEST);
 	// 蒙版默认初始化为 0
 	glClearStencil(0);
@@ -30,7 +31,9 @@ void Model::Draw(const Camera& camera) {
 	for (auto& mesh : meshes_) {
 		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
 	}
-	bbox_wire_.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
+	if (option.show_bbox_) {
+		bbox_wire_.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_);
+	}
 }
 
 void Model::Init() {

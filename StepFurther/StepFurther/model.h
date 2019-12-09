@@ -4,6 +4,7 @@
 #include <vector>
 
 class Camera;
+struct RenderingOption;
 class Model { // hold an instance pointer -> renderManager which is an interface implemented by Scene?
 private:
 	std::vector<zjl::TriMesh> meshes_;
@@ -21,7 +22,7 @@ public:
 
 	// ~Model();
 
-	void Draw(const Camera&);
+	void Draw(const Camera&, const RenderingOption&);
 
 	void Init();
 

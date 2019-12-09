@@ -33,8 +33,8 @@ void Scene::Init() {
 	camera.Translate({ 0.0f, -0.6f, 3.0f });
 	//meshes.push_back(TriMesh());
 	//meshes[0].Init("Res/Dog.Normal.ply");
-	//meshes[0].MoveBy({ 0.0f, 0.0f, -2.9f }).RotateBy({ 0.0f, 1.0f, 0.0f }, PI / 2.0);
 	// LoadObj("Res/01Alocasia.obj", meshes);
+
 	models.push_back(Model());
 	LoadObj("Res/01Alocasia.obj", models[0].GetMeshes());
 	models.back().ScaleBy(0.5f).MoveBy({0.0f, -0.5f, 0.0f});
@@ -101,7 +101,9 @@ void Scene::UpdateScene() {
 	if (tick_cnt_ > 100) {
 		float s1 = 0.6 * sin((tick_cnt_ - 200) * 1.0 / 120) ;
 		float s2 = 0.6 * sin((tick_cnt_ - 201) * 1.0 / 120) ;
-		models[0].MoveBy({0.0f, -(s1 - s2), 0.0f});
+		if (!models.empty()) {
+			models[0].MoveBy({0.0f, -(s1 - s2), 0.0f});
+		}
 	}
 	tick_cnt_ += 1;
 }
@@ -113,6 +115,7 @@ void Scene::Draw() {
 	// Gamma correction
 	glEnable(GL_FRAMEBUFFER_SRGB);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_MULTISAMPLE);
 
 	ground.Draw(camera);
 
@@ -124,7 +127,7 @@ void Scene::Draw() {
 		glPolygonMode(GL_BACK, GL_FILL);
 	}
 	for (auto& model : models) {
-		model.Draw(camera);
+		model.Draw(camera, option_);
 	}
 
 }

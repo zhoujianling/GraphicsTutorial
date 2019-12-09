@@ -6,12 +6,19 @@
 #include "camera.h"
 #include <vector>
 
+struct RenderingOption {
+	bool show_bbox_;
+
+	RenderingOption():
+		show_bbox_(true){}
+};
+
 class Scene {
 private:
+	RenderingOption option_;
 	Ground ground;
-	//TriMesh mesh;
 	Camera camera;
-	// std::vector<zjl::TriMesh> meshes;
+
 	std::vector<Model> models;
 
 	bool w_pressing;
@@ -41,5 +48,7 @@ public:
 	void OnKeyUp(char code);
 
 	void OnMouseMove(float delta_x, float delta_y);
+
+	RenderingOption& GetOption() { return this->option_; }
 
 };
