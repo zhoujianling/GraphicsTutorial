@@ -12,8 +12,7 @@ Scene::Scene():
 	w_pressing(false),
 	s_pressing(false),
 	a_pressing(false),
-	d_pressing(false),
-	draw_wireframe_(false)
+	d_pressing(false)
 {
 	tick_cnt_ = 0;
 }
@@ -28,6 +27,7 @@ void Scene::SetViewPortSize(float width, float height) {
  * z 轴指向屏幕外面, 所以 z 坐标要设负值
  */
 void Scene::Init() {
+	rendering_element_option_table_.clear();
 	ground.InitGeometry();
 	ground.InitShader();
 	camera.Translate({ 0.0f, -0.6f, 3.0f });
@@ -77,7 +77,7 @@ void Scene::UpdateScene() {
 	//std::cout << "\rDelta time: " << delta_time;
 	
 	// update camera
-	const auto move_speed = 2.0f;
+	const auto move_speed = 0.8f;
 	const auto forward_direction = glm::normalize(camera.ForwardDirection());
 	const auto right_hand_direction = glm::normalize(camera.RightHandDirection());
 	const auto scale = move_speed * delta_time_;
@@ -114,12 +114,19 @@ void Scene::Draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	// Gamma correction
 	glEnable(GL_FRAMEBUFFER_SRGB);
-	glEnable(GL_CULL_FACE);
+	if (option_.face_culling_) {
+		glCullFace(GL_BACK);
+		glEnable(GL_CULL_FACE);
+	} else {
+		glDisable(GL_CULL_FACE);
+	}
 	glEnable(GL_MULTISAMPLE);
 
-	ground.Draw(camera);
+	if (rendering_element_option_table_[&ground].visible_) {
+		ground.Draw(camera);
+	}
 
-	if (draw_wireframe_) {
+	if (option_.draw_wireframe_) {
 		glPolygonMode(GL_FRONT, GL_LINE);
 		glPolygonMode(GL_BACK, GL_LINE);
 	} else {
@@ -127,6 +134,7 @@ void Scene::Draw() {
 		glPolygonMode(GL_BACK, GL_FILL);
 	}
 	for (auto& model : models) {
+		if (! rendering_element_option_table_[&model].visible_) continue;
 		model.Draw(camera, option_);
 	}
 
@@ -164,7 +172,7 @@ void Scene::OnKeyUp(char code) {
 		w_pressing = false;
 		break;
 	case 'M':
-		draw_wireframe_ = !draw_wireframe_;
+		option_.draw_wireframe_ = !option_.draw_wireframe_;
 		break;
 	}
 }
@@ -180,7 +188,7 @@ void Scene::OnMouseMove(const float delta_x, const float delta_y) {
 
 void Scene::LoadModel(const std::string& file_path) {
 	models.push_back(Model());
-	bool success = LoadObj(file_path, models.back().GetMeshes());
+	bool success = LoadObj(file_path, models.back());
 	if (!success) {
 		models.pop_back();
 		return;

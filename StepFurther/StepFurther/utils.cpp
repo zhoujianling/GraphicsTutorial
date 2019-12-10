@@ -50,8 +50,7 @@ unsigned char* LoadFile(const char* file_path, int& file_size) {
 }
 
 
-GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum type)
-{
+GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum type) {
 	GLuint texture;
 	glGenTextures(1, &texture); // 申请 1 个纹理地址
 	glBindTexture(GL_TEXTURE_2D, texture); // 2d 纹理， 
@@ -72,8 +71,8 @@ GLuint CreateTexture2D(unsigned char* pixelData, int width, int height, GLenum t
 GLuint CreateTexture2DFromImage(const char *bmp_path) {
 	auto width = 0, height = 0;
 	unsigned char *bmp_image_data = nullptr;
-	LoadRGBImage(bmp_path, bmp_image_data, width, height);
-	//= DecodeBMP(bmpFileData, width, height);
+	//LoadRGBImage(bmp_path, bmp_image_data, width, height);
+	LoadRGBAImage(bmp_path, bmp_image_data, width, height);
 	if (width <= 0 || height <= 0) {
 		fprintf(stderr, "Error, cannot decode image.\n");
 		delete bmp_image_data;
@@ -81,7 +80,7 @@ GLuint CreateTexture2DFromImage(const char *bmp_path) {
 	}
 	// std::cerr << "Debug: load image, width " << width << ", height " << height << std::endl;
 
-	const GLuint texture_id = CreateTexture2D(bmp_image_data, width, height, GL_RGB);
+	const GLuint texture_id = CreateTexture2D(bmp_image_data, width, height, GL_RGBA);
 	//	delete bmpFileData;
 	delete bmp_image_data;
 	return texture_id;

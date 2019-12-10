@@ -8,9 +8,25 @@
 
 struct RenderingOption {
 	bool show_bbox_;
+	bool draw_wireframe_;
+	bool draw_shadow_;
+
+	bool face_culling_;
 
 	RenderingOption():
-		show_bbox_(true){}
+		show_bbox_(true),
+		draw_wireframe_(false),
+		draw_shadow_(true),
+		face_culling_(true)
+	{}
+};
+
+struct RenderingElementOption {
+	bool visible_;
+
+	RenderingElementOption() :
+		visible_(true)
+	{}
 };
 
 class Scene {
@@ -20,13 +36,13 @@ private:
 	Camera camera;
 
 	std::vector<Model> models;
+	std::unordered_map<const RenderingElement*, RenderingElementOption> rendering_element_option_table_;
 
 	bool w_pressing;
 	bool s_pressing;
 	bool a_pressing;
 	bool d_pressing;
 
-	bool draw_wireframe_;
 
 	float delta_time_;
 
@@ -57,4 +73,9 @@ public:
 
 	RenderingOption& GetOption() { return this->option_; }
 
+	RenderingElementOption& GetElementOption(const RenderingElement* element) { return this->rendering_element_option_table_[element]; }
+
+	std::vector<Model>& GetModels() { return this->models; }
+
+	const Ground& GetGround() { return this->ground; }
 };

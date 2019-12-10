@@ -13,9 +13,10 @@ uniform mat4 IT_ModelMatrix;
 varying vec4 V_Normal;
 varying vec4 V_WorldPosition;
 varying vec4 V_TexCoord;
+varying vec4 V_Color;
 
 void main() {
-	// V_Color = color;
+	V_Color = color;
 	V_TexCoord = texcoord;
 	V_Normal = IT_ModelMatrix * normal;
 	V_WorldPosition = ModelMatrix * position;

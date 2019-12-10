@@ -1,7 +1,7 @@
 #include "io.h"
 #include "Include/objloader.h"
 #include "Include/ply_io.h"
-#include "mesh.h"
+#include "model.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "Include/sbt_image.h"
@@ -184,7 +184,8 @@ void LoadPly(const std::string& model_path, VertexBuffer *buffer, ElementBuffer 
 	}
 }
 
-bool LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
+bool LoadObj(const std::string& model_path, Model& model) {
+	auto& meshes = model.GetMeshes();
 	std::string model_path_filtered = model_path;
 	// change backslash to forward slash
 	for (size_t i = 0; i < model_path_filtered.size(); i++) {
@@ -194,10 +195,12 @@ bool LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 	}
 	std::string model_dir = ".";
 	auto forward_slash_pos = model_path_filtered.rfind('/');
+	auto dot_pos = model_path_filtered.rfind('.');
 
 	if (forward_slash_pos != model_path_filtered.npos) {
 		model_dir = model_path.substr(0, forward_slash_pos);
 	}
+	std::string model_name = model_path.substr(forward_slash_pos + 1, dot_pos);
 
  	objl::Loader loader;
  	const auto success = loader.LoadFile(model_path_filtered);
@@ -245,6 +248,7 @@ bool LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 		//std::cout << "path: " << map_kd_filepath << std::endl;
 		meshes.back().SetTextureColorFile(map_kd_filepath);
 	}
+	model.SetName(model_name);
 	return true;
 }
 
@@ -289,8 +293,7 @@ bool LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 	memcpy(elements_buff.GetBuffer(), face_indices.data(), sizeof(unsigned int) * face_indices.size());
  }
 
-void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height)
-{
+void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int &height) {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
 	stbi_set_flip_vertically_on_load(true); 
 	int channel;
@@ -299,11 +302,10 @@ void LoadRGBImage(std::string image_path, unsigned char *& data, int &width, int
 //	stbi_image_free(data);
 }
 
-void LoadRGBAImage(std::string image_path, unsigned char *& data, int &width, int &height)
-{
+void LoadRGBAImage(std::string image_path, unsigned char *& data, int &width, int &height) {
 	// 下面的方法将第一个像素弄到左下角，用于 OpenGL 加载纹理
 	stbi_set_flip_vertically_on_load(1); 
 	int channel;
-	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb);
+	data = stbi_load(image_path.c_str(), &width, &height, &channel, STBI_rgb_alpha);
 //	stbi_image_free(data);
 }

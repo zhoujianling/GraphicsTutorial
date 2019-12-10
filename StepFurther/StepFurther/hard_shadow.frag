@@ -15,12 +15,13 @@ uniform vec4 U_CameraPosition;
 uniform vec4 U_LightOpt;
 uniform sampler2D U_Texture;
 
-//varying vec4 V_Color;
+varying vec4 V_Color;
 varying vec4 V_Normal;
 varying vec4 V_WorldPosition;
 varying vec4 V_TexCoord;
 
 void main() {
+    if (V_Color.a < 0.1) discard;
 	vec4 color = vec4(0.1, 0.1, 0.1, 0.5);
 	gl_FragColor = color;
 	//gl_FragColor = V_Color;

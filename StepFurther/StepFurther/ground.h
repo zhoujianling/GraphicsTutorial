@@ -7,7 +7,7 @@
 #include "Include/glm/ext.hpp"
 
 class Camera;
-class Ground {
+class Ground : public RenderingElement{
 private:
 
 	VertexBuffer buffer_;

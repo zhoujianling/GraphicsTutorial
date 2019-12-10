@@ -80,42 +80,25 @@ static bool InitImGui(GLFWwindow* window) {
 
 static void DrawGuiComponents() {
 	// ....
-	int current_item = 1;
-	const char* items[] = { "abc", "def", "ffff", "0000", "????" };
-	bool tt1;
-	bool tt2;
-	bool tt3;
 
 	// New IMGUI frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::SetNextWindowPos(ImVec2(current_viewport_width - toolset_region_width, 0));
-	ImGui::SetNextWindowSize(ImVec2(std::max(1.0f, toolset_region_width * 1.0f - 1), current_viewport_height));
+	if (auto_resize) {
+		ImGui::SetNextWindowPos(ImVec2(current_viewport_width - toolset_region_width, 0));
+		ImGui::SetNextWindowSize(ImVec2(std::max(1.0f, toolset_region_width * 1.0f - 1), current_viewport_height));
+	}
 	ImGui::Begin("GUI", &my_tool_active, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
 			if (ImGui::MenuItem("Open", "Ctrl+O")) { 
 				/* Do stuff */ 
 
-				//FILE* fp = fopen("trimesh.vert", "r");
-				//std::cout << "##########################" << std::endl;
-				//std::cout << "current dir: " << GetCurrentWorkingDir() << std::endl;
-				//if (fp == nullptr) {
-				//	std::cout << "cannot find trimesh.vert............." << std::endl;
-				//} else {
-				//	std::cout << "succeed in finding trimesh.vert............." << std::endl;
-				//}
 				auto file_str = ImGui::file_dialog_open();
+				// select file from dialog will lead to the change of current working directory
+				// reset to original working dir
 				SetCurrentWorkingDir(current_working_directory);
-				//fp = fopen("trimesh.vert", "r");
-				//std::cout << "##########################" << std::endl;
-				//std::cout << "current dir: " << GetCurrentWorkingDir() << std::endl;
-				//if (fp == nullptr) {
-				//	std::cout << "cannot find trimesh.vert............." << std::endl;
-				//} else {
-				//	std::cout << "succeed in finding trimesh.vert............." << std::endl;
-				//}
 				scene.LoadModel(file_str);
 			}
 			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
@@ -124,19 +107,44 @@ static void DrawGuiComponents() {
 		}
 		ImGui::EndMenuBar();
 	}
-	//ImGuiWindowFlags_;
-	ImGui::BeginChild(ImGui::GetID("GUIddd"), ImVec2(toolset_region_width - 1.0, 80), ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysVerticalScrollbar);
-	ImGui::Checkbox("hell1", &tt1);
-	ImGui::Checkbox("hell2", &tt2);
-	ImGui::Checkbox("hell3", &tt3);
-	ImGui::Checkbox("hell4", &tt3);
-	ImGui::Checkbox("hell5", &tt3);
-	ImGui::Checkbox("hell6", &tt3);
+	//ImGui::CollapsingHeader("Models", &is_models_widget_collapsing);
+	
+	// #######################################
+	auto imgui_style = ImGui::GetStyle();
+	const auto bar_width = imgui_style.ScrollbarSize;
+	ImGui::BeginChild("Models", ImVec2(std::max(toolset_region_width - bar_width - 1.0, 1.0), 80), true, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	ImGui::Columns(2);
+	ImGui::Checkbox("Ground", &scene.GetElementOption(&scene.GetGround()).visible_);
+	for (auto& model : scene.GetModels()) {
+		ImGui::Checkbox(model.GetName().c_str(), &scene.GetElementOption(&model).visible_);
+	}
+	ImGui::NextColumn();
+	ImGui::LabelText("Dummy00", "");
+	for (size_t index = 0; index < scene.GetModels().size(); index ++) {
+		auto& model = scene.GetModels().at(index);
+		// it should be safe??
+		auto id_src = (std::ostringstream() << model.GetName() << "_B").str();
+		if (ImGui::Button(id_src.c_str())) {
+			selected_model_index = index;
+		}
+	}
 	ImGui::EndChild();
+	// #######################################
+	if (selected_model_index >= 0 && selected_model_index < scene.GetModels().size()) {
+		// std::cout << "do something ..." << std::endl;
+		auto& model = scene.GetModels().at(selected_model_index);
+		if (ImGui::CollapsingHeader("Model Details")) {
+			ImGui::DragFloat("Scale", &model.GetScaleTimes(), 0.05f, 0.05, 2.0f);
+		}
+	}
 	//ImGui::ListBoxHeader("ModelName");
 	//ImGui::ListBox("Models", &current_item, items, 5);
 	//ImGui::ListBoxFooter();
 	ImGui::Checkbox("BoundingBox", &scene.GetOption().show_bbox_); 
+	ImGui::Checkbox("Shdow", &scene.GetOption().draw_shadow_); 
+	ImGui::Checkbox("WireFrame", &scene.GetOption().draw_wireframe_); 
+	ImGui::Checkbox("AutoResize", &auto_resize); 
+	ImGui::Checkbox("FaceCulling", &scene.GetOption().face_culling_); 
 	ImGui::LabelText("FrameTime", "%.3f s", frame_time);
 	ImGui::End();
 	ImGui::Render();

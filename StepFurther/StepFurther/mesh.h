@@ -99,11 +99,7 @@ public:
 
 	void SetTextureColorFile(const std::string& texture_color) { this->texture_color_name_ = texture_color; }
 
-	void SetTransparent(bool is_t) { 
-		if (is_t) {
-			for (int i = 0; i < vertex_buffer_.GetVerticesCount(); i++) vertex_buffer_.GetVertex()[i].color[3] = 0.5;
-		}
-		this->is_transparent_ = is_t; }
+	void SetTransparent(bool is_t) { this->is_transparent_ = is_t; }
 
 	//void Translate(float x, float y, float z);
 };

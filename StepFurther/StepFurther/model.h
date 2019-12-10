@@ -5,7 +5,7 @@
 
 class Camera;
 struct RenderingOption;
-class Model { // hold an instance pointer -> renderManager which is an interface implemented by Scene?
+class Model : public RenderingElement { // hold an instance pointer -> renderManager which is an interface implemented by Scene?
 private:
 	std::vector<zjl::TriMesh> meshes_;
 
@@ -14,6 +14,10 @@ private:
 	BoundingBox bbox_;
 
 	WireFrame bbox_wire_;
+
+	std::string name_;
+
+	float scale_times_;
 
 	// wire_frame
 	// shadow
@@ -37,4 +41,10 @@ public:
 	void ComputeBoundingBox();
 
 	const BoundingBox& GetBoundingBox() const { return this->bbox_; }
+
+	const std::string& GetName() const { return this->name_; }
+
+	void SetName(const std::string& name) { this->name_ = name; }
+
+	float& GetScaleTimes() { return this->scale_times_; }
 };

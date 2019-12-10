@@ -21,6 +21,7 @@ in vec4 V_WorldPosition;
 in vec4 V_TexCoord;
 
 void main() {
+    if (V_Color.a < 0.1) discard;
 	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
 	vec4 ambien_color  = U_LightAmbient * U_LightAmbientMaterial;
 	// compute diffuse color 
