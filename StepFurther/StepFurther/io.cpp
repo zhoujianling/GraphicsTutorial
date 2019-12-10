@@ -6,6 +6,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "Include/sbt_image.h"
 #include "vertex.h"
+#include <algorithm>
 
 extern "C" {
 	typedef struct options
@@ -183,21 +184,30 @@ void LoadPly(const std::string& model_path, VertexBuffer *buffer, ElementBuffer 
 	}
 }
 
-void LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
-	std::string model_dir = ".";
-	auto slash_pos = model_path.rfind('/');
-	if (slash_pos != model_path.npos) {
-		model_dir = model_path.substr(0, slash_pos);
+bool LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
+	std::string model_path_filtered = model_path;
+	// change backslash to forward slash
+	for (size_t i = 0; i < model_path_filtered.size(); i++) {
+		if (model_path_filtered[i] == '\\') {
+			model_path_filtered[i] = '/';
+		}
 	}
+	std::string model_dir = ".";
+	auto forward_slash_pos = model_path_filtered.rfind('/');
+
+	if (forward_slash_pos != model_path_filtered.npos) {
+		model_dir = model_path.substr(0, forward_slash_pos);
+	}
+
  	objl::Loader loader;
- 	const auto success = loader.LoadFile(model_path);
+ 	const auto success = loader.LoadFile(model_path_filtered);
  	if (! success) {
  		fprintf(stderr, "Fail to load obj!\n");
- 		return;
+ 		return false;
  	}
  	if (loader.LoadedMeshes.empty()) {
  		fprintf(stderr, "No mesh is loaded!\n");
- 		return;
+ 		return false;
  	}
 	for (const auto& loaded_mesh : loader.LoadedMeshes) {
 		meshes.push_back(zjl::TriMesh());
@@ -229,12 +239,16 @@ void LoadObj(const std::string& model_path, std::vector<zjl::TriMesh>& meshes) {
 		memcpy(elements_buff.GetBuffer(), face_indices.data(), sizeof(unsigned int) * face_indices.size());
 
 		std::string map_kd_filepath = model_dir + "/" + loaded_mesh.MeshMaterial.map_Kd;
+		//std::cout << "model_path " << model_path << std::endl;
+		//std::cout << "model_path2 " << str << std::endl;
+		//std::cout << "model_dir " << model_dir << std::endl;
+		//std::cout << "path: " << map_kd_filepath << std::endl;
 		meshes.back().SetTextureColorFile(map_kd_filepath);
 	}
+	return true;
 }
 
- void LoadObj(std::string modelPath, VertexBuffer& vertices_buff, ElementBuffer& elements_buff)
- {
+ void LoadObj(std::string modelPath, VertexBuffer& vertices_buff, ElementBuffer& elements_buff) {
  	objl::Loader loader;
  	const auto success = loader.LoadFile(modelPath);
  	if (! success)

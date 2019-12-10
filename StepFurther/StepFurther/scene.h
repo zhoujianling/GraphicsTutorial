@@ -28,6 +28,8 @@ private:
 
 	bool draw_wireframe_;
 
+	float delta_time_;
+
 	int tick_cnt_;
 
 public:
@@ -48,6 +50,10 @@ public:
 	void OnKeyUp(char code);
 
 	void OnMouseMove(float delta_x, float delta_y);
+
+	void LoadModel(const std::string& file_path);
+
+	float GetDeltaTime() const { return this->delta_time_; }
 
 	RenderingOption& GetOption() { return this->option_; }
 

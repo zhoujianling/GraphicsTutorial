@@ -35,9 +35,9 @@ void Scene::Init() {
 	//meshes[0].Init("Res/Dog.Normal.ply");
 	// LoadObj("Res/01Alocasia.obj", meshes);
 
-	models.push_back(Model());
-	LoadObj("Res/01Alocasia.obj", models[0].GetMeshes());
-	models.back().ScaleBy(0.5f).MoveBy({0.0f, -0.5f, 0.0f});
+	//models.push_back(Model());
+	//LoadObj("Res/01Alocasia.obj", models[0].GetMeshes());
+	//models.back().ScaleBy(0.5f).MoveBy({0.0f, -0.5f, 0.0f});
 
 
 	//for (auto& mesh : meshes) {
@@ -73,28 +73,28 @@ void Scene::Init() {
 
 
 void Scene::UpdateScene() {
-	const auto delta_time = GetFrameTime();
-	std::cout << "\rDelta time: " << delta_time;
+	delta_time_ = GetFrameTime();
+	//std::cout << "\rDelta time: " << delta_time;
 	
 	// update camera
 	const auto move_speed = 2.0f;
 	const auto forward_direction = glm::normalize(camera.ForwardDirection());
 	const auto right_hand_direction = glm::normalize(camera.RightHandDirection());
-	const auto scale = move_speed * delta_time;
+	const auto scale = move_speed * delta_time_;
 
 	auto delta = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	if (a_pressing) {
-		delta = right_hand_direction * delta_time * move_speed * -1.0f;
+		delta = right_hand_direction * delta_time_* move_speed * -1.0f;
 	}
 	if (d_pressing) {
-		delta = right_hand_direction * delta_time * move_speed;
+		delta = right_hand_direction * delta_time_* move_speed;
 	}
 	if (w_pressing) {
-		delta = forward_direction * delta_time * move_speed;
+		delta = forward_direction * delta_time_* move_speed;
 	}
 	if (s_pressing) {
-		delta = forward_direction * delta_time * move_speed * -1.0f;
+		delta = forward_direction * delta_time_* move_speed * -1.0f;
 	}
 	camera.Translate(delta);
 
@@ -176,4 +176,14 @@ void Scene::OnMouseMove(const float delta_x, const float delta_y) {
 	const auto angle_rotate_by_x_axis = delta_y / 1000.0f; 
 	camera.Yaw(- angle_rotate_by_y_axis );
 	camera.Pitch(- angle_rotate_by_x_axis);
+}
+
+void Scene::LoadModel(const std::string& file_path) {
+	models.push_back(Model());
+	bool success = LoadObj(file_path, models.back().GetMeshes());
+	if (!success) {
+		models.pop_back();
+		return;
+	}
+	models.back().Init();
 }

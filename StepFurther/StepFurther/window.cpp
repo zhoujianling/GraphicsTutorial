@@ -5,6 +5,11 @@
 #include "gui/imgui.h"
 #include "gui/imgui_impl_glfw.h"
 #include "gui/imgui_impl_opengl3.h"
+#define NOMINMAX
+#include "gui/imgui_filedialog.h"
+#include <algorithm>
+#include <iostream>
+
 
 using namespace zjl;
 
@@ -63,6 +68,9 @@ static bool InitImGui(GLFWwindow* window) {
 	config.OversampleV = 5;
 	ImFont* font = io.Fonts->AddFontFromFileTTF("ProggyClean.ttf",
 		13.0f, &config);
+
+	ImGui::SetNextWindowPos(ImVec2(default_viewport_width - toolset_region_width, 0));
+	ImGui::SetNextWindowSize(ImVec2(toolset_region_width, default_viewport_height));
 	// New IMGUI frame
 	//ImGui_ImplOpenGL3_NewFrame();
 	//ImGui_ImplGlfw_NewFrame();
@@ -71,23 +79,66 @@ static bool InitImGui(GLFWwindow* window) {
 }
 
 static void DrawGuiComponents() {
+	// ....
+	int current_item = 1;
+	const char* items[] = { "abc", "def", "ffff", "0000", "????" };
+	bool tt1;
+	bool tt2;
+	bool tt3;
+
 	// New IMGUI frame
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
-	ImGui::Begin("Hello", &my_tool_active, ImGuiWindowFlags_MenuBar);
+	ImGui::SetNextWindowPos(ImVec2(current_viewport_width - toolset_region_width, 0));
+	ImGui::SetNextWindowSize(ImVec2(std::max(1.0f, toolset_region_width * 1.0f - 1), current_viewport_height));
+	ImGui::Begin("GUI", &my_tool_active, ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar()) {
 		if (ImGui::BeginMenu("File")) {
-			if (ImGui::MenuItem("Open..", "Ctrl+O")) { /* Do stuff */ }
+			if (ImGui::MenuItem("Open", "Ctrl+O")) { 
+				/* Do stuff */ 
+
+				//FILE* fp = fopen("trimesh.vert", "r");
+				//std::cout << "##########################" << std::endl;
+				//std::cout << "current dir: " << GetCurrentWorkingDir() << std::endl;
+				//if (fp == nullptr) {
+				//	std::cout << "cannot find trimesh.vert............." << std::endl;
+				//} else {
+				//	std::cout << "succeed in finding trimesh.vert............." << std::endl;
+				//}
+				auto file_str = ImGui::file_dialog_open();
+				SetCurrentWorkingDir(current_working_directory);
+				//fp = fopen("trimesh.vert", "r");
+				//std::cout << "##########################" << std::endl;
+				//std::cout << "current dir: " << GetCurrentWorkingDir() << std::endl;
+				//if (fp == nullptr) {
+				//	std::cout << "cannot find trimesh.vert............." << std::endl;
+				//} else {
+				//	std::cout << "succeed in finding trimesh.vert............." << std::endl;
+				//}
+				scene.LoadModel(file_str);
+			}
 			if (ImGui::MenuItem("Save", "Ctrl+S")) { /* Do stuff */ }
 			if (ImGui::MenuItem("Close", "Ctrl+W")) { my_tool_active = false; }
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenuBar();
 	}
-	if (ImGui::Checkbox("BoundingBox", &scene.GetOption().show_bbox_)) {
-		;
-	}
+	//ImGuiWindowFlags_;
+	ImGui::BeginChild(ImGui::GetID("GUIddd"), ImVec2(toolset_region_width - 1.0, 80), ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysVerticalScrollbar);
+	ImGui::Checkbox("hell1", &tt1);
+	ImGui::Checkbox("hell2", &tt2);
+	ImGui::Checkbox("hell3", &tt3);
+	ImGui::Checkbox("hell4", &tt3);
+	ImGui::Checkbox("hell5", &tt3);
+	ImGui::Checkbox("hell6", &tt3);
+	ImGui::EndChild();
+	//ImGui::ListBoxHeader("ModelName");
+	//ImGui::ListBox("Models", &current_item, items, 5);
+	//ImGui::ListBoxFooter();
+	ImGui::Checkbox("BoundingBox", &scene.GetOption().show_bbox_); 
+	ImGui::LabelText("FrameTime", "%.3f s", frame_time);
+	ImGui::End();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -125,6 +176,7 @@ int zjl::ShowWindow() {
 
 	scene.SetViewPortSize(default_viewport_width * 1.0f - toolset_region_width, default_viewport_height * 1.0f);
 	scene.Init();
+	current_working_directory = GetCurrentWorkingDir();
 
 	if (!InitImGui(window)) {
 		printf("Failed to initialize ImGUI\n");
@@ -142,14 +194,15 @@ int zjl::ShowWindow() {
 		// do something...
 		scene.UpdateScene();
 		scene.Draw();
-
-		DrawGuiComponents();
+		frame_time = scene.GetDeltaTime();
 
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(current_viewport_width - toolset_region_width, 0, toolset_region_width, current_viewport_height);
 		glClearColor(0.9f, 0.9f, 0.9f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
 		glClear(GL_COLOR_BUFFER_BIT );
 		glDisable(GL_SCISSOR_TEST);
+
+		DrawGuiComponents();
 
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);

@@ -182,6 +182,7 @@
     <ClInclude Include="glew.h" />
     <ClInclude Include="ground.h" />
     <ClInclude Include="gui\imconfig.h" />
+    <ClInclude Include="gui\imgui_filedialog.h" />
     <ClInclude Include="gui\imgui.h" />
     <ClInclude Include="gui\imgui_impl_glfw.h" />
     <ClInclude Include="gui\imgui_impl_opengl3.h" />

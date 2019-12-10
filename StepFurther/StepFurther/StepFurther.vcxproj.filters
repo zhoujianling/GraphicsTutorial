@@ -155,5 +155,8 @@
     <ClInclude Include="gui\imconfig.h">
       <Filter>头文件\imgui</Filter>
     </ClInclude>
+    <ClInclude Include="gui\imgui_filedialog.h">
+      <Filter>头文件\imgui</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
