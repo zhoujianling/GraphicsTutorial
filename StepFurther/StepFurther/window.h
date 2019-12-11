@@ -1,10 +1,12 @@
 #pragma once
 #include "scene.h"
+#include "renderer.h"
 
 namespace zjl {
 static bool			is_rotating_view = false;
 static bool			is_models_widget_collapsing = false;
 static Scene		scene;
+static Renderer		renderer;
 static double		xpos, ypos;
 static const int	default_viewport_width = 1200;
 static const int	default_viewport_height = 800;

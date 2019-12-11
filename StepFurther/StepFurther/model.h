@@ -19,14 +19,10 @@ private:
 
 	float scale_times_;
 
-	// wire_frame
-	// shadow
 public:
 	Model();
 
 	// ~Model();
-
-	void Draw(const Camera&, const RenderingOption&);
 
 	void Init();
 
@@ -38,6 +34,8 @@ public:
 
 	std::vector<zjl::TriMesh>& GetMeshes() { return this->meshes_; }
 
+	const std::vector<zjl::TriMesh>& GetConstMeshes() const { return this->meshes_; }
+
 	void ComputeBoundingBox();
 
 	const BoundingBox& GetBoundingBox() const { return this->bbox_; }
@@ -47,4 +45,12 @@ public:
 	void SetName(const std::string& name) { this->name_ = name; }
 
 	float& GetScaleTimes() { return this->scale_times_; }
+
+	WireFrame& GetBoxWires() { return this->bbox_wire_; }
+
+	glm::mat4 ComputeModelMatrix() const {
+		auto model_matrix_0 = glm::scale(glm::identity<glm::mat4>(), { scale_times_, scale_times_, scale_times_ });
+		model_matrix_0 = model_matrix_0 * model_matrix_;
+		return model_matrix_0;
+	}
 };

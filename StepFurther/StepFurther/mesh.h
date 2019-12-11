@@ -54,8 +54,7 @@ public:
 };
 
 namespace zjl {
-class TriMesh// : public Sprite
-{
+class TriMesh {
 private:
 	bool is_transparent_;
 private:
@@ -83,8 +82,6 @@ public:
 
 	void DrawShadow(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
 
-	void Draw(glm::mat4 view_matrix, glm::mat4 projection_matrix, glm::mat4 model_matrix);
-
 	void SetAmbientMaterial(float r, float g, float b, float a);
 
 	void SetDiffuseMaterial(float r, float g, float b, float a);
@@ -102,6 +99,8 @@ public:
 	void SetTransparent(bool is_t) { this->is_transparent_ = is_t; }
 
 	//void Translate(float x, float y, float z);
+	Shader& GetShader() { return this->shader; }
+
 };
 
 };

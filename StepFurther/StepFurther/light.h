@@ -3,54 +3,71 @@
 #include "ggl.h"
 
 class Light {
+private:
+
 protected:
 	// 用于确定这个光源来自 GL_LIGHT0 - GL_LIGHT7 中的哪一个
 	GLenum light_identifier_;
+
+	bool enabled_;
+
+	glm::vec4 position_;
+	glm::vec4 ambient_rgba_;
+	glm::vec4 diffuse_rgba_;
+	glm::vec4 specular_rgba_;
 
 	Light();
 
 public:
 
 	// 环境光
-	void SetAmbientColor(float r, float g, float b, float a);
+	void SetAmbientColor(float r, float g, float b, float a) {
+		this->ambient_rgba_ = { r, g, b, a };
+	}
 
 	// 漫反射
-	void SetDiffuseColor(float r, float g, float b, float a);
+	void SetDiffuseColor(float r, float g, float b, float a) {
+		this->diffuse_rgba_ = { r, g, b, a };
+	}
 
 	// 镜面反射
-	void SetSpecularColor(float r, float g, float b, float a);
+	void SetSpecularColor(float r, float g, float b, float a) {
+		this->specular_rgba_ = { r, g, b, a };
+	}
 
-	void Enable();
-
+	void Enable() {}
 };
 
 /**
  * 方向光的齐次坐标第四项为0，导致处于无穷远处
  * 方向光*不会衰减*
  ***/
-class DirectionLight : public Light
-{
+class DirectionLight : public Light {
+private:
+	glm::vec4 direction_;
+
 public:
 
-	DirectionLight(GLenum light);
+	DirectionLight(GLenum light) {}
 
 	/**
 	 * 方向光的光源坐标仅用于确定光的方向，而非光源位置
 	 */
-	void SetPosition(float x, float y, float z);
+	void SetPosition(float x, float y, float z) {
+		this->direction_ = { x, y, z, 0 };
+	}
 };
 
 
 /**
  * 点光源的能量会衰减，越远光线越暗
  */
-class PointLight : public Light
-{
+class PointLight : public Light {
 private:
 	float position_[3];
 
 public:
-	PointLight(GLenum light);
+	PointLight(GLenum light) {}
 
 	void SetPosition(GLfloat x, GLfloat y, GLfloat z);
 

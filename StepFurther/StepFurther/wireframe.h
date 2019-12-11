@@ -43,4 +43,6 @@ public:
 
 	ElementBuffer& GetElementBuffer() { return this->element_buffer_; }
 
+	Shader& GetShader() { return this->shader; }
+
 };

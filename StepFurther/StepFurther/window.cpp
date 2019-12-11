@@ -114,9 +114,9 @@ static void DrawGuiComponents() {
 	const auto bar_width = imgui_style.ScrollbarSize;
 	ImGui::BeginChild("Models", ImVec2(std::max(toolset_region_width - bar_width - 1.0, 1.0), 80), true, ImGuiWindowFlags_::ImGuiWindowFlags_AlwaysVerticalScrollbar);
 	ImGui::Columns(2);
-	ImGui::Checkbox("Ground", &scene.GetElementOption(&scene.GetGround()).visible_);
+	ImGui::Checkbox("Ground", &renderer.GetElementOption(&scene.GetGround()).visible_);
 	for (auto& model : scene.GetModels()) {
-		ImGui::Checkbox(model.GetName().c_str(), &scene.GetElementOption(&model).visible_);
+		ImGui::Checkbox(model.GetName().c_str(), &renderer.GetElementOption(&model).visible_);
 	}
 	ImGui::NextColumn();
 	ImGui::LabelText("Dummy00", "");
@@ -133,18 +133,27 @@ static void DrawGuiComponents() {
 	if (selected_model_index >= 0 && selected_model_index < scene.GetModels().size()) {
 		// std::cout << "do something ..." << std::endl;
 		auto& model = scene.GetModels().at(selected_model_index);
+		int face_cnt = 0;
+		int vert_cnt = 0;
+		for (auto& mesh : model.GetMeshes()) {
+			face_cnt += mesh.GetElementBuffer().GetLength() / 3;
+			vert_cnt += mesh.GetVertexBuffer().GetVerticesCount();
+		}
 		if (ImGui::CollapsingHeader("Model Details")) {
+			ImGui::LabelText("Mesh Num", "Mesh Num: %d", model.GetMeshes().size());
+			ImGui::LabelText("Vert Num", "Vert Num: %d", vert_cnt);
+			ImGui::LabelText("Face Num", "Face Num: %d", face_cnt);
 			ImGui::DragFloat("Scale", &model.GetScaleTimes(), 0.05f, 0.05, 2.0f);
 		}
 	}
 	//ImGui::ListBoxHeader("ModelName");
 	//ImGui::ListBox("Models", &current_item, items, 5);
 	//ImGui::ListBoxFooter();
-	ImGui::Checkbox("BoundingBox", &scene.GetOption().show_bbox_); 
-	ImGui::Checkbox("Shdow", &scene.GetOption().draw_shadow_); 
-	ImGui::Checkbox("WireFrame", &scene.GetOption().draw_wireframe_); 
+	ImGui::Checkbox("BoundingBox", &renderer.GetOption().show_bbox_); 
+	ImGui::Checkbox("Shdow", &renderer.GetOption().draw_shadow_); 
+	ImGui::Checkbox("WireFrame", &renderer.GetOption().draw_wireframe_); 
 	ImGui::Checkbox("AutoResize", &auto_resize); 
-	ImGui::Checkbox("FaceCulling", &scene.GetOption().face_culling_); 
+	ImGui::Checkbox("FaceCulling", &renderer.GetOption().face_culling_); 
 	ImGui::LabelText("FrameTime", "%.3f s", frame_time);
 	ImGui::End();
 	ImGui::Render();
@@ -184,6 +193,7 @@ int zjl::ShowWindow() {
 
 	scene.SetViewPortSize(default_viewport_width * 1.0f - toolset_region_width, default_viewport_height * 1.0f);
 	scene.Init();
+	renderer.SetScene(scene);
 	current_working_directory = GetCurrentWorkingDir();
 
 	if (!InitImGui(window)) {
@@ -201,7 +211,8 @@ int zjl::ShowWindow() {
 
 		// do something...
 		scene.UpdateScene();
-		scene.Draw();
+		// scene.Draw();
+		renderer.Render();
 		frame_time = scene.GetDeltaTime();
 
 		glEnable(GL_SCISSOR_TEST);

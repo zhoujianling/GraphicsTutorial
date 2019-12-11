@@ -11,18 +11,13 @@ using glm::identity;
 
 
 WireFrame::WireFrame() {
-	//model_matrix_ = glm::translate(identity<mat4>(), { 0.0f, 0.0f, -1.9f });
-	//model_matrix_ = glm::rotate(model_matrix_, PI / 2.0f, { 0.0f, 1.0f, 0.0f });
-	// glTranslatef(0.0f, 0.0f, -3.0f);
 }
 
 WireFrame::~WireFrame()
-{
-}
+{}
 
 
 void WireFrame::InitShader() {
-	// shader.Init("trimesh.vert", "trimesh.frag");
 	shader.Init("wireframe.vert", "wireframe.frag");
 
 	shader.SetVector4("U_LightPosition", 0.0f, 1.0f, 1.0f, 1.0f);

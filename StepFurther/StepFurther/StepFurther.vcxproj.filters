@@ -81,6 +81,9 @@
     <ClCompile Include="gui\imgui_impl_opengl3.cpp">
       <Filter>源文件\imgui</Filter>
     </ClCompile>
+    <ClCompile Include="light.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\glad\gl.h">
@@ -158,5 +161,37 @@
     <ClInclude Include="gui\imgui_filedialog.h">
       <Filter>头文件\imgui</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ground.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="hard_shadow.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_gooch.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="trimesh.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="wireframe.frag">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="ground.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="hard_shadow.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_gooch.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="trimesh.vert">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="wireframe.vert">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -165,6 +165,7 @@
     <ClCompile Include="gui\imgui_widgets.cpp" />
     <ClCompile Include="Include\ply_io.c" />
     <ClCompile Include="io.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="model.cpp" />
@@ -202,6 +203,18 @@
     <ClInclude Include="vertex.h" />
     <ClInclude Include="window.h" />
     <ClInclude Include="wireframe.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ground.frag" />
+    <None Include="ground.vert" />
+    <None Include="hard_shadow.frag" />
+    <None Include="hard_shadow.vert" />
+    <None Include="model_gooch.frag" />
+    <None Include="model_gooch.vert" />
+    <None Include="trimesh.frag" />
+    <None Include="trimesh.vert" />
+    <None Include="wireframe.frag" />
+    <None Include="wireframe.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

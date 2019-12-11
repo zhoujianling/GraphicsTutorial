@@ -4,39 +4,17 @@
 #include "mesh.h"
 #include "model.h"
 #include "camera.h"
+#include "light.h"
 #include <vector>
 
-struct RenderingOption {
-	bool show_bbox_;
-	bool draw_wireframe_;
-	bool draw_shadow_;
-
-	bool face_culling_;
-
-	RenderingOption():
-		show_bbox_(true),
-		draw_wireframe_(false),
-		draw_shadow_(true),
-		face_culling_(true)
-	{}
-};
-
-struct RenderingElementOption {
-	bool visible_;
-
-	RenderingElementOption() :
-		visible_(true)
-	{}
-};
 
 class Scene {
 private:
-	RenderingOption option_;
 	Ground ground;
 	Camera camera;
 
+	std::vector<DirectionLight> lights_;
 	std::vector<Model> models;
-	std::unordered_map<const RenderingElement*, RenderingElementOption> rendering_element_option_table_;
 
 	bool w_pressing;
 	bool s_pressing;
@@ -59,6 +37,10 @@ public:
 
 	void Draw();
 
+	void DrawModel( Model& model);
+
+	void DrawMesh( zjl::TriMesh& mesh, glm::mat4 model_matrix);
+
 	// 键盘按下事件
 	void OnKeyDown(char code);
 
@@ -71,11 +53,10 @@ public:
 
 	float GetDeltaTime() const { return this->delta_time_; }
 
-	RenderingOption& GetOption() { return this->option_; }
-
-	RenderingElementOption& GetElementOption(const RenderingElement* element) { return this->rendering_element_option_table_[element]; }
-
 	std::vector<Model>& GetModels() { return this->models; }
 
-	const Ground& GetGround() { return this->ground; }
+	Ground& GetGround() { return this->ground; }
+
+	Camera& GetCamera() { return this->camera; }
+
 };

@@ -27,7 +27,6 @@ void Scene::SetViewPortSize(float width, float height) {
  * z 轴指向屏幕外面, 所以 z 坐标要设负值
  */
 void Scene::Init() {
-	rendering_element_option_table_.clear();
 	ground.InitGeometry();
 	ground.InitShader();
 	camera.Translate({ 0.0f, -0.6f, 3.0f });
@@ -40,13 +39,8 @@ void Scene::Init() {
 	//models.back().ScaleBy(0.5f).MoveBy({0.0f, -0.5f, 0.0f});
 
 
-	//for (auto& mesh : meshes) {
-		// shadows.emplace_back(mesh.GetVertexBuffer(), mesh.GetElementBuffer());
-		//shadows.push_back(Shadow(mesh.GetVertexBuffer(), mesh.GetElementBuffer()));
-	//}
-
-	//meshes.push_back(TriMesh());
-	//wire_frame.Init("Res/Dog.Normal.ply");
+	lights_.push_back(DirectionLight(0));
+	lights_.back().SetPosition(0.0f, 2.5f, 1.5f);
 
 	ElementBuffer element_buffer_temp;
 	VertexBuffer vertex_buffer_temp;
@@ -60,8 +54,6 @@ void Scene::Init() {
 	//wire_frame.Init(vertex_buffer_temp, element_buffer_edge);
 	// meshes[0].GetBoundingBox().ToWireframe(vertex_buffer_temp, element_buffer_temp);
 	// wire_frame.Init(vertex_buffer_temp, element_buffer_temp);
-
-	// mesh.SetTexture("Res/Texture.bmp");
 
 	// PrintGLMMatrix(projectionMatrix, "projection ");
 
@@ -108,37 +100,6 @@ void Scene::UpdateScene() {
 	tick_cnt_ += 1;
 }
 
-void Scene::Draw() {
-	glClearColor(0.1f, 0.3f, 0.5f, 1.); // 擦除背景使用的颜色, 传入的参数为橡皮擦的颜色
-	// 每一帧绘制之前要清除颜色缓冲区和深度缓冲区(初始化为1.0，即最远)
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	// Gamma correction
-	glEnable(GL_FRAMEBUFFER_SRGB);
-	if (option_.face_culling_) {
-		glCullFace(GL_BACK);
-		glEnable(GL_CULL_FACE);
-	} else {
-		glDisable(GL_CULL_FACE);
-	}
-	glEnable(GL_MULTISAMPLE);
-
-	if (rendering_element_option_table_[&ground].visible_) {
-		ground.Draw(camera);
-	}
-
-	if (option_.draw_wireframe_) {
-		glPolygonMode(GL_FRONT, GL_LINE);
-		glPolygonMode(GL_BACK, GL_LINE);
-	} else {
-		glPolygonMode(GL_FRONT, GL_FILL);
-		glPolygonMode(GL_BACK, GL_FILL);
-	}
-	for (auto& model : models) {
-		if (! rendering_element_option_table_[&model].visible_) continue;
-		model.Draw(camera, option_);
-	}
-
-}
 
 void Scene::OnKeyDown(char code) {
 	switch (code) {
@@ -172,7 +133,7 @@ void Scene::OnKeyUp(char code) {
 		w_pressing = false;
 		break;
 	case 'M':
-		option_.draw_wireframe_ = !option_.draw_wireframe_;
+		// option_.draw_wireframe_ = !option_.draw_wireframe_;
 		break;
 	}
 }

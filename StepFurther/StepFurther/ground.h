@@ -37,5 +37,11 @@ public:
 	void Draw(const Camera&);
 
 	float GetGroundHeight() const { return model_matrix_[1][3]; }
+
+	Shader& GetShader() { return this->shader_; }
+
+	VertexBuffer& GetBuffer() { return this->buffer_; }
+
+	glm::mat4 GetModelMatrix() { return this->model_matrix_; }
 };
 

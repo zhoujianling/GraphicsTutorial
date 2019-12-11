@@ -30,8 +30,7 @@ struct UniformVector4f
  * 对于一个要画的物体，我们通常要写它的 VertexShader 和 FragmentShader
  * 代码的读取、编译、链接，可以进一步封装
  */
-class Shader
-{
+class Shader {
 private:
 	GLuint program_id_;
 

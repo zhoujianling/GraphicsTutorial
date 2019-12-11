@@ -12,38 +12,6 @@ Model::Model():model_matrix_(identity<mat4>()),
 	scale_times_(1.0f)
 {}
 
-void Model::Draw(const Camera& camera, const RenderingOption& option) {
-
-	auto model_matrix_0 = glm::scale(identity<mat4>(), { scale_times_, scale_times_, scale_times_ });
-	model_matrix_0 = model_matrix_0 * model_matrix_;
-	//glEnable(GL_STENCIL_TEST);
-	// 蒙版默认初始化为 0
-	//glClearStencil(0);
-	//glStencilMask(0xFF);
-	//glStencilFunc(GL_NOTEQUAL, 0x1, 0xFF); // 当和 0XFF 做 and运算的结果 NOTEQUAL 1时，通过蒙版测试
-	//glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE); // ???
-	// glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-	if (option.draw_shadow_) {
-		for (auto& mesh : meshes_) {
-			mesh.DrawShadow(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_0);
-		//glStencilMask(0x00);
-		}
-	}
-	// 关闭蒙版写入
-	//glStencilMask(0x00);
-
-	//glDisable(GL_STENCIL_TEST);
-
-	for (auto& mesh : meshes_) {
-		glEnable(GL_BLEND);
-		mesh.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_0);
-		glDisable(GL_BLEND);
-	}
-	if (option.show_bbox_) {
-		bbox_wire_.Draw(camera.GetViewMatrix(), camera.GetProjectionMatrix(), model_matrix_0);
-	}
-}
-
 void Model::Init() {
 	ComputeBoundingBox();
 	bbox_.ToWireframe(bbox_wire_.GetVertexBuffer(), bbox_wire_.GetElementBuffer());
